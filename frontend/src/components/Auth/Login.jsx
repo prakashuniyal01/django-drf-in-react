@@ -1,9 +1,12 @@
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { userLoginApiService } from '../../api/services/authentication.service';
 
 const Login = () => {
+
+  const navigator = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -54,7 +57,14 @@ const Login = () => {
       setIsLoading(true);
       try {
         const response = await userLoginApiService(formData);
-        console.log('Login response:', response);
+
+        localStorage.setItem("tokens", JSON.stringify({
+          refreshToken: response.refresh,
+          accessToken: response.access
+        }));
+
+        localStorage.setItem("userInfo", JSON.stringify(response.user));
+        window.location.reload();
       } catch (error) {
         console.error('Login error:', error);
       } finally {
@@ -162,6 +172,7 @@ const Login = () => {
 
           {/* Submit Button */}
           <button
+            onClick={() => navigator('/admin')}
             type="submit"
             disabled={isLoading}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"

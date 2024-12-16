@@ -1,9 +1,23 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ArticlesList from "../components/Article/ArticleList";
 import Carousel from "../components/Carousel";
 import CategoryTagForm from "../components/CategoryAndTagForm";
 
 const HomePage = () => {
+
+  const navigator = useNavigate();
+
+  useEffect(() => {
+    const userToken = localStorage.getItem('token');
+    const userInfo = localStorage.getItem('userInfo');
+
+    if (userToken && userInfo) {
+      navigator("/admin");
+    }
+
+  }, []);
+
   return (
     <Fragment>
       <section className="w-full">
