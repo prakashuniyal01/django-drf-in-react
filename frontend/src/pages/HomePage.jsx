@@ -19,7 +19,7 @@ const HomePage = () => {
           </div>
         </div>
         <div className="flex justify-center items-center flex-col">
-          <h1 className="text-3xl">Articles</h1>
+          <h1 className="text-2xl text-start w-[88%] px-5 bg-blue-100">Articles</h1>
           <div className="articleContainer ">
             <ArticlesList />
           </div>
