@@ -103,6 +103,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,                 # Blacklist refresh tokens after use
 }
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # cors middleware     
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,7 +111,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # cors middleware     
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -254,6 +254,12 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '182.71.75.106','172.16.1.210']
 
 # cors hadder 
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    "http://127.0.0.1:3000"
+]
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Vite development server
     "http://127.0.0.1:3000", # Alternative localhost
@@ -266,6 +272,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://172.16.1.210:8000",
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Media settings
 MEDIA_URL = '/media/'
