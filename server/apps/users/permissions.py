@@ -22,9 +22,4 @@ class IsJournalist(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.role == 'Journalist'
 
-class IsUser(permissions.BasePermission):
-    """
-    General User role ke liye permission class.
-    """
-    def has_permission(self, request, view):
-        return request.user.role == 'User'
+

@@ -39,8 +39,7 @@ CORS_ALLOW_HEADERS = [
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-SECRET_KEY = 'django-insecure-ve^%_m+2+%9abh8l9mh4-4uuuuc*o+85=9hh&zg+-vre$2fmbp'
+SECRET_KEY = 'django-insecure-6o0q*3fd4!*izx&54v)of=-nw#ay-3a5k8^rv-5jgh9ec&-^t4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -149,24 +148,28 @@ PASSWORD_HASHERS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # my local database home 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # Use MySQL database engine
+        'NAME': 'articles',  # Database name
+        'USER': 'root',  # Database username
+        'PASSWORD': 'root',  # Database password
+        'HOST': 'localhost',  # MySQL database host
+        'PORT': '3306',  # MySQL default port
+    }
+}
+
+# my local database office
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',  # Use MySQL database engine
-#         'NAME': 'articles',  # Database name
+#         'NAME': 'articlesDB',  # Database name
 #         'USER': 'root',  # Database username
-#         'PASSWORD': 'root',  # Database password
+#         'PASSWORD': 'Mobiloitte1',  # Database password
 #         'HOST': 'localhost',  # MySQL database host
 #         'PORT': '3306',  # MySQL default port
 #     }
 # }
-# for raj
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 
 # Email Backend for development (using console for testing)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

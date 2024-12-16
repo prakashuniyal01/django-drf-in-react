@@ -235,25 +235,40 @@ class UserUpdateView(APIView):
             return None
 
     def patch(self, request, user_id, *args, **kwargs):
-        return self.update_user(request, user_id, partial=True)
-
-    def put(self, request, user_id, *args, **kwargs):
-        return self.update_user(request, user_id, partial=False)
-
-    def update_user(self, request, user_id, partial):
         try:
-            # Retrieve the user object based on the provided user_id
+            # Only authenticated users can access this view
             user = self.get_object(user_id)
             if not user:
                 return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
             # Ensure the logged-in user can only update their own details or the admin
             if request.user != user and not request.user.is_superuser:
-                return Response({"detail": "You are not authorized to update this user's details."}, 
-                                 status=status.HTTP_403_FORBIDDEN)
+                return Response({"detail": "You are not authorized to update this user's details."}, status=status.HTTP_403_FORBIDDEN)
 
-            # Deserialize the request data and update the user object
-            serializer = UserUpdateSerializer(user, data=request.data, partial=partial)
+            serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except ValidationError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def put(self, request, user_id, *args, **kwargs):
+        try:
+            # Only authenticated users can access this view
+            user = self.get_object(user_id)
+            if not user:
+                return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            # Ensure the logged-in user can only update their own details or the admin
+            if request.user != user and not request.user.is_superuser:
+                return Response({"detail": "You are not authorized to update this user's details."}, status=status.HTTP_403_FORBIDDEN)
+
+            serializer = UserUpdateSerializer(user, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
