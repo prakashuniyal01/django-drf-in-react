@@ -255,8 +255,8 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '182.71.75.106','172.16.1.
 
 # cors hadder 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite development server
-    "http://127.0.0.1:5173", # Alternative localhost
+    "http://localhost:3000",  # Vite development server
+    "http://127.0.0.1:3000", # Alternative localhost
     "http://localhost:8001",  # Vite development server
     "http://127.0.0.1:8001", # Alternative localhost
     "http://localhost:8080",  # Vite development server

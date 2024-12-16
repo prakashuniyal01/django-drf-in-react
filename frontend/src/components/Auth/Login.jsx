@@ -1,6 +1,7 @@
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { userLoginApiService } from '../../api/services/authentication.service';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -52,16 +53,14 @@ const Login = () => {
 
     if (validateForm()) {
       setIsLoading(true);
-      try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Form submitted:', formData);
-        // Add your login logic here
-      } catch (error) {
-        console.error('Login error:', error);
-      } finally {
-        setIsLoading(false);
-      }
+      // try {
+      //   const response = await userLoginApiService(formData);
+      //   console.log('Login response:', response);
+      // } catch (error) {
+      //   console.error('Login error:', error);
+      // } finally {
+      //   setIsLoading(false);
+      // }
     }
   };
 
