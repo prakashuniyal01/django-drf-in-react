@@ -11,7 +11,6 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const validateForm = () => {
     const newErrors = {};
 
@@ -53,14 +52,14 @@ const Login = () => {
 
     if (validateForm()) {
       setIsLoading(true);
-      // try {
-      //   const response = await userLoginApiService(formData);
-      //   console.log('Login response:', response);
-      // } catch (error) {
-      //   console.error('Login error:', error);
-      // } finally {
-      //   setIsLoading(false);
-      // }
+      try {
+        const response = await userLoginApiService(formData);
+        console.log('Login response:', response);
+      } catch (error) {
+        console.error('Login error:', error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
