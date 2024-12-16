@@ -148,14 +148,21 @@ PASSWORD_HASHERS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # my local database home 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',  # Use MySQL database engine
+#         'NAME': 'articles',  # Database name
+#         'USER': 'root',  # Database username
+#         'PASSWORD': 'root',  # Database password
+#         'HOST': 'localhost',  # MySQL database host
+#         'PORT': '3306',  # MySQL default port
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Use MySQL database engine
-        'NAME': 'articles',  # Database name
-        'USER': 'root',  # Database username
-        'PASSWORD': 'root',  # Database password
-        'HOST': 'localhost',  # MySQL database host
-        'PORT': '3306',  # MySQL default port
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -170,6 +177,7 @@ DATABASES = {
 #         'PORT': '3306',  # MySQL default port
 #     }
 # }
+
 
 # Email Backend for development (using console for testing)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
