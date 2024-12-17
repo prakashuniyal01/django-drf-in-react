@@ -10,3 +10,11 @@ export const AuthEndpoints = {
   forgetOtp: "/users/forget-otp/",
   changePassword: "/users/change-password/",
 };
+
+export const ArticleEndpoints = {
+  list: "/articles/",
+  create: "/articles/",
+  detail: "/articles/{id}/",
+  update: "/articles/{id}/",
+  delete: "/articles/{id}/",
+};
