@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Search, Edit, Trash2, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Edit, Plus, Search, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const sampleArticles = [
   { id: 1, title: 'Getting Started with React', status: 'published', author: 'John Doe', date: '2024-12-15', category: 'Tutorial' },
@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const itemsPerPage = 4;
 
@@ -47,8 +48,18 @@ const Dashboard = () => {
     }
   };
 
+  useEffect(() => {
+    const userToken = localStorage.getItem('token');
+    const userInfo = localStorage.getItem('userInfo');
+    if (!userToken && !userInfo) {
+      window.location.href = '/login';
+    } else {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className={`min-h-screen bg-gray-50 p-8 ${!isLoggedIn ? 'hidden' : ''}`}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
