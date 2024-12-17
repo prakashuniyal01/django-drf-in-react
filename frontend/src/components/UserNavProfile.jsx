@@ -4,27 +4,23 @@ import { useNavigate } from 'react-router-dom';
 
 const UserNavProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [loggedInUserInfo, setLoggedInUserInfo] = useState();
+  const [loggedInUserInfo, setLoggedInUserInfo] = useState({
+    full_name: '',
+    role: '',
+    email: '',
+  });
 
   const navigator = useNavigate();
-
-  // Sample user data - replace with your actual user data
-  const user = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'Admin'
-  };
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (!userInfo) {
       navigator('/login');
     }
-    console.log(userInfo);
     setLoggedInUserInfo(userInfo);
-  }, []);
 
-  console.log(loggedInUserInfo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="relative">
@@ -35,7 +31,7 @@ const UserNavProfile = () => {
       >
         <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
           <span className="text-white text-sm font-medium">
-            {user.name.split(' ').map(n => n[0]).join('')}
+            {loggedInUserInfo.full_name.split(' ').map(n => n[0]).join('')}
           </span>
         </div>
         <div className="hidden md:block text-left">
