@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, Edit, Plus, Search, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { ArticleFormPopup } from '../components/Form/ArticleFormPopup';
 
 const sampleArticles = [
   { id: 1, title: 'Getting Started with React', status: 'published', author: 'John Doe', date: '2024-12-15', category: 'Tutorial' },
@@ -15,6 +16,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [articleFormPopupOn, setArticleFormPopupOn] = useState(false);
 
   const itemsPerPage = 4;
 
@@ -91,11 +93,13 @@ const Dashboard = () => {
               <option value="draft">Draft</option>
               <option value="review">In Review</option>
             </select>
-
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
-              <Plus className="h-5 w-5" />
-              <span>New Article</span>
-            </button>
+            <div>
+              <button onClick={() => setArticleFormPopupOn(!articleFormPopupOn)} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
+                <Plus className="h-5 w-5" />
+                <span>Add Article</span>
+              </button>
+              <ArticleFormPopup isOpen={articleFormPopupOn} onClose={() => setArticleFormPopupOn(false)} />
+            </div>
           </div>
         </div>
 

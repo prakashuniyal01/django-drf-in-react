@@ -96,7 +96,6 @@ const ArticlesList = () => {
 
   const getAllArticlesHandler = async () => {
     const response = await getArticles();
-    console.log(response);
     setAllArticles(response.data);
   };
 
