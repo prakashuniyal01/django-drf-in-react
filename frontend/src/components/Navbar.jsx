@@ -1,18 +1,27 @@
-import  { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import UserNavProfile from "./UserNavProfile";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    const useInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (useInfo) {
+      setUserLoggedIn(true);
+    }
+  }, []);
+
   return (
     <nav className="p-4 text-white bg-blue-600">
       <div className="container flex items-center justify-between mx-auto">
         {/* Logo */}
-        <h1 className="text-xl font-bold">Article Management</h1>
+        <Link to="/" className="text-xl font-bold">Article Management</Link>
 
         {/* Toggle Button */}
         <button
@@ -54,25 +63,30 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <ul
-          className={`${
-            isOpen ? "block" : "hidden"
-          } md:flex md:space-x-4 absolute md:relative top-16 md:top-0 left-0 md:left-auto w-full md:w-auto bg-blue-600 md:bg-transparent`}
+          className={`${isOpen ? "block" : "hidden"
+            } md:flex md:space-x-4 absolute md:relative top-16 md:top-0 left-0 md:left-auto w-full md:w-auto bg-blue-600 md:bg-transparent`}
         >
-          <li className="p-2 text-center md:p-0 md:text-left">
-            <Link to="/" className="hover:text-yellow-300">
-              Home
-            </Link>
-          </li>
-          <li className="p-2 text-center md:p-0 md:text-left">
-            <Link to="/login" className="hover:text-yellow-300">
-              Login
-            </Link>
-          </li>
-          <li className="p-2 text-center md:p-0 md:text-left">
-            <Link to="/signup" className="hover:text-yellow-300">
-              Signup
-            </Link>
-          </li>
+          {!userLoggedIn ? (
+            <Fragment>
+              <li className="p-2 text-center md:p-0 md:text-left">
+                <Link to="/" className="hover:text-yellow-300">
+                  Home
+                </Link>
+              </li>
+              <li className="p-2 text-center md:p-0 md:text-left">
+                <Link to="/login" className="hover:text-yellow-300">
+                  Login
+                </Link>
+              </li>
+              <li className="p-2 text-center md:p-0 md:text-left">
+                <Link to="/signup" className="hover:text-yellow-300">
+                  Signup
+                </Link>
+              </li>
+            </Fragment>
+          ) : (
+            <UserNavProfile />
+          )}
         </ul>
       </div>
     </nav>
