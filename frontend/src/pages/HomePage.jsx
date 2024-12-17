@@ -1,8 +1,8 @@
 import { Fragment, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ArticlesList from "../components/Article/ArticleList";
-import Carousel from "../components/Carousel";
 import CategoryTagForm from "../components/CategoryAndTagForm";
+import HeroSection from "../components/HeroSection";
 
 const HomePage = () => {
 
@@ -16,13 +16,14 @@ const HomePage = () => {
       navigator("/admin");
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Fragment>
       <section className="w-full">
         <div className="w-[100%]">
-          <Carousel />
+          <HeroSection />
         </div>
         <div className="w-full flex justify-center items-center flex-col my-3 mt-3">
           <div className="my-3">

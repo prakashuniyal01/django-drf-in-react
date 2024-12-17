@@ -78,6 +78,7 @@ const Login = () => {
     if (userInfo) {
       navigator('/admin');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -179,7 +180,9 @@ const Login = () => {
 
           {/* Submit Button */}
           <button
-            onClick={() => navigator('/admin')}
+            onClick={() => {
+              window.location.href = '/admin';
+            }}
             type="submit"
             disabled={isLoading}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -196,7 +199,7 @@ const Login = () => {
 
           {/* Sign Up Link */}
           <p className="text-center text-sm text-gray-600">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
               Sign up
             </Link>

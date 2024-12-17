@@ -89,9 +89,13 @@ const UserNavProfile = () => {
 
             <button
               className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
-              onClick={() => console.log('Logout clicked')}
+              onClick={() => {
+                localStorage.removeItem('userInfo');
+                window.location.href = '/login';
+              }}
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut
+                className="h-4 w-4" />
               Log out
             </button>
           </div>
