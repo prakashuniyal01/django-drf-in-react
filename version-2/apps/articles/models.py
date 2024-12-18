@@ -1,14 +1,14 @@
 from django.db import models
 from django.utils.timezone import now
 from django.conf import settings
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator,MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
+from decimal import Decimal
 
 User = settings.AUTH_USER_MODEL
-
 
 class Category(models.Model):
     """
@@ -29,7 +29,34 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+class Country(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+
+
+class State(models.Model):
+    name = models.CharField(max_length=100)
+    country = models.ForeignKey(Country, related_name='states', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ['name', 'country']
+
+    def __str__(self):
+        return f"{self.name}, {self.country.name}"
+
+
+class City(models.Model):
+    name = models.CharField(max_length=100)
+    state = models.ForeignKey(State, related_name='cities', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ['name', 'state']
+
+    def __str__(self):
+        return f"{self.name}, {self.state.name}, {self.state.country.name}"
+    
 class Article(models.Model):
     """
     Represents an article in the system.
@@ -42,8 +69,8 @@ class Article(models.Model):
         ('published', 'Published'),
     ]
 
-    title = models.CharField(max_length=200)
-    subtitle = models.CharField(max_length=200, null=True, blank=True)
+    title = models.TextField()
+    subtitle = models.TextField()
     content = models.TextField()
     author = models.ForeignKey(
         User,
@@ -51,19 +78,9 @@ class Article(models.Model):
         null=True,
         related_name='articles'
     )
-    # Image field with size and type validation
-    image = models.ImageField(
-        upload_to='articles/images/', 
-        null=True, 
-        blank=True, 
-        validators=[
-            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png']),
-        ]
-    )
-
     publish_date = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -77,6 +94,19 @@ class Article(models.Model):
         related_name='reviewed_articles'
     )
     approved_at = models.DateTimeField(null=True, blank=True)
+    # Location Fields
+    city = models.ForeignKey(City, null=True, blank=True, on_delete=models.SET_NULL)
+    latitude = models.DecimalField(
+        max_digits=9, decimal_places=6,
+        validators=[MinValueValidator(Decimal('-90.0')), MaxValueValidator(Decimal('90.0'))],
+        null=True, blank=True
+    )
+    longitude = models.DecimalField(
+        max_digits=9, decimal_places=6,
+        validators=[MinValueValidator(Decimal('-180.0')), MaxValueValidator(Decimal('180.0'))],
+        null=True, blank=True
+    )
+    
     categories = models.ManyToManyField(
         'Category',
         related_name='articles'
@@ -85,29 +115,30 @@ class Article(models.Model):
         'Tag',
         related_name='articles'
     )
+    images = models.ManyToManyField(
+        'ArticleImage',  # Reference to the ArticleImage model
+        related_name='articles_images',  # Changed related_name to avoid conflict
+        blank=True  # Allow articles without images
+    )
+    
     deleted_at = models.DateTimeField(null=True, blank=True)
     
+    # Agreed to terms field (if necessary)
+    agreed_to_terms = models.BooleanField(default=False)
+
     def clean(self):
-        # Custom validation for publish_date
         if self.publish_date and self.publish_date <= now().date():
             raise ValidationError('Publish date must be in the future.')
 
-        # Validation for terms agreement
         if not self.agreed_to_terms:
             raise ValidationError('You must agree to the terms.')
 
-        # Optional: additional validation to ensure the image is under a certain size
-        if self.image:
-            file_size = self.image.size  # In bytes
-            if file_size > 5 * 1024 * 1024:  # 5 MB size limit
-                raise ValidationError("Image file size must be less than 5MB.")
-            elif file_size < 100 * 1024:  # 100 KB size limit
-                raise ValidationError("Image file size must be at least 100KB.")
-            
+        if not self.categories.exists():
+            raise ValidationError("At least one category must be selected.")
+        if not self.tags.exists():
+            raise ValidationError("At least one tag must be selected.")
+
     def save(self, *args, **kwargs):
-        """
-        Automatically set `approved_at` if the status is 'published'.
-        """
         if self.status == 'published' and not self.approved_at:
             self.approved_at = now()
         super().save(*args, **kwargs)
@@ -121,9 +152,34 @@ class Article(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        
+
+
+class ArticleImage(models.Model):
+    """
+    Represents an image related to an article.
+    """
+    article = models.ForeignKey(
+        'Article',
+        related_name='article_images',  # Changed related_name to avoid conflict
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(
+        upload_to='articles/images/', 
+        validators=[
+            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png']),
+        ]
+    )
+    order = models.PositiveIntegerField(default=0, help_text="Order in which the images appear.")
+    
+    def __str__(self):
+        return f"Image for {self.article.title}"
+
+    class Meta:
+        ordering = ['order']
+
+
 # Signal to send an email notification when an article's status changes
-@receiver(pre_save, sender=Article)
+@receiver(post_save, sender=Article)
 def send_status_change_notification(sender, instance, **kwargs):
     """
     Sends an email notification to the author when the status of an article changes.
@@ -157,7 +213,7 @@ class Comment(models.Model):
         """
         Automatically set `edited` if the content is modified.
         """
-        if self.pk and self.content:
+        if self.pk:
             original = Comment.objects.get(pk=self.pk)
             if original.content != self.content:
                 self.edited = True
@@ -198,7 +254,6 @@ class Like(models.Model):
             return f"Like by {self.user} on Comment {self.comment.id}"
         return f"Like by {self.user} on Article {self.article.id}"
 
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -211,4 +266,3 @@ class Like(models.Model):
                 name='unique_comment_like'
             )
         ]
-

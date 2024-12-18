@@ -1,65 +1,53 @@
-from rest_framework.permissions import BasePermission
-from rest_framework import permissions
 from rest_framework import permissions
 
-class IsAdminOrEditor(permissions.BasePermission):
+class IsAdmin(permissions.BasePermission):
     """
-    Custom permission to only allow access to Admin or Editor users.
-    """
-
-    def has_permission(self, request, view):
-        # Allow all users to view published articles (GET method)
-        if request.method == 'GET':
-            # Check if the article is published
-            if view.kwargs.get('article_status') == 'published':  # Adjust this according to your model logic
-                return True
-        
-        # Check if the user is authenticated and has the required role for non-GET methods (edit, delete, etc.)
-        if request.user.is_authenticated:
-            return request.user.role in ["admin", "editor"]
-        
-        return False
-
-
-class IsAdminOrJournalist(permissions.BasePermission):
-    """
-    Custom permission to allow only Admins or Journalists.
+    Permission for Admins who can do all CRUD operations.
     """
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role in ["admin", "journalist"]
+        return request.user.role == 'admin'
 
 
-class IsEditorOrAdmin(permissions.BasePermission):
+class IsJournalist(permissions.BasePermission):
     """
-    Allows access to Admins and Editors only.
+    Permission for Journalists to allow CRUD on their own articles.
     """
     def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return request.user.role in ["admin", "editor"]
-        return False
+        # Only allow CRUD if user is a journalist
+        return request.user.role == 'journalist'
 
-
-class IsAuthorOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission to only allow authors of an object to edit or delete it.
-    Admin users can modify anything.
-    """
     def has_object_permission(self, request, view, obj):
+        # Journalists can only access their own articles
         if request.method in permissions.SAFE_METHODS:
             return True
-        return obj.author == request.user or request.user.is_staff
-    
-class IsAdminOnly(BasePermission):
+        return obj.author == request.user
+
+
+class IsEditor(permissions.BasePermission):
     """
-    Custom permission to allow only Admin users to perform any action.
+    Permission for Editors to change the status of articles but not create, read, or delete them.
     """
     def has_permission(self, request, view):
-        # Allow GET requests to all authenticated users
-        if request.method == 'GET':
+        return request.user.role == 'editor'
+
+    def has_object_permission(self, request, view, obj):
+        # Editors can only update the status of articles
+        if request.method == 'PATCH':
+            if 'status' in request.data:
+                return True
+        return False
+
+
+class IsPublishedOrAuthenticated(permissions.BasePermission):
+    """
+    Read-only permission for users to view published articles.
+    """
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:  # GET requests (read)
             return True
-        
-        # For all other methods (POST, PUT, DELETE), allow only Admins
-        if request.user.is_authenticated:
-            return request.user.is_superuser  # Only Admins (is_staff=True) can modify data
-        
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:  # GET requests (read)
+            return obj.status == 'published'  # Only published articles can be read
         return False
