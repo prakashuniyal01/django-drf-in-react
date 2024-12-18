@@ -1,0 +1,40 @@
+# Ignore Python bytecode files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environment
+venv/
+env/
+.venv/
+
+# Ignore Django migrations folder (if you're generating new migrations locally)
+apps/articles/migrations/
+apps/users/migrations/
+
+# Ignore logs and database files
+*.log
+*.sqlite3
+db.sqlite3
+
+# Ignore media and static files (if not needed in the Docker image)
+media/
+static/
+
+# Ignore the build, temporary, and system files
+*.bak
+*.swp
+*.swo
+
+# Ignore the .git directory
+.git/
+.gitmodules
+
+# Ignore IDE or editor configuration files (like VSCode, PyCharm, etc.)
+.vscode/
+.idea/
+
+# Ignore Docker and Docker Compose configuration files (optional)
+docker-compose.override.yml
+Dockerfile.*

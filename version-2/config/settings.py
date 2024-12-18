@@ -162,12 +162,25 @@ PASSWORD_HASHERS = [
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# postgrass database settings
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'articledb',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'db',  # This matches the service name in docker-compose.yml
+        'PORT': '5432',
     }
 }
+
 
 # my local database office
 # DATABASES = {
