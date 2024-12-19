@@ -84,7 +84,7 @@ class Article(models.Model):
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
-        default='draft'
+        default='pending'
     )
     reviewed_by = models.ForeignKey(
         User,
