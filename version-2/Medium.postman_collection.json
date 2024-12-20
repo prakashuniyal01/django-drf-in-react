@@ -1,0 +1,2474 @@
+{
+	"info": {
+		"_postman_id": "0a8ba019-2084-4a02-84bd-f03befcdbeee",
+		"name": "Medium",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39675801",
+		"_collection_link": "https://article-management-9598.postman.co/workspace/article-management-Workspace~8b620a57-58ed-49b2-840b-c20e2ec33fc7/collection/39675801-0a8ba019-2084-4a02-84bd-f03befcdbeee?action=share&source=collection_link&creator=39675801"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "admins",
+					"item": [
+						{
+							"name": "admin all users list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkyMTE3LCJpYXQiOjE3MzQ1MDU3MTcsImp0aSI6ImRkMWRmYmZlZGUwMDQ2YmI4NWIzODEwZjY1NjFmMzlhIiwidXNlcl9pZCI6MX0.hs8sow-9Hr-rT6mCREV1stEtQVCml-L2TI42cM-MjsE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/users/admin/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"admin",
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin one user get",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkyMTE3LCJpYXQiOjE3MzQ1MDU3MTcsImp0aSI6ImRkMWRmYmZlZGUwMDQ2YmI4NWIzODEwZjY1NjFmMzlhIiwidXNlcl9pZCI6MX0.hs8sow-9Hr-rT6mCREV1stEtQVCml-L2TI42cM-MjsE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/users/admin/users/2/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"admin",
+										"users",
+										"2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin create user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkyMTE3LCJpYXQiOjE3MzQ1MDU3MTcsImp0aSI6ImRkMWRmYmZlZGUwMDQ2YmI4NWIzODEwZjY1NjFmMzlhIiwidXNlcl9pZCI6MX0.hs8sow-9Hr-rT6mCREV1stEtQVCml-L2TI42cM-MjsE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"full_name\" : \"akash editor\",\n    \"email\": \"uniyalprakash7@gmail.com\",\n    \"password\": \"Mobiloitte@1\",\n    \"confirm_password\": \"Mobiloitte@1\",\n    \"role\": \"editor\",\n    \"number\": \"8979444472\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/admin/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"admin",
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "varify users",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"uniyalprakash7@gmail.com\",\n    \"otp\": \"205090\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/users/register-verify-otp/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"register-verify-otp",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin update users",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkyMTE3LCJpYXQiOjE3MzQ1MDU3MTcsImp0aSI6ImRkMWRmYmZlZGUwMDQ2YmI4NWIzODEwZjY1NjFmMzlhIiwidXNlcl9pZCI6MX0.hs8sow-9Hr-rT6mCREV1stEtQVCml-L2TI42cM-MjsE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"full_name\": \"prakash journalist\",\n    \"email\": \"prakash03uniyal@gmail.com\",\n    \"number\": \"8979403859\",\n    \"role\": \"journalist\",\n    \"is_active\": true,\n    \"is_staff\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/admin/users/2/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"admin",
+										"users",
+										"2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin change any thing",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkyMTE3LCJpYXQiOjE3MzQ1MDU3MTcsImp0aSI6ImRkMWRmYmZlZGUwMDQ2YmI4NWIzODEwZjY1NjFmMzlhIiwidXNlcl9pZCI6MX0.hs8sow-9Hr-rT6mCREV1stEtQVCml-L2TI42cM-MjsE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"full_name\": \"prakash journalist\",\n    \"email\": \"prakash03uniyal@gmail.com\",\n    \"number\": \"8979403859\",\n    \"role\": \"journalist\",\n    \"is_active\": true,\n    \"is_staff\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/admin/users/2/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"admin",
+										"users",
+										"2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin user deleted",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkyMTE3LCJpYXQiOjE3MzQ1MDU3MTcsImp0aSI6ImRkMWRmYmZlZGUwMDQ2YmI4NWIzODEwZjY1NjFmMzlhIiwidXNlcl9pZCI6MX0.hs8sow-9Hr-rT6mCREV1stEtQVCml-L2TI42cM-MjsE",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/users/admin/users/4/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"admin",
+										"users",
+										"4",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "resister user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\" : \"prakash admin\",\n    \"email\": \"prakashrawat485@gmail.com\",\n    \"password\": \"Mobiloitte@1\",\n    \"confirm_password\": \"Mobiloitte@1\",\n    \"role\": \"admin\",\n    \"number\": \"8979449743\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/register/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register user verify",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakashrawat485@gmail.com\",\n    \"otp\": \"491284\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/register-verify-otp/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"register-verify-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"uniyalprakash7@gmail.com\",\n    \"password\": \"Mobiloitte@1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkwNTc4LCJpYXQiOjE3MzQ1MDQxNzgsImp0aSI6IjdjYzY5MDY0ZWViODQ3ODg4YzQ3ODZjMTIzNmVjNmZkIiwidXNlcl9pZCI6M30.tSpDkFLOTTxC9ISIHRAa0TdC-raUkxxPkEjFk2voiu0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\" : \"prakash editors\",\n    \"email\": \"prakashrawat485@gmail.com\",\n    \"number\" : \"890503934\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/user/3/update/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"user",
+								"3",
+								"update",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user patch profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkwNTc4LCJpYXQiOjE3MzQ1MDQxNzgsImp0aSI6IjdjYzY5MDY0ZWViODQ3ODg4YzQ3ODZjMTIzNmVjNmZkIiwidXNlcl9pZCI6M30.tSpDkFLOTTxC9ISIHRAa0TdC-raUkxxPkEjFk2voiu0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"prakash editor\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/user/3/update/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"user",
+								"3",
+								"update",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user change passhowr",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTkwNTc4LCJpYXQiOjE3MzQ1MDQxNzgsImp0aSI6IjdjYzY5MDY0ZWViODQ3ODg4YzQ3ODZjMTIzNmVjNmZkIiwidXNlcl9pZCI6M30.tSpDkFLOTTxC9ISIHRAa0TdC-raUkxxPkEjFk2voiu0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"old_password\": \"Mobi@123\",\n    \"new_password\": \"Mobiloitte@1\",\n    \"confirm_password\": \"Mobiloitte@1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/change-password/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"change-password",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user Forget password otp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakashrawat485@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/forget-password/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"forget-password",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user forget password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakashrawat485@gmail.com\",\n    \"otp\": \"114687\",\n    \"new_password\": \"Mobiloitte@12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/verify-otp/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"verify-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user resend otp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakash.rawat@mobiloitte.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/resend-otp/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"resend-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8000/users/login/",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakash03uniyal@gmail.com\",\n    \"password\": \"Mobiloitte@1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "articles",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "admin get all articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/admin/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"admin",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "http://127.0.0.1:8000/articles/admin/?page=4",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/admin/?page=4",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"admin",
+										""
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get admin categories",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/categories/admin/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"categories",
+										"admin",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin tags",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/tags/admin/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"tags",
+										"admin",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin get 1 articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/admin/54/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"admin",
+										"54",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin create article",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Tech Innovations in India\",\n    \"subtitle\": \"A deep dive into India's tech growth\",\n    \"content\": \"India is rapidly growing in the tech industry with many innovations...\",\n    \"publish_date\": \"2024-12-23T10:00:00Z\",\n    \"categories_input\": [\n        \"Technology\"\n    ],\n    \"tags_input\": [\n        \"Innovation\",\n        \"Innovationdd\",\n        \"Innovationddd\"\n\n    ],\n    \"city\": {\n        \"name\": \"Bengaluru\",\n        \"state\": {\n            \"name\": \"Karnataka\",\n            \"country\": {\n                \"name\": \"India\"\n            }\n        }\n    },\n    \"latitude\": \"12.9716\",\n    \"longitude\": \"77.5946\",\n    \"agreed_to_terms\": true\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/admin/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"admin",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin categories create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sports\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/categories/admin/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"categories",
+										"admin",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin tags create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sports\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/tags/admin/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"tags",
+										"admin",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin put update articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Tech Innovations in India\",\n    \"subtitle\": \"A deep dive into India's tech growth\",\n    \"content\": \"India is rapidly growing in the tech industry with many innovations...\",\n    \"publish_date\": \"2024-12-23T10:00:00Z\",\n    \"status\": \"published\",\n    \"categories_input\": [\n        \"News\"\n    ],\n    \"tags_input\": [\n        \"tech\",\n        \"main\"\n    ],\n    \"city\": {\n        \"name\": \"New Delhi\",\n        \"state\": {\n            \"name\": \"Delhi\",\n            \"country\": {\n                \"name\": \"India\"\n            }\n        }\n    },\n    \"latitude\": \"28.6139\",\n    \"longitude\": \"77.2090\",\n    \"agreed_to_terms\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/admin/8/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"admin",
+										"8",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin update categories",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\" : \"update cat\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/categories/admin/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"categories",
+										"admin",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin tags update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"update tags\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/tags/admin/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"tags",
+										"admin",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin patch articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"published\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/admin/59/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"admin",
+										"59",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin delete articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/admin/5/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"admin",
+										"5",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin delete tags",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/tags/admin/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"tags",
+										"admin",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin categories",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NjgxNzU0LCJpYXQiOjE3MzQ1OTUzNTQsImp0aSI6ImVlMjZlNzcxM2U5ZDQwMGRiZWEwNmUxOTBmMDcxOTJiIiwidXNlcl9pZCI6MX0.93VRQ-LfwTp-ZFuwzdHi39k9yvqoYQnXOLQU7H6qBEw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/categories/admin/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"categories",
+										"admin",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "all admins route complates"
+				},
+				{
+					"name": "editor",
+					"item": [
+						{
+							"name": "editor get all articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NzAxNzQwLCJpYXQiOjE3MzQ2MTUzNDAsImp0aSI6IjdlYTE1MDdjNTExOTQyMGU4Y2I3NzQ3NmQ3NThkMDljIiwidXNlcl9pZCI6M30.myydCF_1gw_tQ1Y2z8MvSjmPX7A5UGN6UP-YbalDECs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editor get 1 articles",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NzAxNzQwLCJpYXQiOjE3MzQ2MTUzNDAsImp0aSI6IjdlYTE1MDdjNTExOTQyMGU4Y2I3NzQ3NmQ3NThkMDljIiwidXNlcl9pZCI6M30.myydCF_1gw_tQ1Y2z8MvSjmPX7A5UGN6UP-YbalDECs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/65/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"65",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "editor change articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0Njk5NjQ3LCJpYXQiOjE3MzQ2MTMyNDcsImp0aSI6ImVkYzUzN2NkYWE5ZDQyNDRiNDNkOTc4Yjc0ODVhNjNiIiwidXNlcl9pZCI6Mn0.M1lEn74eqohZqLFMoPSO0039-K8pCq3VUhlhsbsPmqM",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"approved\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/65/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"65",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "### Sample Scenarios:\n\n1. **From** **`pending`**:\n    \n    - Allowed: `approved`, `rejected`.\n        \n    - Not Allowed: `published`.\n        \n2. **From** **`approved`**:\n    \n    - Allowed: `published`.\n        \n    - Not Allowed: `rejected`, `pending`.\n        \n3. **From** **`published`**:\n    \n    - Allowed: `rejected`.\n        \n    - Not Allowed: `pending`, `approved`.\n        \n4. **From** **`rejected`**:\n    \n    - Not Allowed: Any transition."
+				},
+				{
+					"name": "journalist",
+					"item": [
+						{
+							"name": "get articles on journalist own",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NzU2NDU1LCJpYXQiOjE3MzQ2NzAwNTUsImp0aSI6ImVhMzJiZDc0MjlkNzRmMjM4OTY2YTI2OGY4ZGRmYWQ4IiwidXNlcl9pZCI6Mn0.z77rquD5LcFbGzD6Xi6HD6ksXQwT6GoiGH-kkXHvmkU",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "journalist get one articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0Njk5NjQ3LCJpYXQiOjE3MzQ2MTMyNDcsImp0aSI6ImVkYzUzN2NkYWE5ZDQyNDRiNDNkOTc4Yjc0ODVhNjNiIiwidXNlcl9pZCI6Mn0.M1lEn74eqohZqLFMoPSO0039-K8pCq3VUhlhsbsPmqM",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/59/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"59",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "journalist post request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NzU2NDU1LCJpYXQiOjE3MzQ2NzAwNTUsImp0aSI6ImVhMzJiZDc0MjlkNzRmMjM4OTY2YTI2OGY4ZGRmYWQ4IiwidXNlcl9pZCI6Mn0.z77rquD5LcFbGzD6Xi6HD6ksXQwT6GoiGH-kkXHvmkU",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Tech Innovations in India\",\n    \"subtitle\": \"A deep dive into India's tech growth\",\n    \"content\": \"India is rapidly growing in the tech industry with many innovations...\",\n    \"publish_date\": \"2024-12-23T10:00:00Z\",\n    \"categories_input\": [\n        \"Technologydad\"\n    ],\n    \"tags_input\": [\n        \"Innovation\"\n    ],\n    \"city\": {\n        \"name\": \"New Delhi\",\n        \"state\": {\n            \"name\": \"Delhi\",\n            \"country\": {\n                \"name\": \"Indida\"\n            }\n        }\n    },\n    \"latitude\": \"28.6139\",\n    \"longitude\": \"77.2090\",\n    \"agreed_to_terms\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/articles/articles/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "journalist put request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0Njk5NjQ3LCJpYXQiOjE3MzQ2MTMyNDcsImp0aSI6ImVkYzUzN2NkYWE5ZDQyNDRiNDNkOTc4Yjc0ODVhNjNiIiwidXNlcl9pZCI6Mn0.M1lEn74eqohZqLFMoPSO0039-K8pCq3VUhlhsbsPmqM",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Tech Innovations in India\",\n    \"subtitle\": \"A deep dive into India's tech growth\",\n    \"content\": \"India is rapidly growing in the tech industry with many innovations...\",\n    \"publish_date\": \"2024-12-23T10:00:00Z\",\n    \"categories_input\": [\n        \"Technologydadad\"\n    ],\n    \"tags_input\": [\n        \"Innovadstion\"\n    ],\n    \"city\": {\n        \"name\": \"New Delhi\",\n        \"state\": {\n            \"name\": \"Delhi\",\n            \"country\": {\n                \"name\": \"Indida\"\n            }\n        }\n    },\n    \"latitude\": \"28.6139\",\n    \"longitude\": \"77.2090\",\n    \"agreed_to_terms\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/articles/articles/63/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"63",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "journalist delete articles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0Njk5NjQ3LCJpYXQiOjE3MzQ2MTMyNDcsImp0aSI6ImVkYzUzN2NkYWE5ZDQyNDRiNDNkOTc4Yjc0ODVhNjNiIiwidXNlcl9pZCI6Mn0.M1lEn74eqohZqLFMoPSO0039-K8pCq3VUhlhsbsPmqM",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/articles/articles/63/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"articles",
+										"articles",
+										"63",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "### Key Functionalities:\n\n1. **Journalist**:\n    \n    - Can create, update, and delete their articles.\n        \n    - Cannot update or delete articles once they are `approved` or `published`.\n        \n    - Cannot change the status of any article."
+				},
+				{
+					"name": "get all published articles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/articles/published/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								"articles",
+								"published",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "gat 1 published article details",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "test faltu",
+			"item": [
+				{
+					"name": "registore request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\" : \"prakash rawat\",\n    \"email\": \"prakash.rawat@mobiloitte.com\",\n    \"password\": \"Mobiloitte@1\",\n    \"confirm_password\": \"Mobiloitte@1\",\n    \"role\": \"admin\",\n    \"number\": \"8979049772\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/register/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "otp account varification",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakash.rawat@mobiloitte.com\",\n    \"otp\": \"626494\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/register-verify-otp/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"register-verify-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registore request Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\" : \"prakash uniyal\",\n    \"email\": \"prakash04uniyal@gmail.com\",\n    \"password\": \"Mobiloitte@1\",\n    \"confirm_password\": \"Mobiloitte@1\",\n    \"role\": \"user\",\n    \"number\": \"8273049773\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/register/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"uniyalprakash7@gmail.com\",\n    \"password\": \"Mobiloitte@1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login request Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"akhil\",\n    \"password\": \"akhil\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login request Copy 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"akhil\",\n    \"password\": \"akhil\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user profile put update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzEyODExLCJpYXQiOjE3MzMyMjY0MTEsImp0aSI6IjE0N2E4NTQ1Zjg0ZjRhZTc5YzgxZGFmYzhhZjE1ODJkIiwidXNlcl9pZCI6M30.bFIAtoCMupNPf7gPtrnLJCb2C8Wl5GZBSoGo3eTySD4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"sahil@example.com\",\n    \"password\": \"sahil@123\",\n    \"number\": 97059403950\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/user/3/update/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"user",
+								"3",
+								"update",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user profile petch",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMDk1Nzg2LCJpYXQiOjE3MzIwOTQ4ODYsImp0aSI6ImI0YjNhNWFkMWNhZjQ4NjI5YTNmNTY2YmMzODM4YzA2IiwidXNlcl9pZCI6Nn0.PNOMSEN823MxR5LetHqCc9OFWGIE8kZVxrdkccmTCvo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"sahil singhhgdddd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/user/6/update/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"user",
+								"6",
+								"update",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "otp send",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"maan03saab@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/forget-otp/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"forget-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "validate otps",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakashrawat485@gmail.com\",\n    \"otp\": \"456720\",\n    \"new_password\": \"GUR203as@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/verify-otp/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"verify-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resend otp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"prakashrawat485@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/resend-otp/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"resend-otp",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzE1NTY1LCJpYXQiOjE3MzMyMjkxNjUsImp0aSI6ImEwMTYyOTNlZDUxNjRlNzVhMTE0NmNiMzYwMWY4YTIyIiwidXNlcl9pZCI6Mn0.iZKnoxX6HvNwrpvHMgeggna-Z_9MQ4HTEt0XM-S21kQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"old_password\": \"Mobiloitte@12\",\n    \"new_password\": \"Madsssss@1as\",\n    \"confirm_password\": \"Madsssss@1as\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/change-password/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"change-password",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "articles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzA0NjYyLCJpYXQiOjE3MzMyMTgyNjIsImp0aSI6IjkzOGRhYTdlZjFlMzQ2ZmViMTE4MzgwOWRmNjllZTlmIiwidXNlcl9pZCI6M30.g1ngNh5WlMF5aXOijoBdXrE4-f-z5Iqlp8wGB90yO38",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n        \"title\": \"Cloud Computing: An Introduction\",\n        \"subtitle\": \"Why Cloud Is the Future\",\n        \"content\": \"Cloud computing has become a cornerstone of modern IT infrastructure. Explore the basics of cloud technology, its types, benefits, and how businesses are leveraging it for scalability and efficiency.\",\n        \"categories\": [\"technology\", \"cloud\"],\n        \"tags\": [\"cloud computing\", \"technology\", \"IT\", \"business\"],\n        \"image_url\": \"https://picsum.photos/200/304\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editor end point",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzE3MzgzLCJpYXQiOjE3MzMyMzA5ODMsImp0aSI6IjUyMjZmNDNjNjMzYTRhZjU5ZTMyMTQyNTkxNzVkMzZkIiwidXNlcl9pZCI6NH0.DFUGQtwHxf8FphWHoOWhJKfXQu8kQdfapRFz1SwVmY0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"published\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/19/approve/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								"19",
+								"approve",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "articles update patch",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNDc2MTM5LCJpYXQiOjE3MzMzODk3MzksImp0aSI6IjU1ZjE0MmNlMjAwZjRjN2NhNjJmMmQ4MzcxYmE3NGQ1IiwidXNlcl9pZCI6NH0.7NA7Ci1CaxvP9Pru6nuomJX9rBtpuHDG6Q6f385ZzW0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"test\",\n    \"subtitle\": \"test\",\n    \"content\": \"test\",\n    \"image_url\": null,\n    \"tags\": [\"test\"],\n    \"categories\": [\"test\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/article/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"article",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "articles delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzE3MzgzLCJpYXQiOjE3MzMyMzA5ODMsImp0aSI6IjUyMjZmNDNjNjMzYTRhZjU5ZTMyMTQyNTkxNzVkMzZkIiwidXNlcl9pZCI6NH0.DFUGQtwHxf8FphWHoOWhJKfXQu8kQdfapRFz1SwVmY0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/19/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								"19",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "articles",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTg2MDcyLCJpYXQiOjE3MzQ0OTk2NzIsImp0aSI6IjdiZmJjMzVkNjVlYTRkZjJiNmIyYTVjYmFiOTE5Yzk5IiwidXNlcl9pZCI6MX0.vMUYvbyn35AayWW5ZflaOHwIGsVMTDNBm6tC7PsLR3E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edior content update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzE3MzgzLCJpYXQiOjE3MzMyMzA5ODMsImp0aSI6IjUyMjZmNDNjNjMzYTRhZjU5ZTMyMTQyNTkxNzVkMzZkIiwidXNlcl9pZCI6NH0.DFUGQtwHxf8FphWHoOWhJKfXQu8kQdfapRFz1SwVmY0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This article covers the basics of Django REST Framework (DRF) and how to use it.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/19/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								"19",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request Copy 6",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzE3MDMzLCJpYXQiOjE3MzMyMzA2MzMsImp0aSI6IjVlNGEzMGUxMmFjOTQ5MjE5M2FiZDM3OThhZmQzY2MzIiwidXNlcl9pZCI6NH0.8-5AYsVH5ID1RiEZ29N7itok4TKhy5Pgap0pQKxahyU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\" : \"published\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/19/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								"19",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTEzNDQwLCJpYXQiOjE3MzI1MTI1NDAsImp0aSI6IjcyNjlkMWI5MDQyYTRjMzFhZDI5ZjE0ZDVlYTJjYzU2IiwidXNlcl9pZCI6MX0.0ZBnDcGFxuig07PMvqrKyGT2jyOxeIt7cg9O0_wW_cQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/articles/articles/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"articles",
+								"articles",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzEwNTA5LCJpYXQiOjE3MzMyMjQxMDksImp0aSI6IjNhYjdhYjliM2UwZDRhMmE5M2Q3NTk0N2Y0YjEwOTExIiwidXNlcl9pZCI6M30.badLelwmoXXzRvsYVTsLX0DHjby4VWTLFdvBloAFOjA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "search Copy",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get all published articles Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/articles/articles/published/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"articles",
+						"articles",
+						"published",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gat 1 published article details Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/articles/articles/published/64/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"articles",
+						"articles",
+						"published",
+						"64",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -56,15 +56,32 @@ class IsJournalistOrEditor(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return request.user and request.user.role in ['journalist', 'editor']
+        """
+        Allow actions based on user role:
+        - Journalists: Can create, update, delete, and view their own articles.
+        - Editors: Can view all articles and update their status, but cannot create articles.
+        """
+        if request.user.role == 'journalist':
+            return True  # Journalists can access all actions for their own articles.
+
+        if request.user.role == 'editor':
+            # Editors can only view or update status.
+            return view.action in ['list', 'retrieve', 'change_status']
+
+        return False
 
     def has_object_permission(self, request, view, obj):
-        # Journalists can only modify their own articles
+        """
+        Define object-level permissions:
+        - Journalists: Can modify their own articles, with restrictions.
+        - Editors: Can view all articles and update their status.
+        """
         if request.user.role == 'journalist':
+            # Journalists can only modify their own articles.
             return obj.author == request.user
 
-        # Editors can access all objects
         if request.user.role == 'editor':
-            return True
+            # Editors can view and update status but not modify article content.
+            return view.action in ['retrieve', 'change_status']
 
         return False

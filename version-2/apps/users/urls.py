@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import OTPVerificationView, UserRegisterView, LoginView, UserUpdateView, PasswordChangeView, SendOtpView, VerifyOtpView, ResendOTPView, UserDetailView, AdminUserView
-from django.views.generic import TemplateView
+# from django.views.generic import TemplateView
 
 urlpatterns = [
     # User-related views
@@ -12,7 +12,7 @@ urlpatterns = [
     path('user/', UserDetailView.as_view(), name='user-detail'),
     
     # OTP-related views
-    path('forget-otp/', SendOtpView.as_view(), name='forget-otp'),
+    path('forget-password/', SendOtpView.as_view(), name='forget-password'),
     path('verify-otp/', VerifyOtpView.as_view(), name='verify-otp'),
     path('resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
 
@@ -22,15 +22,15 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # JWT token refresh
 
     # Page rendering views
-    path('login-page/', TemplateView.as_view(template_name='login.html'), name='login'),
-    path('register-page/', TemplateView.as_view(template_name='register.html'), name='register'),
+    # path('login-page/', TemplateView.as_view(template_name='login.html'), name='login'),
+    # path('register-page/', TemplateView.as_view(template_name='register.html'), name='register'),
     
-    path('dashboard/admin/', TemplateView.as_view(template_name='dashboard/admin.html'),  name='user-detail'),
-    path('dashboard/editor/', TemplateView.as_view(template_name='dashboard/editor.html'), name='dashboard-editor'),
-    path('dashboard/journalist/', TemplateView.as_view(template_name='dashboard/journalist.html'),  name='user-detail'),
+    # path('dashboard/admin/', TemplateView.as_view(template_name='dashboard/admin.html'),  name='user-detail'),
+    # path('dashboard/editor/', TemplateView.as_view(template_name='dashboard/editor.html'), name='dashboard-editor'),
+    # path('dashboard/journalist/', TemplateView.as_view(template_name='dashboard/journalist.html'),  name='user-detail'),
     
     # Make sure this path is correct for user dashboard
-    path('dashboard/user/', TemplateView.as_view(template_name='dashboard/user.html'), name='user-detail'),
+    # path('dashboard/user/', TemplateView.as_view(template_name='dashboard/user.html'), name='user-detail'),
 
     # Add the following to handle /user/dashboard/
     # path('user/dashboard/', TemplateView.as_view(template_name='dashboard/user.html'), name='user-detail'),

@@ -1,109 +1,138 @@
-## part 1 
+## Article Management System - Readme
 
-Scenario: You have been hired by a media company to develop an internal article management system. Journalists, editors, and administrators will use the system to create, edit, review, and publish articles. The system also includes an API to allow integration with third-party platforms.
+### Overview
+This is an internal article management system designed for a media company. The system supports functionalities for journalists, editors, and administrators to create, edit, review, and publish articles. It also includes an API for integration with third-party platforms.
 
-You need to build the following features in the system:
+---
 
-Part 1: Article Submission Form
-The first task is to create a two-page form that allows journalists to submit articles for review.
+### Features
 
-Form Fields:
+#### Part 1: Article Submission Form
 
-Page 1:
-Title (Text Field)
-Subtitle (Text Field)
-Article Content (Text Area)
-Author Name (Text Field)
-Email Address (Email Field)
-Page 2:
-Article Image (File Upload)
-Tags (Checkboxes for predefined tags like Politics, Sports, Tech, etc.)
-Category (Dropdown with categories like News, Opinion, Feature)
-Publish Date (Date Field, must be a future date)
-Agree to Terms (Checkbox)
-Custom Validation:
+**Form Fields:**
 
-Ensure the title is at least 10 characters long.
-Validate that the publish date is in the future.
-Email field must have a valid format.
-Ensure that the terms checkbox is checked.
-Pagination:
+- **Page 1:**
+  - Title (Text Field)
+  - Subtitle (Text Field)
+  - Article Content (Text Area)
+  - Author Name (Text Field)
+  - Email Address (Email Field)
 
-Implement pagination to split the form across two pages, with the ability to navigate between pages without losing form data.
-Error Handling:
+- **Page 2:**
+  - Article Image (File Upload)
+  - Tags (Checkboxes for predefined tags: Politics, Sports, Tech, etc.)
+  - Category (Dropdown: News, Opinion, Feature)
+  - Publish Date (Date Field, must be a future date)
+  - Agree to Terms (Checkbox)
 
-Display validation errors with user-friendly messages.
-Part 2: Article Management System (Backend & API)
-The second part involves building the backend for managing articles and users, including authentication, CRUD operations, and API integration.
+**Custom Validation:**
 
-Authentication:
+- Title must be at least 10 characters long.
+- Publish date must be a future date.
+- Email field must have a valid format.
+- Terms checkbox must be checked.
 
-Implement user registration, login, and logout functionality.
-Use Django's built-in authentication system.
-Allow users to reset passwords via email.
-Authorization:
+**Pagination:**
+- Split the form into two pages with the ability to navigate between them without losing data.
 
-Three user roles:
-Journalist: Can submit and edit their own articles but cannot publish them.
-Editor: Can review, approve, and publish articles.
-Admin: Has full access to create, edit, delete, and manage users.
-Use Django’s permission system to restrict actions based on roles.
-CRUD Operations:
+**Error Handling:**
+- User-friendly error messages for validation errors.
 
-Create a model called Article with fields such as title, content, author, image, tags, category, and publish_date.
-Journalists can create and edit their own articles.
-Editors can approve, reject, or publish articles.
-Admins can manage articles and users.
-Django Rest Framework (DRF) API:
+---
 
-Create an API for the Article model using DRF.
-Implement CRUD operations via the API.
-Use Token Authentication for the API.
-Restrict API access based on user roles (e.g., only Editors and Admins can approve or publish articles).
-Implement pagination, search, and filtering in the API (e.g., filter articles by category or search by title).
+#### Part 2: Article Management System (Backend & API)
 
-Implement email notifications when an article is submitted for review and when it is approved or rejected.
-Create an endpoint for retrieving a list of published articles, accessible to the public.
+**Authentication:**
+- User registration, login, and logout functionality.
+- Password reset via email.
+- Django's built-in authentication system.
 
-<!-- ======================================= part 2 ========================================= -->
-## part 2 
+**Authorization:**
+- Roles:
+  - **Journalist:** Submit and edit their own articles but cannot publish.
+  - **Editor:** Review, approve, and publish articles.
+  - **Admin:** Full access to create, edit, delete articles and manage users.
+- Role-based permissions using Django’s permission system.
 
-Here is the additional task in the projects which the 2nd group of trainees need to do :
+**CRUD Operations:**
+- Create an `Article` model with fields: title, content, author, image, tags, category, and publish_date.
+- Journalists can create and edit their own articles.
+- Editors can approve, reject, or publish articles.
+- Admins can manage articles and users.
 
-User Roles and Permissions:
+**Django Rest Framework (DRF) API:**
+- CRUD operations for the `Article` model.
+- Token Authentication for API.
+- Role-based access restrictions for API endpoints.
+- Pagination, search, and filtering (e.g., filter by category, search by title).
+- Email notifications for article submission, approval, or rejection.
+- Public endpoint for retrieving published articles.
 
-Permissions: Add role-based permissions using Django's built-in permissions system for Journalist, Editor, and Admin.
-Journalists can only submit and edit their own articles.
-Editors can approve, reject, or publish articles.
-Admins have full access to manage articles and users.
-Implement these roles in the views and API to restrict access and actions based on the user role, similar to the PMS task.
+---
 
-JWT Authentication:
+#### Additional Features
 
-Implement JWT-based authentication instead of Django's default session-based authentication for the API, which allows secure authentication for API requests and enhances flexibility in external integrations (similar to the PMS bonus feature).
+- **JWT Authentication:**
+  - Implemented JWT-based authentication for API requests.
 
-Views:
+- **Views:**
+  - Paginated list view of articles with filtering (by category, tags, and date).
+  - Detailed view for each article (full content, image, author details, status).
+  - Grid view for visual representation of articles.
+  - Map view for geographic location-based articles (using Google Maps or OpenStreetMap).
 
-List View: Create a paginated list view of articles, with filtering options (by category, tags, and date).
-Detail View: Implement a detailed view for each article, showing the full content, image, author details, and status.
-Grid View: Display articles in a grid format (e.g., using 3 columns), for visual representation of articles.
-Map View: If geographic location is relevant (e.g., articles tied to specific locations), integrate a map view that uses Google Maps or OpenStreetMap to show the locations of articles.
+- **Image Gallery:**
+  - Multiple images can be uploaded for each article.
 
-Image Gallery:
+- **Location-based Search:**
+  - Search articles within a geographic area using latitude and longitude coordinates.
 
-Add an image gallery functionality to articles, allowing multiple images to be uploaded for each article. This can be handled using a separate ArticleImage model and displaying the images as a gallery (similar to the PMS bonus feature).
-Location-based Search:
+- **Swagger API Documentation:**
+  - Integrated Swagger (via `drf-yasg`) for API documentation.
 
-If articles are linked to specific locations (e.g., articles covering news in particular cities or regions), implement location-based filtering. This could allow users to search for articles within a certain geographical area, using latitude and longitude coordinates stored in the Article model or via custom SQL queries.
+- **Custom SQL Queries:**
+  - Filter articles by categories, tags, publish date, or author name.
 
-Swagger API Documentation:
+---
 
-Integrate Swagger using drf-yasg to automatically generate API documentation. This will document all the API endpoints for CRUD operations, including the POST, GET, PUT/PATCH, and DELETE methods for articles and user management, similar to the PMS project.
+### How to Use
 
-Custom SQL Queries:
+#### Create a Virtual Environment:
+```bash
+make env
+```
 
-Implement raw SQL queries or use Django ORM to filter articles based on categories, tags, publish date, or author name. This could be used for the API's filtering, searching, or sorting features.
+#### Install Dependencies:
+```bash
+make install
+```
 
+#### Run the Development Server:
+```bash
+make run
+```
 
+#### Apply Migrations:
+```bash
+make migrate
+```
 
-please go through it and let me know if any clarification is required .
+#### Seed Database:
+```bash
+make seed
+```
+
+#### Run Tests:
+```bash
+make test
+```
+
+#### Build and Run Docker:
+```bash
+make build
+make docker-run
+```
+
+---
+
+This Makefile is aligned perfectly with the Django project directory structure to streamline development tasks.

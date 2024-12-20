@@ -127,7 +127,8 @@ class Article(models.Model):
     agreed_to_terms = models.BooleanField(default=False)
 
     def clean(self):
-        if self.publish_date and self.publish_date <= now().date():
+        # Convert now() to datetime to match the type of publish_date
+        if self.publish_date and self.publish_date <= now():
             raise ValidationError('Publish date must be in the future.')
 
         if not self.agreed_to_terms:

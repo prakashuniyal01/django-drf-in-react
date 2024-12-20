@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'corsheaders',
+    'frontend'
 ]
 
 
@@ -92,6 +93,8 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.MultiPartParser',  # For handling file uploads
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 AUTHENTICATION_BACKENDS = [

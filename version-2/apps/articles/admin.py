@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Article, Tag, Category, Comment, Like
+from .models import Article, Tag, Category, Comment, Like, ArticleImage
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -22,6 +22,11 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ['author__email', 'content']  # Allow searching by author email and content
     list_filter = ['edited', 'created_at']  # Enable filtering by edited status and created time
     
+@admin.register(ArticleImage)  # Registering ArticleImage model in the admin
+class ArticleImageAdmin(admin.ModelAdmin):
+    list_display = ['article', 'image', 'order']  # Show article, image, and order in the list view
+    search_fields = ['article__title']  # Allow searching by article title
+    list_filter = ['order']  # Allow filtering by the order of images
     
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
@@ -34,3 +39,4 @@ admin.site.register(Tag,TagAdmin)  # Register other models like Tag, if necessar
 admin.site.register(Category, CategoryAdmin)  # If you have a Category model
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Like, LikeAdmin)
+admin.site.register(ArticleImage, ArticleImageAdmin)

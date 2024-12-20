@@ -3,13 +3,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
-from django.shortcuts import get_object_or_404
 from .models import Article, Category, Tag
 from .serializers import ArticleSerializer, ArticleDetailSerializer,CategorySerializer, TagSerializer
-from .permissions import IsAdminUser, IsJournalist, IsEditor, IsJournalistOrEditor
-from django.db.models import Q
+from .permissions import IsAdminUser, IsJournalistOrEditor
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import AllowAny
 
 class ArticlePagination(PageNumberPagination):
     page_size = 5  # Set the number of items per page
@@ -155,7 +155,8 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
     def get_queryset(self):
         """
         Restrict the queryset based on user role.
-        Journalists see their own articles. Editors see all articles.
+        - Journalists see only their own articles.
+        - Editors see all articles.
         """
         user = self.request.user
         if user.role == 'journalist':
@@ -163,11 +164,17 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
         return self.queryset
 
     def get_serializer_class(self):
+        """
+        Use different serializers for list/retrieve and create/update actions.
+        """
         if self.action in ['list', 'retrieve']:
             return ArticleDetailSerializer
         return ArticleSerializer
 
     def get_serializer_context(self):
+        """
+        Add additional context for serializers.
+        """
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
@@ -180,36 +187,40 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         """
-        Restrict update based on status and user role.
+        Restrict update based on article status and user role.
         """
         article = self.get_object()
         user = self.request.user
+
         if user.role == 'journalist' and article.status in ['approved', 'published']:
-            return Response(
-                {"detail": "You cannot update an article once it's approved or published."},
-                status=status.HTTP_403_FORBIDDEN
+            raise PermissionDenied(
+                "You cannot update an article once it's approved or published."
             )
+
         serializer.save(updated_at=timezone.now())
 
     def perform_destroy(self, instance):
         """
-        Journalists cannot delete published articles.
-        Editors can delete any article.
+        Restrict delete operations:
+        - Journalists cannot delete published articles.
+        - Editors can delete any article.
         """
         user = self.request.user
         if user.role == 'journalist' and instance.status == 'published':
-            return Response(
-                {"detail": "You cannot delete a published article."},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise PermissionDenied("You cannot delete a published article.")
         instance.delete()
 
     @action(detail=True, methods=['patch'], url_path='change-status')
     def change_status(self, request, pk=None):
         """
-        Editors can change the status of articles.
+        Editors can change the status of articles based on defined rules:
+        - Pending → Approved → Published.
+        - Pending → Rejected.
+        - Published → Rejected.
         """
         user = request.user
+
+        # Ensure only editors can change the status.
         if user.role != 'editor':
             return Response(
                 {"detail": "Only editors can change the status of articles."},
@@ -217,21 +228,53 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
             )
 
         article = self.get_object()
-        status = request.data.get('status')
+        new_status = request.data.get('status')
 
-        if status not in ['approved', 'published', 'rejected']:
+        # Validate the new status.
+        valid_statuses = ['pending', 'approved', 'published', 'rejected']
+        if new_status not in valid_statuses:
             return Response(
                 {"detail": "Invalid status."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Enforce status change rules
-        if status == 'published' and article.status != 'approved':
+        current_status = article.status
+
+        # Define valid status transitions.
+        allowed_transitions = {
+            'pending': ['approved', 'rejected'],
+            'approved': ['published'],
+            'published': ['rejected'],
+            'rejected': []  # No transitions allowed from 'rejected'.
+        }
+
+        if new_status not in allowed_transitions.get(current_status, []):
             return Response(
-                {"detail": "Article must be approved before it can be published."},
+                {
+                    "detail": f"Cannot change status from '{current_status}' to '{new_status}'."
+                },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        article.status = status
+        # Update the status if the transition is valid.
+        article.status = new_status
         article.save()
-        return Response({"detail": "Status updated successfully."})
+
+        return Response(
+            {"detail": f"Status changed from '{current_status}' to '{new_status}' successfully."},
+            status=status.HTTP_200_OK
+        )
+
+# published articles 
+class PublishedArticleListView(ListAPIView):
+    queryset = Article.objects.filter(status='published')  # Filter only published articles
+    serializer_class = ArticleDetailSerializer
+    permission_classes = [AllowAny]  # No authentication required
+    pagination_class = ArticlePagination  # Use the custom pagination class
+
+class PublishedArticleDetailView(RetrieveAPIView):
+    queryset = Article.objects.filter(status='published')  # Filter only published articles
+    serializer_class = ArticleDetailSerializer
+    permission_classes = [AllowAny]  # No authentication required
+    lookup_field = 'id'  # Use 'id' to lookup a specific article
+    

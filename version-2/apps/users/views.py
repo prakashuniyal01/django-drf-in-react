@@ -236,14 +236,17 @@ class UserUpdateView(APIView):
 
     def patch(self, request, user_id, *args, **kwargs):
         try:
-            # Only authenticated users can access this view
             user = self.get_object(user_id)
             if not user:
                 return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            # Ensure the logged-in user can only update their own details or the admin
+            # Ensure the logged-in user can only update their own details or is an admin
             if request.user != user and not request.user.is_superuser:
                 return Response({"detail": "You are not authorized to update this user's details."}, status=status.HTTP_403_FORBIDDEN)
+
+            # Prevent non-admins from updating roles
+            if 'role' in request.data and not request.user.is_superuser:
+                return Response({"detail": "You are not authorized to update roles."}, status=status.HTTP_403_FORBIDDEN)
 
             serializer = UserUpdateSerializer(user, data=request.data, partial=True)
             if serializer.is_valid():
@@ -259,14 +262,17 @@ class UserUpdateView(APIView):
 
     def put(self, request, user_id, *args, **kwargs):
         try:
-            # Only authenticated users can access this view
             user = self.get_object(user_id)
             if not user:
                 return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            # Ensure the logged-in user can only update their own details or the admin
+            # Ensure the logged-in user can only update their own details or is an admin
             if request.user != user and not request.user.is_superuser:
                 return Response({"detail": "You are not authorized to update this user's details."}, status=status.HTTP_403_FORBIDDEN)
+
+            # Prevent non-admins from updating roles
+            if 'role' in request.data and not request.user.is_superuser:
+                return Response({"detail": "You are not authorized to update roles."}, status=status.HTTP_403_FORBIDDEN)
 
             serializer = UserUpdateSerializer(user, data=request.data)
             if serializer.is_valid():
@@ -279,6 +285,7 @@ class UserUpdateView(APIView):
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 # change password 
