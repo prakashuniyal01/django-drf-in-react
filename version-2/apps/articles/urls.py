@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ArticleViewSet, CategoryViewSet, TagViewSet, ArticleViewSetJournalist, PublishedArticleListView, PublishedArticleDetailView
+from .views import ArticleViewSet, CategoryViewSet, TagViewSet, ArticleViewSetJournalist, PublishedArticleListView, PublishedArticleDetailView, ArticleListView
 
 article_list = ArticleViewSetJournalist.as_view({
     'get': 'list',
@@ -32,5 +32,6 @@ urlpatterns = [
     #journalist and editor routes 
     path('articles/', article_list, name='article-list'),  # Endpoint for listing and creating articles
     path('articles/<int:pk>/', article_detail, name='article-detail'),  # Endpoint for retrieving, updating, or deleting a specific article
+    path('articles/', ArticleListView.as_view(), name='article-list'),
 ]
 

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Article, Category, Tag, City, State, Country, ArticleImage
+import django_filters
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -197,3 +198,5 @@ class ArticleSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+    
+   

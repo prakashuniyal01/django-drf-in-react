@@ -10,6 +10,9 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
+from rest_framework import generics
+from .filter import ArticleFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 class ArticlePagination(PageNumberPagination):
     page_size = 5  # Set the number of items per page
@@ -210,17 +213,13 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
             raise PermissionDenied("You cannot delete a published article.")
         instance.delete()
 
-    @action(detail=True, methods=['patch'], url_path='change-status')
+    @action(detail=True, methods=['patch'], url_path='change-status', name='Change Status')
     def change_status(self, request, pk=None):
         """
-        Editors can change the status of articles based on defined rules:
-        - Pending → Approved → Published.
-        - Pending → Rejected.
-        - Published → Rejected.
+        Editors can change the status of articles.
         """
         user = request.user
-
-        # Ensure only editors can change the status.
+        # Restrict this action to editors only
         if user.role != 'editor':
             return Response(
                 {"detail": "Only editors can change the status of articles."},
@@ -229,23 +228,14 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
 
         article = self.get_object()
         new_status = request.data.get('status')
-
-        # Validate the new status.
-        valid_statuses = ['pending', 'approved', 'published', 'rejected']
-        if new_status not in valid_statuses:
-            return Response(
-                {"detail": "Invalid status."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
         current_status = article.status
 
-        # Define valid status transitions.
+        # Define valid status transitions
         allowed_transitions = {
             'pending': ['approved', 'rejected'],
             'approved': ['published'],
             'published': ['rejected'],
-            'rejected': []  # No transitions allowed from 'rejected'.
+            'rejected': []
         }
 
         if new_status not in allowed_transitions.get(current_status, []):
@@ -256,7 +246,6 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Update the status if the transition is valid.
         article.status = new_status
         article.save()
 
@@ -265,7 +254,11 @@ class ArticleViewSetJournalist(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-# published articles 
+
+
+
+
+# published articles  all users 
 class PublishedArticleListView(ListAPIView):
     queryset = Article.objects.filter(status='published')  # Filter only published articles
     serializer_class = ArticleDetailSerializer
@@ -278,3 +271,17 @@ class PublishedArticleDetailView(RetrieveAPIView):
     permission_classes = [AllowAny]  # No authentication required
     lookup_field = 'id'  # Use 'id' to lookup a specific article
     
+    
+class ArticleListView(generics.ListAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ArticleFilter
+    permission_classes = [IsAuthenticated]  # Optional: You can add permissions
+
+    def get_queryset(self):
+        """
+        Optionally restricts the queryset by filtering against query parameters.
+        """
+        queryset = super().get_queryset()
+        return queryset

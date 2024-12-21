@@ -153,7 +153,22 @@ class Article(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-
+# Signal to send an email notification when an article's status changes
+@receiver(post_save, sender=Article)
+def send_status_change_notification(sender, instance, **kwargs):
+    """
+    Sends an email notification to the author when the status of an article changes.
+    """
+    try:
+        previous_instance = Article.objects.get(pk=instance.pk)
+        if previous_instance.status != instance.status:
+            # Send an email notification to the author
+            subject = f"Your article status has changed: {instance.title}"
+            message = f"Dear {instance.author.full_name},\n\nYour article titled '{instance.title}' status has been updated to {instance.status}."
+            recipient_list = [instance.author.email]
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
+    except Article.DoesNotExist:
+        pass  # The article is being created for the first time, no previous status exists
 
 class ArticleImage(models.Model):
     """
@@ -178,23 +193,13 @@ class ArticleImage(models.Model):
     class Meta:
         ordering = ['order']
 
+    def save(self, *args, **kwargs):
+        if not self.order:
+            # Get the maximum order value for the article and increment by 1
+            max_order = ArticleImage.objects.filter(article=self.article).aggregate(models.Max('order'))['order__max']
+            self.order = (max_order or 0) + 1
+        super().save(*args, **kwargs)
 
-# Signal to send an email notification when an article's status changes
-@receiver(post_save, sender=Article)
-def send_status_change_notification(sender, instance, **kwargs):
-    """
-    Sends an email notification to the author when the status of an article changes.
-    """
-    try:
-        previous_instance = Article.objects.get(pk=instance.pk)
-        if previous_instance.status != instance.status:
-            # Send an email notification to the author
-            subject = f"Your article status has changed: {instance.title}"
-            message = f"Dear {instance.author.full_name},\n\nYour article titled '{instance.title}' status has been updated to {instance.status}."
-            recipient_list = [instance.author.email]
-            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
-    except Article.DoesNotExist:
-        pass  # The article is being created for the first time, no previous status exists
 
 
 class Comment(models.Model):
