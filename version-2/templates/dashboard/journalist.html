@@ -6,12 +6,10 @@
     <title>Juornalist Dashboard</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
     <style>
       .profile-cart {
         position: absolute;
@@ -51,8 +49,7 @@
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#sidebar"
-            aria-controls="sidebar"
-          >
+            aria-controls="sidebar">
             <i class="bi bi-list"></i>
           </button>
           <h4>Welcome, <span id="user-name"></span></h4>
@@ -63,16 +60,14 @@
                   <img
                     src="https://picsum.photos/id/1/200/300"
                     id="profile-icon"
-                    alt="Profile Icon"
-                  />
+                    alt="Profile Icon" />
                 </a>
                 <div class="profile-cart" id="profile-cart">
                   <div class="profile-header">
                     <img
                       src="https://picsum.photos/id/1/200/300"
                       id="profile-image"
-                      alt="Profile Image"
-                    />
+                      alt="Profile Image" />
                     <h5 id="user-name-dropdown"></h5>
                   </div>
                   <ul class="profile-details">
@@ -102,16 +97,14 @@
       class="offcanvas offcanvas-start"
       tabindex="-1"
       id="sidebar"
-      aria-labelledby="sidebarLabel"
-    >
+      aria-labelledby="sidebarLabel">
       <div class="offcanvas-header">
         <h5 id="sidebarLabel">Menu</h5>
         <button
           type="button"
           class="btn-close"
           data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
+          aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
         <!-- User Profile Section -->
@@ -143,12 +136,7 @@
             >
           </li>
           <li class="list-group-item">
-            <a
-              href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#createArticleModal"
-              >Create Article</a
-            >
+            <a href="/users/Journalist/articles/create/">Create Article</a>
           </li>
           <li class="list-group-item">
             <a href="#" id="logout-sidebar">Logout</a>
@@ -163,8 +151,7 @@
       id="createArticleModal"
       tabindex="-1"
       aria-labelledby="createArticleModalLabel"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -175,8 +162,7 @@
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="createArticleForm">
@@ -190,8 +176,7 @@
                   type="text"
                   class="form-control"
                   id="subtitle"
-                  required
-                />
+                  required />
               </div>
               <div class="mb-3">
                 <label for="content" class="form-label">Content</label>
@@ -199,8 +184,7 @@
                   class="form-control"
                   id="content"
                   rows="5"
-                  required
-                ></textarea>
+                  required></textarea>
               </div>
               <div class="mb-3">
                 <label for="categories" class="form-label">Categories</label>
@@ -209,8 +193,7 @@
                   class="form-control"
                   id="categories"
                   placeholder="Comma-separated (e.g., technology, cloud)"
-                  required
-                />
+                  required />
               </div>
               <div class="mb-3">
                 <label for="tags" class="form-label">Tags</label>
@@ -219,8 +202,7 @@
                   class="form-control"
                   id="tags"
                   placeholder="Comma-separated (e.g., cloud computing, IT)"
-                  required
-                />
+                  required />
               </div>
               <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
@@ -240,8 +222,7 @@
       id="profileModal"
       tabindex="-1"
       aria-labelledby="profileModalLabel"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -250,8 +231,7 @@
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <p><strong>Full Name:</strong> <span id="modal-fullname"></span></p>
@@ -269,8 +249,7 @@
       id="updateDetailsModal"
       tabindex="-1"
       aria-labelledby="updateDetailsModalLabel"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -281,8 +260,7 @@
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="update-user-form">
@@ -296,8 +274,7 @@
                   type="number"
                   id="number"
                   class="form-control"
-                  required
-                />
+                  required />
               </div>
               <button type="submit" class="btn btn-primary">
                 Save Changes
@@ -314,8 +291,7 @@
       id="changePasswordModal"
       tabindex="-1"
       aria-labelledby="changePasswordModalLabel"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -326,8 +302,7 @@
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="change-password-form">
@@ -339,8 +314,7 @@
                   type="password"
                   id="old-password"
                   class="form-control"
-                  required
-                />
+                  required />
               </div>
               <div class="mb-3">
                 <label for="new-password" class="form-label"
@@ -350,8 +324,7 @@
                   type="password"
                   id="new-password"
                   class="form-control"
-                  required
-                />
+                  required />
               </div>
               <div class="mb-3">
                 <label for="confirm-password" class="form-label"
@@ -361,8 +334,7 @@
                   type="password"
                   id="confirm-password"
                   class="form-control"
-                  required
-                />
+                  required />
               </div>
               <button type="submit" class="btn btn-primary">
                 Change Password
@@ -378,8 +350,7 @@
       id="verifyOtpModal"
       tabindex="-1"
       aria-labelledby="verifyOtpModalLabel"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -388,8 +359,7 @@
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="verify-otp-form">
@@ -399,8 +369,7 @@
                   type="email"
                   class="form-control"
                   id="otp-email"
-                  required
-                />
+                  required />
               </div>
               <div class="mb-3">
                 <label for="otp" class="form-label">OTP</label>
@@ -409,8 +378,7 @@
               <button
                 type="submit"
                 id="verify-otp-submit"
-                class="btn btn-primary"
-              >
+                class="btn btn-primary">
                 Verify OTP
               </button>
             </form>
@@ -427,8 +395,7 @@
           background: url('https://via.placeholder.com/1200x400') no-repeat
             center/cover;
           color: #fff;
-        "
-      >
+        ">
         <h1>Welcome</h1>
         <p class="lead">Discover, read, and manage articles seamlessly.</p>
         <a href="#articles-container" class="btn btn-primary btn-lg"
@@ -445,24 +412,21 @@
           <form
             method="GET"
             action="/search/"
-            class="d-flex justify-content-center mt-3"
-          >
+            class="d-flex justify-content-center mt-3">
             <input
               type="text"
               id="categorie"
               name="categories"
               class="form-control me-2"
               placeholder="Enter categories (e.g., Tech, Education)"
-              style="max-width: 400px"
-            />
+              style="max-width: 400px" />
             <input
               type="text"
               id="tag"
               name="tags"
               class="form-control me-2"
               placeholder="Enter tags (e.g., AI, Blockchain)"
-              style="max-width: 400px"
-            />
+              style="max-width: 400px" />
             <button type="button" class="btn btn-primary" id="searchBtn">
               Search
             </button>
@@ -488,8 +452,7 @@
       id="editArticleModal"
       tabindex="-1"
       aria-labelledby="editArticleModalLabel"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -498,8 +461,7 @@
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="editArticleForm">
@@ -509,8 +471,7 @@
                   type="text"
                   class="form-control"
                   id="newTitle"
-                  required
-                />
+                  required />
               </div>
               <div class="mb-3">
                 <label for="newSubtitle" class="form-label">Subtitle</label>
@@ -521,8 +482,7 @@
                 <textarea
                   class="form-control"
                   id="newContent"
-                  rows="3"
-                ></textarea>
+                  rows="3"></textarea>
               </div>
               <div class="mb-3">
                 <label for="newTags" class="form-label"
@@ -542,8 +502,7 @@
             <button
               type="button"
               class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+              data-bs-dismiss="modal">
               Close
             </button>
             <button type="button" class="btn btn-primary" id="saveArticleBtn">
@@ -610,1040 +569,970 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // login
-      document.addEventListener("DOMContentLoaded", () => {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          window.location.href = "/users/login-page";
-        } else {
-          fetch("/users/user/", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data) {
+              // login
+              document.addEventListener("DOMContentLoaded", () => {
+                const accessToken = localStorage.getItem("access_token");
+                if (!accessToken) {
+                  window.location.href = "/users/login-page";
+                } else {
+                  fetch("/users/user/", {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                  })
+                    .then((response) => response.json())
+                    .then((data) => {
+                      if (data) {
+                        localStorage.setItem("user_data", JSON.stringify(data));
+                        document.getElementById("user-name").textContent =
+                          data.full_name;
+                        document.getElementById("profile-icon").src =
+                          data.profile_image || "https://picsum.photos/id/1/200/300";
+                        document.getElementById("user-name-dropdown").textContent =
+                          data.full_name;
+                        document.getElementById("user-email-dropdown").textContent =
+                          data.email;
+                        document.getElementById("user-phone-dropdown").textContent =
+                          data.number;
+                        document.getElementById("user-role-dropdown").textContent =
+                          data.role;
+                      } else {
+                        alert("Failed to fetch user data");
+                      }
+                    })
+                    .catch((error) => {
+                      console.error("Error:", error);
+                      alert("An error occurred while fetching user data.");
+                    });
+                }
+
+                document
+                  .getElementById("profile-icon-link")
+                  .addEventListener("click", () => {
+                    const profileCart = document.getElementById("profile-cart");
+                    profileCart.style.display =
+                      profileCart.style.display === "block" ? "none" : "block";
+                  });
+
+                document.getElementById("logout-btn").addEventListener("click", logout);
+                document
+                  .getElementById("logout-sidebar")
+                  .addEventListener("click", logout);
+
+                function logout() {
+                  localStorage.removeItem("user_data");
+                  localStorage.removeItem("access_token");
+                  window.location.href = "/users/login-page";
+                }
+              });
+
+              const accessToken = localStorage.getItem("access_token");
+
+              /**
+               * ========================= validation  ==========================
+               * email validation
+               * number number
+               * name
+               * password
+               */
+              function regexMail(email) {
+                const messages = [];
+
+                // 1. Check if input is empty
+                if (!email) {
+                  messages.push("Email address cannot be empty.");
+                  return { isValid: false, messages };
+                }
+
+                // 2. Format Check (basic regex)
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                  messages.push("Invalid email format. Please provide a valid email.");
+                }
+
+                // 3. Length Validation
+                if (email.length > 254) {
+                  messages.push(
+                    "Email address is too long. Maximum length is 254 characters."
+                  );
+                }
+
+                // 4. Local part length check
+                const localPart = email.split("@")[0];
+                if (localPart.length > 64) {
+                  messages.push(
+                    "Local part of the email (before '@') is too long. Maximum is 64 characters."
+                  );
+                }
+
+                // 5. Check for consecutive dots
+                if (email.includes("..")) {
+                  messages.push(
+                    "Email address cannot contain consecutive dots ('..')."
+                  );
+                }
+
+                // 6. Top-Level Domain Check
+                const domain = email.split("@")[1];
+                if (domain && !domain.includes(".")) {
+                  messages.push(
+                    "Email domain must contain a '.' (e.g., 'example.com')."
+                  );
+                }
+
+                // 7. Valid Characters
+                const invalidCharsRegex = /[^a-zA-Z0-9._%+-@]/;
+                if (invalidCharsRegex.test(email)) {
+                  messages.push(
+                    "Email contains invalid characters. Only letters, numbers, '.', '_', '%', '+', and '-' are allowed."
+                  );
+                }
+
+                // 8. Optional: DNS Check (Mocked)
+                if (!domain || domain === "test.com") {
+                  messages.push(
+                    "Domain does not seem valid. (e.g., 'test.com' is not allowed)"
+                  );
+                }
+
+                // Return results
+                const isValid = messages.length === 0;
+                if (isValid) {
+                  messages.push("Email is valid!");
+                }
+                return { isValid, messages };
+              }
+              /**
+               * ============================================= side bar start ======================================
+               */
+              // Wait until the document content is fully loaded
+              document.addEventListener("DOMContentLoaded", () => {
+                // Retrieve the access token from localStorage to check if the user is authenticated
+                const accessToken = localStorage.getItem("access_token");
+
+                // If the token does not exist, redirect the user to the login page
+                if (!accessToken) {
+                  redirectToLoginPage();
+                } else {
+                  // If the token is present, fetch the user's data from the server
+                  fetchUserData(accessToken);
+                }
+
+                // Event listener to toggle the visibility of the profile dropdown menu
+                document
+                  .getElementById("profile-icon-link")
+                  .addEventListener("click", toggleProfileDropdown);
+
+                // Event listeners to handle logout from both the main profile section and sidebar
+                document.getElementById("logout-btn").addEventListener("click", logout);
+                document
+                  .getElementById("logout-sidebar")
+                  .addEventListener("click", logout);
+
+                // Populate the sidebar and modals with user data after login
+                populateSidebarAndModals();
+
+                // Handle user update form submission for changing personal details (email and phone number)
+                handleUserUpdateForm();
+
+                // Handle password change form submission
+                handleChangePasswordForm();
+              });
+
+              // **Redirect the user to the login page**
+              function redirectToLoginPage() {
+                // Redirect to the login page if the user is not authenticated
+                window.location.href = "/users/login-page";
+              }
+
+              // **Fetch user data using the access token**
+              function fetchUserData(accessToken) {
+                // Fetch user data from the server
+                fetch("/users/user/", {
+                  method: "GET",
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`, // Include the access token in the request headers
+                  },
+                })
+                  .then((response) => response.json()) // Parse the JSON response from the server
+                  .then((data) => {
+                    if (data) {
+                      // If data is received, save it to localStorage and update the profile section
+                      saveUserDataToLocalStorage(data);
+                      updateProfileSection(data);
+                    } else {
+                      // If no data is received, alert the user
+                      alert("Failed to fetch user data");
+                    }
+                  })
+                  .catch((error) => {
+                    // If there's an error during the fetch process, log the error and alert the user
+                    console.error("Error:", error);
+                    alert("An error occurred while fetching user data.");
+                  });
+              }
+
+              // **Save the fetched user data to localStorage for future use**
+              function saveUserDataToLocalStorage(data) {
+                // Store the user data as a stringified JSON object in localStorage
                 localStorage.setItem("user_data", JSON.stringify(data));
-                document.getElementById("user-name").textContent =
-                  data.full_name;
+              }
+
+              // **Update the profile section on the page with user data**
+              function updateProfileSection(data) {
+                // Update various elements on the page with the user's details (name, profile image, etc.)
+                document.getElementById("user-name").textContent = data.full_name;
                 document.getElementById("profile-icon").src =
                   data.profile_image || "https://picsum.photos/id/1/200/300";
                 document.getElementById("user-name-dropdown").textContent =
                   data.full_name;
-                document.getElementById("user-email-dropdown").textContent =
-                  data.email;
+                document.getElementById("user-email-dropdown").textContent = data.email;
                 document.getElementById("user-phone-dropdown").textContent =
                   data.number;
-                document.getElementById("user-role-dropdown").textContent =
-                  data.role;
-              } else {
-                alert("Failed to fetch user data");
+                document.getElementById("user-role-dropdown").textContent = data.role;
               }
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-              alert("An error occurred while fetching user data.");
-            });
-        }
 
-        document
-          .getElementById("profile-icon-link")
-          .addEventListener("click", () => {
-            const profileCart = document.getElementById("profile-cart");
-            profileCart.style.display =
-              profileCart.style.display === "block" ? "none" : "block";
-          });
+              // **Toggle the visibility of the profile dropdown**
+              function toggleProfileDropdown() {
+                const profileCart = document.getElementById("profile-cart");
+                // Toggle the display property of the profile dropdown (show or hide)
+                profileCart.style.display =
+                  profileCart.style.display === "block" ? "none" : "block";
+              }
 
-        document.getElementById("logout-btn").addEventListener("click", logout);
-        document
-          .getElementById("logout-sidebar")
-          .addEventListener("click", logout);
+              // **Logout the user by clearing stored data and redirecting to login page**
+              function logout() {
+                // Remove user data and access token from localStorage
+                localStorage.removeItem("user_data");
+                localStorage.removeItem("access_token");
+                // Redirect the user to the login page
+                redirectToLoginPage();
+              }
 
-        function logout() {
-          localStorage.removeItem("user_data");
-          localStorage.removeItem("access_token");
-          window.location.href = "/users/login-page";
-        }
-      });
+              // **Populate the sidebar and modals with user details**
+              function populateSidebarAndModals() {
+                // Retrieve the access token from localStorage to authenticate the request
+                const token = localStorage.getItem("access_token");
 
-      const accessToken = localStorage.getItem("access_token");
+                // Fetch user data to populate the sidebar and modals
+                fetch("/users/user/", {
+                  method: "GET",
+                  headers: {
+                    Authorization: `Bearer ${token}`, // Pass the access token in the request headers
+                    "Content-Type": "application/json",
+                  },
+                })
+                  .then((response) => response.json()) // Parse the response as JSON
+                  .then((data) => {
+                    if (data) {
+                      // If data is fetched successfully, update the sidebar and modal UI elements
+                      updateSidebar(data);
+                      updateModal(data);
+                      updateUpdateForm(data);
+                    }
+                  })
+                  .catch((error) => console.error("Error:", error)); // Log errors if the fetch fails
+              }
 
-      /**
-       * ========================= validation  ==========================
-       * email validation
-       * number number
-       * name
-       * password
-       */
-      function regexMail(email) {
-        const messages = [];
+              // **Update sidebar with user data**
+              function updateSidebar(data) {
+                // Populate sidebar with user's full name, email, and role
+                document.getElementById("user-fullname").textContent = data.full_name;
+                document.getElementById("user-email").textContent = data.email;
+                document.getElementById("user-role").textContent = data.role;
+              }
 
-        // 1. Check if input is empty
-        if (!email) {
-          messages.push("Email address cannot be empty.");
-          return { isValid: false, messages };
-        }
+              // **Update modal with user data**
+              function updateModal(data) {
+                // Populate the modal with user's full name, email, role, and phone number
+                document.getElementById("modal-fullname").textContent = data.full_name;
+                document.getElementById("modal-email").textContent = data.email;
+                document.getElementById("modal-role").textContent = data.role;
+                document.getElementById("modal-number").textContent = data.number;
+              }
 
-        // 2. Format Check (basic regex)
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-          messages.push("Invalid email format. Please provide a valid email.");
-        }
+              // **Populate the update form with the user's current data**
+              function updateUpdateForm(data) {
+                // Pre-fill the form fields with user's current email and phone number
+                document.getElementById("email").value = data.email;
+                document.getElementById("number").value = data.number || ""; // Default to an empty string if the phone number is null
+              }
 
-        // 3. Length Validation
-        if (email.length > 254) {
-          messages.push(
-            "Email address is too long. Maximum length is 254 characters."
-          );
-        }
+              // **Handle the user update form submission (for email and phone number updates)**
+              function handleUserUpdateForm() {
+                // Listen for the form submission
+                document
+                  .getElementById("update-user-form")
+                  .addEventListener("submit", (event) => {
+                    event.preventDefault(); // Prevent the default form submission behavior
 
-        // 4. Local part length check
-        const localPart = email.split("@")[0];
-        if (localPart.length > 64) {
-          messages.push(
-            "Local part of the email (before '@') is too long. Maximum is 64 characters."
-          );
-        }
+                    // Get the user ID from localStorage to update the correct user data
+                    const userId = JSON.parse(localStorage.getItem("user_data")).id;
+                    const updateApiUrl = `/users/user/${userId}/update/`; // Dynamic API endpoint based on user ID
 
-        // 5. Check for consecutive dots
-        if (email.includes("..")) {
-          messages.push(
-            "Email address cannot contain consecutive dots ('..')."
-          );
-        }
+                    // Collect the form data (email and phone number)
+                    const userData = {
+                      email: document.getElementById("email").value,
+                      number: document.getElementById("number").value,
+                    };
 
-        // 6. Top-Level Domain Check
-        const domain = email.split("@")[1];
-        if (domain && !domain.includes(".")) {
-          messages.push(
-            "Email domain must contain a '.' (e.g., 'example.com')."
-          );
-        }
+                    // Send a PUT request to update the user's details on the server
+                    updateUserDetails(updateApiUrl, userData);
+                  });
+              }
 
-        // 7. Valid Characters
-        const invalidCharsRegex = /[^a-zA-Z0-9._%+-@]/;
-        if (invalidCharsRegex.test(email)) {
-          messages.push(
-            "Email contains invalid characters. Only letters, numbers, '.', '_', '%', '+', and '-' are allowed."
-          );
-        }
+              // **Send the PUT request to update the user's details**
+              function updateUserDetails(updateApiUrl, userData) {
+                // Retrieve the access token from localStorage for authentication
+                const token = localStorage.getItem("access_token");
 
-        // 8. Optional: DNS Check (Mocked)
-        if (!domain || domain === "test.com") {
-          messages.push(
-            "Domain does not seem valid. (e.g., 'test.com' is not allowed)"
-          );
-        }
+                // Send the PUT request to the API to update the user's data
+                fetch(updateApiUrl, {
+                  method: "PUT",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(userData), // Send the updated user data in the request body
+                })
+                  .then((response) => response.json()) // Parse the JSON response
+                  .then(() => {
+                    // Show an alert and reload the page after a successful update
+                    alert("Details updated successfully!");
+                    window.location.reload(); // Refresh the page to reflect changes
+                  })
+                  .catch((error) => {
+                    console.error("Error:", error); // Log any errors
+                    alert("An error occurred while updating the details."); // Show an error message
+                  });
+              }
 
-        // Return results
-        const isValid = messages.length === 0;
-        if (isValid) {
-          messages.push("Email is valid!");
-        }
-        return { isValid, messages };
-      }
-      /**
-       * ============================================= side bar start ======================================
-       */
-      // Wait until the document content is fully loaded
-      document.addEventListener("DOMContentLoaded", () => {
-        // Retrieve the access token from localStorage to check if the user is authenticated
-        const accessToken = localStorage.getItem("access_token");
+              // **Handle password change form submission**
+              function handleChangePasswordForm() {
+                // Listen for the form submission
+                document
+                  .getElementById("change-password-form")
+                  .addEventListener("submit", (event) => {
+                    event.preventDefault(); // Prevent the default form submission behavior
 
-        // If the token does not exist, redirect the user to the login page
-        if (!accessToken) {
-          redirectToLoginPage();
-        } else {
-          // If the token is present, fetch the user's data from the server
-          fetchUserData(accessToken);
-        }
+                    // Collect the password change data (old password, new password, confirm new password)
+                    const passwordData = {
+                      old_password: document.getElementById("old-password").value,
+                      new_password: document.getElementById("new-password").value,
+                      confirm_password:
+                        document.getElementById("confirm-password").value,
+                    };
 
-        // Event listener to toggle the visibility of the profile dropdown menu
-        document
-          .getElementById("profile-icon-link")
-          .addEventListener("click", toggleProfileDropdown);
+                    // Send the password change request if the data is valid
+                    changePassword(passwordData);
+                  });
+              }
 
-        // Event listeners to handle logout from both the main profile section and sidebar
-        document.getElementById("logout-btn").addEventListener("click", logout);
-        document
-          .getElementById("logout-sidebar")
-          .addEventListener("click", logout);
+              // **Send the password change request to the server**
+              // **Send the password change request to the server**
+              function changePassword(passwordData) {
+                const token = localStorage.getItem("access_token");
+                const apiUrl = "/users/change-password/";
 
-        // Populate the sidebar and modals with user data after login
-        populateSidebarAndModals();
+                // **Validate the password data**
+                function validatePasswordData(passwordData) {
+                  const { old_password, new_password, confirm_password } = passwordData;
 
-        // Handle user update form submission for changing personal details (email and phone number)
-        handleUserUpdateForm();
+                  // Check if any of the fields are empty
+                  if (!old_password || !new_password || !confirm_password) {
+                    alert("All fields are required.");
+                    return false;
+                  }
 
-        // Handle password change form submission
-        handleChangePasswordForm();
-      });
+                  // Check if the new password and confirm password match
+                  if (new_password !== confirm_password) {
+                    alert("New password and confirm password do not match.");
+                    return false;
+                  }
 
-      // **Redirect the user to the login page**
-      function redirectToLoginPage() {
-        // Redirect to the login page if the user is not authenticated
-        window.location.href = "/users/login-page";
-      }
+                  // Check the strength of the new password (example: at least 8 characters, one uppercase, one number)
+                  const passwordStrengthRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+                  if (!passwordStrengthRegex.test(new_password)) {
+                    alert(
+                      "New password must be at least 8 characters long, include one uppercase letter and one number."
+                    );
+                    return false;
+                  }
 
-      // **Fetch user data using the access token**
-      function fetchUserData(accessToken) {
-        // Fetch user data from the server
-        fetch("/users/user/", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Include the access token in the request headers
-          },
-        })
-          .then((response) => response.json()) // Parse the JSON response from the server
-          .then((data) => {
-            if (data) {
-              // If data is received, save it to localStorage and update the profile section
-              saveUserDataToLocalStorage(data);
-              updateProfileSection(data);
-            } else {
-              // If no data is received, alert the user
-              alert("Failed to fetch user data");
-            }
-          })
-          .catch((error) => {
-            // If there's an error during the fetch process, log the error and alert the user
-            console.error("Error:", error);
-            alert("An error occurred while fetching user data.");
-          });
-      }
+                  // If all checks pass, return true
+                  return true;
+                }
 
-      // **Save the fetched user data to localStorage for future use**
-      function saveUserDataToLocalStorage(data) {
-        // Store the user data as a stringified JSON object in localStorage
-        localStorage.setItem("user_data", JSON.stringify(data));
-      }
+                // Validate the password data before sending the request
+                if (validatePasswordData(passwordData)) {
+                  fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(passwordData), // Send the password data in the request body
+                  })
+                    .then((response) => {
+                      // Check if the response is ok (status 200-299)
+                      if (!response.ok) {
+                        return response.json().then((data) => {
+                          throw new Error(data.detail || "Failed to change password.");
+                        });
+                      }
+                      return response.json();
+                    })
+                    .then((data) => {
+                      // Check if the response contains errors (validation errors from the server)
+                      if (data.errors) {
+                        let errorMessage = "";
+                        // Loop through all errors and create a message string
+                        for (const key in data.errors) {
+                          if (data.errors.hasOwnProperty(key)) {
+                            errorMessage += `${key}: ${data.errors[key].join(", ")}\n`;
+                          }
+                        }
+                        alert(errorMessage || "Password changed successfully!");
+                      } else {
+                        // If no validation errors, show a success message
+                        alert(data.detail || "Password changed successfully!");
+                      }
 
-      // **Update the profile section on the page with user data**
-      function updateProfileSection(data) {
-        // Update various elements on the page with the user's details (name, profile image, etc.)
-        document.getElementById("user-name").textContent = data.full_name;
-        document.getElementById("profile-icon").src =
-          data.profile_image || "https://picsum.photos/id/1/200/300";
-        document.getElementById("user-name-dropdown").textContent =
-          data.full_name;
-        document.getElementById("user-email-dropdown").textContent = data.email;
-        document.getElementById("user-phone-dropdown").textContent =
-          data.number;
-        document.getElementById("user-role-dropdown").textContent = data.role;
-      }
+                      // Reset the form after success
+                      document.getElementById("change-password-form").reset();
+                    })
+                    .catch((error) => {
+                      // Display any unexpected errors in an alert
+                      alert(error.message || "An unknown error occurred.");
+                    });
+                }
+              }
+              // create article model
+              document.addEventListener("DOMContentLoaded", () => {
+                const createArticleForm = document.getElementById("createArticleForm");
 
-      // **Toggle the visibility of the profile dropdown**
-      function toggleProfileDropdown() {
-        const profileCart = document.getElementById("profile-cart");
-        // Toggle the display property of the profile dropdown (show or hide)
-        profileCart.style.display =
-          profileCart.style.display === "block" ? "none" : "block";
-      }
+                createArticleForm.addEventListener("submit", async (event) => {
+                  event.preventDefault();
 
-      // **Logout the user by clearing stored data and redirecting to login page**
-      function logout() {
-        // Remove user data and access token from localStorage
-        localStorage.removeItem("user_data");
-        localStorage.removeItem("access_token");
-        // Redirect the user to the login page
-        redirectToLoginPage();
-      }
+                  const title = document.getElementById("title").value;
+                  const subtitle = document.getElementById("subtitle").value;
+                  const content = document.getElementById("content").value;
+                  const categories = document
+                    .getElementById("categories")
+                    .value.split(",")
+                    .map((item) => item.trim());
+                  const tags = document
+                    .getElementById("tags")
+                    .value.split(",")
+                    .map((item) => item.trim());
+                  const imageFile = document.getElementById("image").files[0]; // Get image file
 
-      // **Populate the sidebar and modals with user details**
-      function populateSidebarAndModals() {
-        // Retrieve the access token from localStorage to authenticate the request
-        const token = localStorage.getItem("access_token");
+                  // Prepare FormData payload for image upload and other article details
+                  const formData = new FormData();
+                  formData.append("title", title);
+                  formData.append("subtitle", subtitle);
+                  formData.append("content", content);
+                  formData.append("categories", categories.join(",")); // Convert categories to comma-separated string
+                  formData.append("tags", tags.join(",")); // Convert tags to comma-separated string
 
-        // Fetch user data to populate the sidebar and modals
-        fetch("/users/user/", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // Pass the access token in the request headers
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => response.json()) // Parse the response as JSON
-          .then((data) => {
-            if (data) {
-              // If data is fetched successfully, update the sidebar and modal UI elements
-              updateSidebar(data);
-              updateModal(data);
-              updateUpdateForm(data);
-            }
-          })
-          .catch((error) => console.error("Error:", error)); // Log errors if the fetch fails
-      }
+                  if (imageFile) {
+                    formData.append("image", imageFile); // Append image if it's selected
+                    console.log(imageFile); // Check if the image is being appended correctly
+                  } else {
+                    console.log("No image selected"); // If no image is selected
+                  }
 
-      // **Update sidebar with user data**
-      function updateSidebar(data) {
-        // Populate sidebar with user's full name, email, and role
-        document.getElementById("user-fullname").textContent = data.full_name;
-        document.getElementById("user-email").textContent = data.email;
-        document.getElementById("user-role").textContent = data.role;
-      }
+                  const accessToken = localStorage.getItem("access_token");
 
-      // **Update modal with user data**
-      function updateModal(data) {
-        // Populate the modal with user's full name, email, role, and phone number
-        document.getElementById("modal-fullname").textContent = data.full_name;
-        document.getElementById("modal-email").textContent = data.email;
-        document.getElementById("modal-role").textContent = data.role;
-        document.getElementById("modal-number").textContent = data.number;
-      }
+                  try {
+                    const response = await fetch("/articles/", {
+                      method: "POST",
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        // 'Content-Type' is not needed here because we are using FormData
+                      },
+                      body: formData, // Send formData, which automatically sets 'Content-Type' to 'multipart/form-data'
+                    });
 
-      // **Populate the update form with the user's current data**
-      function updateUpdateForm(data) {
-        // Pre-fill the form fields with user's current email and phone number
-        document.getElementById("email").value = data.email;
-        document.getElementById("number").value = data.number || ""; // Default to an empty string if the phone number is null
-      }
-
-      // **Handle the user update form submission (for email and phone number updates)**
-      function handleUserUpdateForm() {
-        // Listen for the form submission
-        document
-          .getElementById("update-user-form")
-          .addEventListener("submit", (event) => {
-            event.preventDefault(); // Prevent the default form submission behavior
-
-            // Get the user ID from localStorage to update the correct user data
-            const userId = JSON.parse(localStorage.getItem("user_data")).id;
-            const updateApiUrl = `/users/user/${userId}/update/`; // Dynamic API endpoint based on user ID
-
-            // Collect the form data (email and phone number)
-            const userData = {
-              email: document.getElementById("email").value,
-              number: document.getElementById("number").value,
-            };
-
-            // Send a PUT request to update the user's details on the server
-            updateUserDetails(updateApiUrl, userData);
-          });
-      }
-
-      // **Send the PUT request to update the user's details**
-      function updateUserDetails(updateApiUrl, userData) {
-        // Retrieve the access token from localStorage for authentication
-        const token = localStorage.getItem("access_token");
-
-        // Send the PUT request to the API to update the user's data
-        fetch(updateApiUrl, {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData), // Send the updated user data in the request body
-        })
-          .then((response) => response.json()) // Parse the JSON response
-          .then(() => {
-            // Show an alert and reload the page after a successful update
-            alert("Details updated successfully!");
-            window.location.reload(); // Refresh the page to reflect changes
-          })
-          .catch((error) => {
-            console.error("Error:", error); // Log any errors
-            alert("An error occurred while updating the details."); // Show an error message
-          });
-      }
-
-      // **Handle password change form submission**
-      function handleChangePasswordForm() {
-        // Listen for the form submission
-        document
-          .getElementById("change-password-form")
-          .addEventListener("submit", (event) => {
-            event.preventDefault(); // Prevent the default form submission behavior
-
-            // Collect the password change data (old password, new password, confirm new password)
-            const passwordData = {
-              old_password: document.getElementById("old-password").value,
-              new_password: document.getElementById("new-password").value,
-              confirm_password:
-                document.getElementById("confirm-password").value,
-            };
-
-            // Send the password change request if the data is valid
-            changePassword(passwordData);
-          });
-      }
-
-      // **Send the password change request to the server**
-      // **Send the password change request to the server**
-      function changePassword(passwordData) {
-        const token = localStorage.getItem("access_token");
-        const apiUrl = "/users/change-password/";
-
-        // **Validate the password data**
-        function validatePasswordData(passwordData) {
-          const { old_password, new_password, confirm_password } = passwordData;
-
-          // Check if any of the fields are empty
-          if (!old_password || !new_password || !confirm_password) {
-            alert("All fields are required.");
-            return false;
-          }
-
-          // Check if the new password and confirm password match
-          if (new_password !== confirm_password) {
-            alert("New password and confirm password do not match.");
-            return false;
-          }
-
-          // Check the strength of the new password (example: at least 8 characters, one uppercase, one number)
-          const passwordStrengthRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-          if (!passwordStrengthRegex.test(new_password)) {
-            alert(
-              "New password must be at least 8 characters long, include one uppercase letter and one number."
-            );
-            return false;
-          }
-
-          // If all checks pass, return true
-          return true;
-        }
-
-        // Validate the password data before sending the request
-        if (validatePasswordData(passwordData)) {
-          fetch(apiUrl, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(passwordData), // Send the password data in the request body
-          })
-            .then((response) => {
-              // Check if the response is ok (status 200-299)
-              if (!response.ok) {
-                return response.json().then((data) => {
-                  throw new Error(data.detail || "Failed to change password.");
+                    if (response.ok) {
+                      alert("Article created successfully!");
+                      window.location.reload(); // Reload to update articles list
+                    } else {
+                      const errorData = await response.json();
+                      alert(
+                        `Error: ${errorData.message || "Failed to create article."}`
+                      );
+                    }
+                  } catch (error) {
+                    console.error("Error:", error);
+                    alert("An unexpected error occurred.");
+                  }
                 });
-              }
-              return response.json();
-            })
-            .then((data) => {
-              // Check if the response contains errors (validation errors from the server)
-              if (data.errors) {
-                let errorMessage = "";
-                // Loop through all errors and create a message string
-                for (const key in data.errors) {
-                  if (data.errors.hasOwnProperty(key)) {
-                    errorMessage += `${key}: ${data.errors[key].join(", ")}\n`;
+              });
+
+              /**
+               * ============================================= side bar end ======================================
+               */
+              // fetch
+              // fetch
+              document.addEventListener("DOMContentLoaded", () => {
+                const articlesContainer = document.getElementById("articles-container");
+                const accessToken = localStorage.getItem("access_token");
+
+                // Fetch articles
+                async function fetchArticles() {
+                  try {
+                    const response = await fetch("/articles/articles/", {
+                      method: "GET",
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                      },
+                    });
+                    console.log(response);
+
+                    if (response.ok) {
+                      const articles = await response.json();
+                      displayArticles(articles);
+
+                      console.log({ articles });
+                    } else {
+                      alert("Failed to fetch articles.");
+                    }
+                  } catch (error) {
+                    console.error("Error:", error);
+                    alert("An unexpected error occurred while fetching articles.");
                   }
                 }
-                alert(errorMessage || "Password changed successfully!");
-              } else {
-                // If no validation errors, show a success message
-                alert(data.detail || "Password changed successfully!");
-              }
 
-              // Reset the form after success
-              document.getElementById("change-password-form").reset();
-            })
-            .catch((error) => {
-              // Display any unexpected errors in an alert
-              alert(error.message || "An unknown error occurred.");
-            });
-        }
-      }
-      // create article model
-      document.addEventListener("DOMContentLoaded", () => {
-        const createArticleForm = document.getElementById("createArticleForm");
+                // Display articles as cards
+                function displayArticles(articles) {
+                  console.log("article display", articles.results);
+                  articlesContainer.innerHTML = "";
+                  articles.results.forEach((article) => {
+                    {% comment %} const comments = article.comments.length
+                      ? `<ul>${article.comments
+                          .map(
+                            (comment) =>
+                              `<li>${comment.content || "No comment text"}</li>`
+                          )
+                          .join("")}</ul>`
+                      : "<p>No comments yet.</p>"; {% endcomment %}
 
-        createArticleForm.addEventListener("submit", async (event) => {
-          event.preventDefault();
+                    {% comment %} const likes = article.likes || 0; {% endcomment %}
 
-          const title = document.getElementById("title").value;
-          const subtitle = document.getElementById("subtitle").value;
-          const content = document.getElementById("content").value;
-          const categories = document
-            .getElementById("categories")
-            .value.split(",")
-            .map((item) => item.trim());
-          const tags = document
-            .getElementById("tags")
-            .value.split(",")
-            .map((item) => item.trim());
-          const imageFile = document.getElementById("image").files[0]; // Get image file
+                    // Check if the article status is either 'draft' or 'rejected'
+                    const canEditOrDelete =
+                      article.status === "draft" || article.status === "rejected";
 
-          // Prepare FormData payload for image upload and other article details
-          const formData = new FormData();
-          formData.append("title", title);
-          formData.append("subtitle", subtitle);
-          formData.append("content", content);
-          formData.append("categories", categories.join(",")); // Convert categories to comma-separated string
-          formData.append("tags", tags.join(",")); // Convert tags to comma-separated string
-
-          if (imageFile) {
-            formData.append("image", imageFile); // Append image if it's selected
-            console.log(imageFile); // Check if the image is being appended correctly
-          } else {
-            console.log("No image selected"); // If no image is selected
-          }
-
-          const accessToken = localStorage.getItem("access_token");
-
-          try {
-            const response = await fetch("/articles/", {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                // 'Content-Type' is not needed here because we are using FormData
-              },
-              body: formData, // Send formData, which automatically sets 'Content-Type' to 'multipart/form-data'
-            });
-
-            if (response.ok) {
-              alert("Article created successfully!");
-              window.location.reload(); // Reload to update articles list
-            } else {
-              const errorData = await response.json();
-              alert(
-                `Error: ${errorData.message || "Failed to create article."}`
-              );
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An unexpected error occurred.");
-          }
-        });
-      });
-
-      /**
-       * ============================================= side bar end ======================================
-       */
-      // fetch
-      // fetch
-      document.addEventListener("DOMContentLoaded", () => {
-        const articlesContainer = document.getElementById("articles-container");
-        const accessToken = localStorage.getItem("access_token");
-
-        // Fetch articles
-        async function fetchArticles() {
-          try {
-            const response = await fetch("/articles/", {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            });
-            console.log(response);
-
-            if (response.ok) {
-              const articles = await response.json();
-              displayArticles(articles);
-            } else {
-              alert("Failed to fetch articles.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An unexpected error occurred while fetching articles.");
-          }
-        }
-
-        // Display articles as cards
-        function displayArticles(articles) {
-          articlesContainer.innerHTML = "";
-          articles.forEach((article) => {
-            const comments = article.comments.length
-              ? `<ul>${article.comments
-                  .map(
-                    (comment) =>
-                      `<li>${comment.content || "No comment text"}</li>`
-                  )
-                  .join("")}</ul>`
-              : "<p>No comments yet.</p>";
-
-            const likes = article.likes || 0;
-
-            // Check if the article status is either 'draft' or 'rejected'
-            const canEditOrDelete =
-              article.status === "draft" || article.status === "rejected";
-
-            const card = document.createElement("div");
-            card.className = "col-md-4 mb-4";
-            card.innerHTML = `
-      <div class="card">
-        <img src="${article.image || "https://picsum.photos/id/1/200/300"}" 
-             class="card-img-top" alt="Article Image" 
-             style="width: 350px; height: 300px; object-fit: cover;">
-        <div class="card-body">
-            <h5 class="card-title"><strong>Title:</strong> ${article.title}</h5>
-            <p class="card-subtitle text-muted"><strong>subTitle:</strong> ${
-              article.subtitle
-            }</p>
-            <p class="card-text"><strong>Content:</strong> ${article.content.substring(
-              0,
-              100
-            )}...</p>
-            <p><strong>Status: </strong> ${article.status}</p>
-            <p><strong>Author: </strong> ${article.author_name}</p>
-            <p><strong>Tags: </strong> 
-                ${article.tags.map((tag) => tag.name).join(", ")}
-            </p>
-            <p><strong>Categories: </strong> 
-                ${article.categories
-                  .map((category) => category.name)
-                  .join(", ")}
-            </p>
-            <p><strong>Likes:</strong> ${likes}</p>
-            <p><strong>Comments:</strong></p>
-            ${comments}
-            <button class="btn btn-primary btn-sm" onclick="editArticle(${
-              article.id
-            })" ${!canEditOrDelete ? "disabled" : ""}>Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteArticle(${
-              article.id
-            })" ${!canEditOrDelete ? "disabled" : ""}>Delete</button>
-            <button class="btn btn-info btn-sm" onclick="readArticle(${
-              article.id
-            })">Read</button>
-        </div>
-      </div>
-    `;
-            articlesContainer.appendChild(card);
-          });
-        }
-
-        // Read Article - Show Full Article in Modal
-        window.readArticle = async function (articleId) {
-          try {
-            const response = await fetch(`/articles/${articleId}/`, {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            });
-
-            if (response.ok) {
-              const article = await response.json();
-              showArticleModal(article);
-            } else {
-              alert("Failed to load article details.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert(
-              "An unexpected error occurred while loading article details."
-            );
-          }
-        };
-
-        // Show Article Modal
-        function showArticleModal(article) {
-          const modalContent = `
-            <div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="articleModalLabel">${
-                              article.title
-                            }</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="${
-                              article.image ||
-                              "https://picsum.photos/id/1/200/300"
-                            }" class="img-fluid mb-3" alt="Article Image">
-                            <h6><strong>Subtitle:</strong> ${
-                              article.subtitle
-                            }</h6>
-                            <p>${article.content}</p>
-                            <p><strong>Status:</strong> ${article.status}</p>
-                            <p><strong>Author:</strong> ${
-                              article.author_name
-                            }</p>
-                            <p><strong>Email: </strong> ${
-                              article.author_email
-                            }</p>
-                            <p><strong>Tags: </strong> 
-                               ${article.tags.map((tag) => tag.name).join(", ")}
-                            </p>
-                            <p><strong>Categories: </strong> 
-                                ${article.categories
-                                  .map((category) => category.name)
-                                  .join(", ")}
-                            </p>
-                            <p><strong>Likes:</strong> ${article.likes || 0}</p>
-                            <p><strong>Comments:</strong></p>
-                            ${
-                              article.comments.length
-                                ? `<ul>${article.comments
-                                    .map(
-                                      (comment) =>
-                                        `<li>${
-                                          comment.content || "No comment text"
-                                        }</li>`
-                                    )
-                                    .join("")}</ul>`
-                                : "<p>No comments yet.</p>"
-                            }
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
+                    const card = document.createElement("div");
+                    card.className = "col-md-4 mb-4";
+                    card.innerHTML = `
+              <div class="card">
+                <img src="${article.image || "https://picsum.photos/id/1/200/300"}"
+                     class="card-img-top" alt="Article Image"
+                     style="width: 350px; height: 300px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>Title:</strong> ${article.title}</h5>
+                    <p class="card-subtitle text-muted"><strong>subTitle:</strong> ${
+                      article.subtitle
+                    }</p>
+                    <p class="card-text"><strong>Content:</strong> ${article.content.substring(
+                      0,
+                      100
+                    )}...</p>
+                    <p><strong>Status: </strong> ${article.status}</p>
+                    <p><strong>Author: </strong> ${article.author_name}</p>
+                    <p><strong>Tags: </strong>
+                        ${article.tags.map((tag) => tag.name).join(", ")}
+                    </p>
+                    <p><strong>Categories: </strong>
+                        ${article.categories
+                          .map((category) => category.name)
+                          .join(", ")}
+                    </p>
+                    {% comment %} <p><strong>Likes:</strong> ${likes}</p>
+                    <p><strong>Comments:</strong></p>
+                    ${comments} {% endcomment %}
+                    <button class="btn btn-primary btn-sm" onclick="editArticle(${
+                      article.id
+                    })" ${!canEditOrDelete ? "" : ""}>Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteArticle(${
+                      article.id
+                    })" ${!canEditOrDelete ? "" : ""}>Delete</button>
+                    <button class="btn btn-info btn-sm" onclick="readArticle(${
+                      article.id
+                    })">Read</button>
                 </div>
-            </div>
-        `;
+              </div>
+            `;
+                    articlesContainer.appendChild(card);
+                  });
+                }
 
-          // Inject modal into the body and show it
-          document.body.insertAdjacentHTML("beforeend", modalContent);
-          const modal = new bootstrap.Modal(
-            document.getElementById("articleModal")
-          );
-          modal.show();
-
-          // Remove modal from DOM after it is closed
-          document
-            .getElementById("articleModal")
-            .addEventListener("hidden.bs.modal", () => {
-              document.getElementById("articleModal").remove();
-            });
-        }
-
-        // Fetch articles on load
-        fetchArticles();
-      });
-
-      window.editContent = async function (articleId) {
-        const currentContent = document.getElementById(
-          `content-${articleId}`
-        ).textContent;
-
-        const newContent = prompt("Edit Content:", currentContent);
-        if (newContent && newContent !== currentContent) {
-          try {
-            const response = await fetch(`/article/${articleId}/`, {
-              method: "PATCH",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ content: newContent }),
-            });
-
-            if (response.ok) {
-              alert("Content updated successfully.");
-              fetchArticles(); // Refresh the articles list
-            } else {
-              alert("Failed to update content.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred while updating content.");
-          }
-        }
-      };
-
-      window.updateArticle = async function (articleId) {
-        // Fetch article details for pre-filling the form
-        const response = await fetch(`/article/${articleId}/`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (response.ok) {
-          const article = await response.json();
-
-          // Populate and show modal
-          const modalContent = `
-            <div class="modal" tabindex="-1" id="update-modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Update Article</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="update-form">
-                                <div class="mb-3">
-                                    <label for="title" class="form-label">Title</label>
-                                    <input type="text" class="form-control" id="title" value="${article.title}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="subtitle" class="form-label">Subtitle</label>
-                                    <input type="text" class="form-control" id="subtitle" value="${article.subtitle}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="content" class="form-label">Content</label>
-                                    <textarea class="form-control" id="content">${article.content}</textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-success" onclick="saveUpdatedArticle(${articleId})">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-          document.body.insertAdjacentHTML("beforeend", modalContent);
-          const modal = new bootstrap.Modal(
-            document.getElementById("update-modal")
-          );
-          modal.show();
-        } else {
-          alert("Failed to fetch article details.");
-        }
-      };
-
-      window.saveUpdatedArticle = async function (articleId) {
-        const title = document.getElementById("title").value;
-        const subtitle = document.getElementById("subtitle").value;
-        const content = document.getElementById("content").value;
-
-        try {
-          const response = await fetch(`/article/${articleId}/`, {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ title, subtitle, content }),
-          });
-
-          if (response.ok) {
-            alert("Article updated successfully.");
-            document.getElementById("update-modal").remove();
-            fetchArticles(); // Refresh the articles list
-          } else {
-            alert("Failed to update article.");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An error occurred while updating the article.");
-        }
-      };
-
-      // Edit Article
-      async function editArticle(articleId) {
-        // Fetch the article details first
-        try {
-          const response = await fetch(`/article/${articleId}/`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          });
-
-          if (response.ok) {
-            const article = await response.json();
-            // Pre-fill the modal with the current article data
-            document.getElementById("newTitle").value = article.title;
-            document.getElementById("newSubtitle").value =
-              article.subtitle || "";
-            document.getElementById("newContent").value = article.content || "";
-            document
-              .getElementById("newTags")
-              .value.split(",")
-              .map((tag) => tag.trim());
-            document
-              .getElementById("newCategories")
-              .value.split(",")
-              .map((category) => category.trim());
-            // Show the modal
-            const editModal = new bootstrap.Modal(
-              document.getElementById("editArticleModal")
-            );
-            editModal.show();
-
-            // Add event listener for Save button
-            document.getElementById("saveArticleBtn").onclick =
-              async function () {
-                const updatedTitle = document.getElementById("newTitle").value;
-                const updatedSubtitle =
-                  document.getElementById("newSubtitle").value;
-                const updatedContent =
-                  document.getElementById("newContent").value;
-                const updatedTags = document
-                  .getElementById("newTags")
-                  .value.split(",")
-                  .map((tag) => tag.trim());
-                const updatedCategories = document
-                  .getElementById("newCategories")
-                  .value.split(",")
-                  .map((category) => category.trim());
-
-                if (updatedTitle) {
+                // Read Article - Show Full Article in Modal
+                window.readArticle = async function (articleId) {
                   try {
-                    const updateResponse = await fetch(
-                      `/article/${articleId}/`,
-                      {
-                        method: "PATCH",
-                        headers: {
-                          Authorization: `Bearer ${localStorage.getItem(
-                            "access_token"
-                          )}`,
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          title: updatedTitle,
-                          subtitle: updatedSubtitle,
-                          content: updatedContent,
-                          tags: updatedTags,
-                          categories: updatedCategories,
-                        }),
-                      }
-                    );
+                    const response = await fetch(`/articles/articles/${articleId}/`, {
+                      method: "GET",
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                      },
+                    });
 
-                    if (updateResponse.ok) {
-                      alert("Article updated successfully!");
-                      location.reload(); // Reload articles to reflect changes
+                    if (response.ok) {
+                      const article = await response.json();
+
+      window.location.href = `/users/Journalist/singleJournalistPage/${articleId}/`;
                     } else {
-                      alert("Failed to update article.");
+                      alert("Failed to load article details.");
                     }
                   } catch (error) {
                     console.error("Error:", error);
                     alert(
-                      "An unexpected error occurred while updating the article."
+                      "An unexpected error occurred while loading article details."
                     );
                   }
-                } else {
-                  alert("Title is required.");
+                };
+
+                // Fetch articles on load
+                fetchArticles();
+              });
+
+              window.editContent = async function (articleId) {
+                const currentContent = document.getElementById(
+                  `content-${articleId}`
+                ).textContent;
+
+                const newContent = prompt("Edit Content:", currentContent);
+                if (newContent && newContent !== currentContent) {
+                  try {
+                    const response = await fetch(`/articles/articles/${articleId}/`, {
+                      method: "PATCH",
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ content: newContent }),
+                    });
+
+                    if (response.ok) {
+                      alert("Content updated successfully.");
+                      fetchArticles(); // Refresh the articles list
+                    } else {
+                      alert("Failed to update content.");
+                    }
+                  } catch (error) {
+                    console.error("Error:", error);
+                    alert("An error occurred while updating content.");
+                  }
                 }
               };
-          } else {
-            alert("Failed to fetch article details.");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An error occurred while fetching the article.");
-        }
-      }
 
-      // Delete Article
-      window.deleteArticle = async function (articleId) {
-        if (confirm("Are you sure you want to delete this article?")) {
-          try {
-            const response = await fetch(`/article/${articleId}/`, {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-              },
-            });
+              window.updateArticle = async function (articleId) {
+                // Fetch article details for pre-filling the form
+                const response = await fetch(`/article/${articleId}/`, {
+                  method: "GET",
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                });
 
-            if (response.ok) {
-              alert("Article deleted successfully!");
-              location.reload(); // Reload articles
-            } else {
-              alert("Failed to delete article.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An unexpected error occurred while deleting the article.");
-          }
-        }
-      };
+                if (response.ok) {
+                  const article = await response.json();
 
-      // search
-      document.addEventListener("DOMContentLoaded", function () {
-        const searchBtn = document.getElementById("searchBtn");
-        const categoriesInput = document.getElementById("categorie");
-        const tagsInput = document.getElementById("tag");
-        const articlesDiv = document.getElementById("articles");
-
-        // Debounce function
-        function debounce(fn, delay) {
-          let timer;
-          return function () {
-            const context = this;
-            const args = arguments;
-            clearTimeout(timer);
-            timer = setTimeout(() => fn.apply(context, args), delay);
-          };
-        }
-
-        // Fetch and display articles
-        function fetchArticles() {
-          const categories = categoriesInput.value.trim();
-          const tags = tagsInput.value.trim();
-
-          const url = `/articles/search/?categories=${encodeURIComponent(
-            categories
-          )}&tags=${encodeURIComponent(tags)}`;
-
-          fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-              if (data && data.length > 0) {
-                renderArticles(data);
-              } else {
-                articlesDiv.innerHTML = "<p>No articles found.</p>";
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching articles:", error);
-              articlesDiv.innerHTML = "<p>Error loading articles.</p>";
-            });
-        }
-
-        // Render articles to the DOM
-        function renderArticles(articles) {
-          console.log(articles);
-          articlesDiv.innerHTML = ""; // Clear previous results
-          articles.forEach((article) => {
-            const articleHtml = `
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="${article.image}" alt="${
-              article.title
-            }" class="img-fluid">
-                        <div class="card-body">
-                            <h5 class="card-title">${article.title}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">${
-                              article.subtitle
-                            }</h6>
-                            <p><strong>Author:</strong> ${
-                              article.author_name
-                            }</p>
-                            <p><strong>Categories:</strong> ${article.categories
-                              .map((category) => category.name)
-                              .join(", ")}</p>
-                            <p><strong>Tags:</strong> ${article.tags
-                              .map((tag) => tag.name)
-                              .join(", ")}</p>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between">
-                            <button class="icon-btn"><i class="bi bi-hand-thumbs-up"></i> ${
-                              article.likes_count || 0
-                            }</button>
-                            <button class="icon-btn"><i class="bi bi-chat-left-text"></i> ${
-                              article.comments.length || 0
-                            }</button>
-                            <a href="/article-page/${
-                              article.id
-                            }/" class="btn btn-primary">Read More</a>
+                  // Populate and show modal
+                  const modalContent = `
+                    <div class="modal" tabindex="-1" id="update-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Update Article</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="update-form">
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="title" value="${article.title}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="subtitle" class="form-label">Subtitle</label>
+                                            <input type="text" class="form-control" id="subtitle" value="${article.subtitle}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="content" class="form-label">Content</label>
+                                            <textarea class="form-control" id="content">${article.content}</textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-success" onclick="saveUpdatedArticle(${articleId})">Save</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-            articlesDiv.innerHTML += articleHtml;
-          });
-        }
+                `;
+                  document.body.insertAdjacentHTML("beforeend", modalContent);
+                  const modal = new bootstrap.Modal(
+                    document.getElementById("update-modal")
+                  );
+                  modal.show();
+                } else {
+                  alert("Failed to fetch article details.");
+                }
+              };
 
-        // Event listeners
-        searchBtn.addEventListener("click", debounce(fetchArticles, 500));
+              window.saveUpdatedArticle = async function (articleId) {
+                const title = document.getElementById("title").value;
+                const subtitle = document.getElementById("subtitle").value;
+                const content = document.getElementById("content").value;
 
-        // Optional: Listen for Enter key press to trigger search
-        categoriesInput.addEventListener("keypress", function (event) {
-          if (event.key === "Enter") {
-            debounce(fetchArticles, 500)();
-          }
-        });
-        tagsInput.addEventListener("keypress", function (event) {
-          if (event.key === "Enter") {
-            debounce(fetchArticles, 500)();
-          }
-        });
-      });
+                try {
+                  const response = await fetch(`/articles/articles/${articleId}/`, {
+                    method: "PUT",
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ title, subtitle, content }),
+                  });
+
+                  if (response.ok) {
+                    alert("Article updated successfully.");
+                    document.getElementById("update-modal").remove();
+                    fetchArticles(); // Refresh the articles list
+                  } else {
+                    alert("Failed to update article.");
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                  alert("An error occurred while updating the article.");
+                }
+              };
+
+              // Edit Article
+              async function editArticle(articleId) {
+                // Fetch the article details first
+                try {
+                  const response = await fetch(`/articles/articles/${articleId}/`, {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                    },
+                  });
+
+                  if (response.ok) {
+                    const article = await response.json();
+                    // Pre-fill the modal with the current article data
+                    document.getElementById("newTitle").value = article.title;
+                    document.getElementById("newSubtitle").value =
+                      article.subtitle || "";
+                    document.getElementById("newContent").value = article.content || "";
+                    document
+                      .getElementById("newTags")
+                      .value.split(",")
+                      .map((tag) => tag.trim());
+                    document
+                      .getElementById("newCategories")
+                      .value.split(",")
+                      .map((category) => category.trim());
+                    // Show the modal
+                    const editModal = new bootstrap.Modal(
+                      document.getElementById("editArticleModal")
+                    );
+                    editModal.show();
+
+                    // Add event listener for Save button
+                    document.getElementById("saveArticleBtn").onclick =
+                      async function () {
+                        const updatedTitle = document.getElementById("newTitle").value;
+                        const updatedSubtitle =
+                          document.getElementById("newSubtitle").value;
+                        const updatedContent =
+                          document.getElementById("newContent").value;
+                        const updatedTags = document
+                          .getElementById("newTags")
+                          .value.split(",")
+                          .map((tag) => tag.trim());
+                        const updatedCategories = document
+                          .getElementById("newCategories")
+                          .value.split(",")
+                          .map((category) => category.trim());
+
+                        if (updatedTitle) {
+                          try {
+                            const updateResponse = await fetch(
+                              `/articles/articles/${articleId}/`,
+                              {
+                                method: "PATCH",
+                                headers: {
+                                  Authorization: `Bearer ${localStorage.getItem(
+                                    "access_token"
+                                  )}`,
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                  title: updatedTitle,
+                                  subtitle: updatedSubtitle,
+                                  content: updatedContent,
+                                  tags: updatedTags,
+                                  categories: updatedCategories,
+                                }),
+                              }
+                            );
+
+                            if (updateResponse.ok) {
+                              alert("Article updated successfully!");
+                              location.reload(); // Reload articles to reflect changes
+                            } else {
+                              alert("Failed to update article.");
+                            }
+                          } catch (error) {
+                            console.error("Error:", error);
+                            alert(
+                              "An unexpected error occurred while updating the article."
+                            );
+                          }
+                        } else {
+                          alert("Title is required.");
+                        }
+                      };
+                  } else {
+                    alert("Failed to fetch article details.");
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                  alert("An error occurred while fetching the article.");
+                }
+              }
+
+              // Delete Article
+              window.deleteArticle = async function (articleId) {
+                if (confirm("Are you sure you want to delete this article?")) {
+                  try {
+                    const response = await fetch(`/articles/articles/${articleId}/`, {
+                      method: "DELETE",
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                      },
+                    });
+
+                    if (response.ok) {
+                      alert("Article deleted successfully!");
+                      location.reload(); // Reload articles
+                    } else {
+                      alert("Failed to delete article.");
+                    }
+                  } catch (error) {
+                    console.error("Error:", error);
+                    alert("An unexpected error occurred while deleting the article.");
+                  }
+                }
+              };
+
+              // search
+              document.addEventListener("DOMContentLoaded", function () {
+                const searchBtn = document.getElementById("searchBtn");
+                const categoriesInput = document.getElementById("categorie");
+                const tagsInput = document.getElementById("tag");
+                const articlesDiv = document.getElementById("articles");
+
+                // Debounce function
+                function debounce(fn, delay) {
+                  let timer;
+                  return function () {
+                    const context = this;
+                    const args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(() => fn.apply(context, args), delay);
+                  };
+                }
+
+                // Fetch and display articles
+                function fetchArticles() {
+                  const categories = categoriesInput.value.trim();
+                  const tags = tagsInput.value.trim();
+
+                  const url = `/articles/search/?categories=${encodeURIComponent(
+                    categories
+                  )}&tags=${encodeURIComponent(tags)}`;
+
+                  fetch(url)
+                    .then((response) => response.json())
+                    .then((data) => {
+                      if (data && data.length > 0) {
+                        renderArticles(data);
+                      } else {
+                        articlesDiv.innerHTML = "<p>No articles found.</p>";
+                      }
+                    })
+                    .catch((error) => {
+                      console.error("Error fetching articles:", error);
+                      articlesDiv.innerHTML = "<p>Error loading articles.</p>";
+                    });
+                }
+
+                // Render articles to the DOM
+                function renderArticles(articles) {
+                  console.log(articles);
+                  articlesDiv.innerHTML = ""; // Clear previous results
+                  articles.forEach((article) => {
+                    const articleHtml = `
+                        <div class="col">
+                            <div class="card h-100">
+                                <img src="${article.image}" alt="${
+                      article.title
+                    }" class="img-fluid">
+                                <div class="card-body">
+                                    <h5 class="card-title">${article.title}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">${
+                                      article.subtitle
+                                    }</h6>
+                                    <p><strong>Author:</strong> ${
+                                      article.author_name
+                                    }</p>
+                                    <p><strong>Categories:</strong> ${article.categories
+                                      .map((category) => category.name)
+                                      .join(", ")}</p>
+                                    <p><strong>Tags:</strong> ${article.tags
+                                      .map((tag) => tag.name)
+                                      .join(", ")}</p>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between">
+                                    <button class="icon-btn"><i class="bi bi-hand-thumbs-up"></i> ${
+                                      article.likes_count || 0
+                                    }</button>
+                                    <button class="icon-btn"><i class="bi bi-chat-left-text"></i> ${
+                                      article.comments.length || 0
+                                    }</button>
+                                    <a href="/article-page/${
+                                      article.id
+                                    }/" class="btn btn-primary">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    articlesDiv.innerHTML += articleHtml;
+                  });
+                }
+
+                // Event listeners
+                searchBtn.addEventListener("click", debounce(fetchArticles, 500));
+
+                // Optional: Listen for Enter key press to trigger search
+                categoriesInput.addEventListener("keypress", function (event) {
+                  if (event.key === "Enter") {
+                    debounce(fetchArticles, 500)();
+                  }
+                });
+                tagsInput.addEventListener("keypress", function (event) {
+                  if (event.key === "Enter") {
+                    debounce(fetchArticles, 500)();
+                  }
+                });
+              });
     </script>
   </body>
 </html>

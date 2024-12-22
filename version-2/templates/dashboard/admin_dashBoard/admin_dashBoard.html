@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>admin Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+      rel="stylesheet" />
+    <style>
+      .profile-cart {
+        position: absolute;
+        top: 50px;
+        right: 10px;
+        width: 300px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        display: none;
+        z-index: 999;
+      }
+
+      .profile-cart img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+      }
+
+      #profile-icon {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+      }
+
+      .metric-card {
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        background-color: #fff;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .metric-card:hover {
+        background-color: #8b0000;
+
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .metric-card.active {
+        background-color: #8b0000;
+      }
+
+      .search-filter-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .status-badge {
+        padding: 5px 10px;
+        border-radius: 12px;
+      }
+
+      .status-rejected {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .status-pending {
+        background-color: #ffc107;
+        color: black;
+      }
+
+      .status-published {
+        background-color: #6c757d;
+        color: white;
+      }
+
+      table tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+      }
+
+      table tr.active-row {
+        background-color: #d3d3d3;
+      }
+
+      footer a:hover {
+        color: #ffd700;
+        /* Gold color on hover */
+      }
+      .sidebar-left {
+        width: 300px; /* Adjust width as desired */
+        min-height: 100vh; /* Full height */
+        background-color: #f8f9fa; /* Light grey or any color you like */
+        border-right: 1px solid #ddd;
+        padding: 1rem;
+        position: "absolute";
+      }
+      .col-md-2 {
+        width: 20% !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          {% comment %}
+          <button
+            class="btn btn-primary me-3"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebar"
+            aria-controls="sidebar">
+            <i class="bi bi-list"></i>
+          </button>
+          {% endcomment %}
+          <h4>Welcome, <span id="user-name"></span></h4>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="profile-icon-link">
+                  <img
+                    src="https://picsum.photos/id/1/200/300"
+                    id="profile-icon"
+                    alt="Profile Icon" />
+                </a>
+                <div class="profile-cart" id="profile-cart">
+                  <div class="profile-header">
+                    <img
+                      src="https://picsum.photos/id/1/200/300"
+                      id="profile-image"
+                      alt="Profile Image" />
+                    <h5 id="user-name-dropdown"></h5>
+                  </div>
+                  <ul class="profile-details">
+                    <li>
+                      <span>Email:</span> <span id="user-email-dropdown"></span>
+                    </li>
+                    <li>
+                      <span>Phone:</span> <span id="user-phone-dropdown"></span>
+                    </li>
+                    <li>
+                      <span>Role:</span> <span id="user-role-dropdown"></span>
+                    </li>
+                  </ul>
+                  <button class="btn btn-danger btn-logout">
+                    <a
+                      style="text-decoration: none; color: #ffffff"
+                      href="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#updateDetailsModal">
+                      Update Details
+                    </a>
+                  </button>
+                  <button class="btn btn-danger btn-logout" id="logout-btn">
+                    Logout
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div style="display: flex; gap: 12px">
+      <!-- Sidebar  al models  -->
+      <div class="sidebar-left">
+        <!-- User Profile Section -->
+        <div id="user-profile" class="mb-3">
+          <h6>Welcome, <span id="user-fullname">User</span></h6>
+          <p>Email: <span id="user-email"></span></p>
+          <p>Role: <span id="user-role"></span></p>
+        </div>
+
+        <ul class="list-group">
+          {% comment %}
+          <li class="list-group-item">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+              Profile Settings
+            </a>
+          </li>
+          {% endcomment %}
+
+          <li class="list-group-item">
+            <a href="/users/admin/">Dashboard</a>
+          </li>
+          <li class="list-group-item">
+            <a href="/users/admin/manage/user">Manage user</a>
+          </li>
+          <li class="list-group-item">
+            <a href="/users/admin/published/article/">Published Article</a>
+          </li>
+
+          <a href="#" id="logout-sidebar"></a>
+        </ul>
+      </div>
+
+      <!-- Profile Modal -->
+      <div
+        class="modal fade"
+        id="profileModal"
+        tabindex="-1"
+        aria-labelledby="profileModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="profileModalLabel">
+                Profile Settings
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>
+                <strong>Full Name:</strong> <span id="modal-fullname"></span>
+              </p>
+              <p><strong>Email:</strong> <span id="modal-email"></span></p>
+              <p><strong>Role:</strong> <span id="modal-role"></span></p>
+              <p><strong>Number</strong> <span id="modal-number"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Details Modal -->
+      <div
+        class="modal fade"
+        id="updateDetailsModal"
+        tabindex="-1"
+        aria-labelledby="updateDetailsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateDetailsModalLabel">
+                Update Details
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="update-user-form">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="form-control"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="number" class="form-label">Phone Number</label>
+                  <input
+                    type="number"
+                    id="number"
+                    class="form-control"
+                    required />
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Save Changes
+                </button>
+                <button class="btn btn-primary">
+                  <a
+                    style="text-decoration: none; color: #ffffff"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#changePasswordModal">
+                    Change Password
+                  </a>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Password Modal -->
+      <div
+        class="modal fade"
+        id="changePasswordModal"
+        tabindex="-1"
+        aria-labelledby="changePasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="changePasswordModalLabel">
+                Change Password
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="change-password-form">
+                <div class="mb-3">
+                  <label for="old-password" class="form-label"
+                    >Old Password</label
+                  >
+                  <input
+                    type="password"
+                    id="old-password"
+                    class="form-control"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="new-password" class="form-label"
+                    >New Password</label
+                  >
+                  <input
+                    type="password"
+                    id="new-password"
+                    class="form-control"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="confirm-password" class="form-label"
+                    >Confirm Password</label
+                  >
+                  <input
+                    type="password"
+                    id="confirm-password"
+                    class="form-control"
+                    required />
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Change Password
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create User Modal -->
+      <div
+        class="modal fade"
+        id="createUserModal"
+        tabindex="-1"
+        aria-labelledby="createUserModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createUserModalLabel">Create User</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="create-user-form">
+                <div class="mb-3">
+                  <label for="create-email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="create-email"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="create-full-name" class="form-label"
+                    >Full Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="create-full-name"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="create-password" class="form-label"
+                    >Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="create-password"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="create-confirm-password" class="form-label"
+                    >Confirm Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="create-confirm-password"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="create-role" class="form-label">Role</label>
+                  <select class="form-control" id="create-role" required>
+                    <!-- <option value="user">User</option> -->
+                    <option value="editor">Editor</option>
+                    <option value="journalist">Journalist</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="create-number" class="form-label"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="create-number"
+                    maxlength="12"
+                    required />
+                </div>
+                <button
+                  type="submit"
+                  id="create-user-submit"
+                  class="btn btn-primary">
+                  Create User
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OTP Verification Modal -->
+      <div
+        class="modal fade"
+        id="verifyOtpModal"
+        tabindex="-1"
+        aria-labelledby="verifyOtpModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="verifyOtpModalLabel">Verify OTP</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="verify-otp-form">
+                <div class="mb-3">
+                  <label for="otp-email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="otp-email"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="otp" class="form-label">OTP</label>
+                  <input type="text" class="form-control" id="otp" required />
+                </div>
+                <button
+                  type="submit"
+                  id="verify-otp-submit"
+                  class="btn btn-primary">
+                  Verify OTP
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Dashboard Content -->
+
+      <!-- Main container for the user list -->
+
+      <!-- =========================================== articles related ====================================================== -->
+      <!-- articles data loads  -->
+      <div
+        class="modal fade"
+        id="editArticleModal"
+        tabindex="-1"
+        aria-labelledby="editArticleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editArticleModalLabel">
+                Edit Article
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editArticleForm">
+                <!-- Hidden input to store article ID -->
+                <input type="hidden" id="articleId" />
+
+                <div class="mb-3">
+                  <label for="articleTitle" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="articleTitle" />
+                </div>
+                <div class="mb-3">
+                  <label for="articleStatus" class="form-label">Status</label>
+                  <select class="form-control" id="articleStatus">
+                    <option value="draft">Draft</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="articleContent" class="form-label">Content</label>
+                  <textarea
+                    class="form-control"
+                    id="articleContent"
+                    rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="articleCategories" class="form-label"
+                    >Categories</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="articleCategories" />
+                </div>
+                <div class="mb-3">
+                  <label for="articleTags" class="form-label">Tags</label>
+                  <input type="text" class="form-control" id="articleTags" />
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    id="deleteArticleBtn">
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="saveChangesBtn">
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Section -->
+      <div style="width: 78%; margin-top: 24px">
+        <div
+          class="row text-center"
+          style="display: flex; justify-content: center; align-items: center">
+          <div class="col-md-2">
+            <div class="metric-card" onclick="filterArticles('published')">
+              <h5>Published Articles</h5>
+              <h2 id="published-articles">0</h2>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="metric-card" onclick="filterArticles('approved')">
+              <h5>Approved Articles</h5>
+              <h2 id="approved-articles">0</h2>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="metric-card" onclick="filterArticles('pending')">
+              <h5>Submitted Articles</h5>
+              <h2 id="submitted-articles">0</h2>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="metric-card" onclick="filterArticles('rejected')">
+              <h5>Rejected Articles</h5>
+              <h2 id="rejected-articles">0</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table for displaying articles -->
+        <div class="text-center container mt-4">
+          <h4>articles data</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Author Email</th>
+                <th>Image</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="articlesTableBody">
+              <!-- Articles will be appended here dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <nav>
+          <ul class="pagination justify-content-center" id="pagination">
+            <!-- Pagination Buttons will be dynamically inserted -->
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ======================================== footer ====================================== -->
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <!-- About Section -->
+          <div class="col-md-4">
+            <h5 class="text-uppercase">About Us</h5>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+              convallis felis orci, nec sollicitudin urna pellentesque at.
+              Integer euismod pharetra metus, at efficitur nunc facilisis id.
+            </p>
+          </div>
+
+          <!-- Contact Section -->
+          <div class="col-md-4">
+            <h5 class="text-uppercase">Contact Us</h5>
+            <ul class="list-unstyled">
+              <li>
+                <i class="bi bi-house-door"></i> Address: 1234 Main Street,
+                City, Country
+              </li>
+              <li><i class="bi bi-phone"></i> Phone: +123 456 7890</li>
+              <li><i class="bi bi-envelope"></i> Email: contact@example.com</li>
+            </ul>
+          </div>
+
+          <!-- Social Media Links -->
+          <div class="col-md-4">
+            <h5 class="text-uppercase">Follow Us</h5>
+            <div class="d-flex">
+              <a href="#" class="btn btn-outline-light me-2"
+                ><i class="bi bi-facebook"></i> Facebook</a
+              >
+              <a href="#" class="btn btn-outline-light me-2"
+                ><i class="bi bi-twitter"></i> Twitter</a
+              >
+              <a href="#" class="btn btn-outline-light me-2"
+                ><i class="bi bi-linkedin"></i> LinkedIn</a
+              >
+              <a href="#" class="btn btn-outline-light"
+                ><i class="bi bi-instagram"></i> Instagram</a
+              >
+            </div>
+          </div>
+        </div>
+        <hr class="my-4 border-light" />
+        <div class="text-center">
+          <p>&copy; 2024 Your Website Name. All Rights Reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const accessToken = localStorage.getItem("access_token");
+
+      /**
+       * ========================= validation  ==========================
+       * email validation
+       * number number
+       * name
+       * password
+       */
+      function regexMail(email) {
+        const messages = [];
+
+        // 1. Check if input is empty
+        if (!email) {
+          messages.push("Email address cannot be empty.");
+          return { isValid: false, messages };
+        }
+
+        // 2. Format Check (basic regex)
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+          messages.push("Invalid email format. Please provide a valid email.");
+        }
+
+        // 3. Length Validation
+        if (email.length > 254) {
+          messages.push(
+            "Email address is too long. Maximum length is 254 characters."
+          );
+        }
+
+        // 4. Local part length check
+        const localPart = email.split("@")[0];
+        if (localPart.length > 64) {
+          messages.push(
+            "Local part of the email (before '@') is too long. Maximum is 64 characters."
+          );
+        }
+
+        // 5. Check for consecutive dots
+        if (email.includes("..")) {
+          messages.push(
+            "Email address cannot contain consecutive dots ('..')."
+          );
+        }
+
+        // 6. Top-Level Domain Check
+        const domain = email.split("@")[1];
+        if (domain && !domain.includes(".")) {
+          messages.push(
+            "Email domain must contain a '.' (e.g., 'example.com')."
+          );
+        }
+
+        // 7. Valid Characters
+        const invalidCharsRegex = /[^a-zA-Z0-9._%+-@]/;
+        if (invalidCharsRegex.test(email)) {
+          messages.push(
+            "Email contains invalid characters. Only letters, numbers, '.', '_', '%', '+', and '-' are allowed."
+          );
+        }
+
+        // 8. Optional: DNS Check (Mocked)
+        if (!domain || domain === "test.com") {
+          messages.push(
+            "Domain does not seem valid. (e.g., 'test.com' is not allowed)"
+          );
+        }
+
+        // Return results
+        const isValid = messages.length === 0;
+        if (isValid) {
+          messages.push("Email is valid!");
+        }
+        return { isValid, messages };
+      }
+      /**
+       * ============================================= side bar start ======================================
+       */
+      // Wait until the document content is fully loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        // Retrieve the access token from localStorage to check if the user is authenticated
+        const accessToken = localStorage.getItem("access_token");
+
+        // If the token does not exist, redirect the user to the login page
+        if (!accessToken) {
+          redirectToLoginPage();
+        } else {
+          // If the token is present, fetch the user's data from the server
+          fetchUserData(accessToken);
+        }
+
+        // Event listener to toggle the visibility of the profile dropdown menu
+        document
+          .getElementById("profile-icon-link")
+          .addEventListener("click", toggleProfileDropdown);
+
+        // Event listeners to handle logout from both the main profile section and sidebar
+        document.getElementById("logout-btn").addEventListener("click", logout);
+        document
+          .getElementById("logout-sidebar")
+          .addEventListener("click", logout);
+
+        // Populate the sidebar and modals with user data after login
+        populateSidebarAndModals();
+
+        // Handle user update form submission for changing personal details (email and phone number)
+        handleUserUpdateForm();
+
+        // Handle password change form submission
+        handleChangePasswordForm();
+      });
+
+      // **Redirect the user to the login page**
+      function redirectToLoginPage() {
+        // Redirect to the login page if the user is not authenticated
+        window.location.href = "/login";
+      }
+
+      // **Fetch user data using the access token**
+      function fetchUserData(accessToken) {
+        // Fetch user data from the server
+        fetch("/users/user/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Include the access token in the request headers
+          },
+        })
+          .then((response) => response.json()) // Parse the JSON response from the server
+          .then((data) => {
+            if (data) {
+              // If data is received, save it to localStorage and update the profile section
+              saveUserDataToLocalStorage(data);
+              updateProfileSection(data);
+            } else {
+              // If no data is received, alert the user
+              alert("Failed to fetch user data");
+            }
+          })
+          .catch((error) => {
+            // If there's an error during the fetch process, log the error and alert the user
+            console.error("Error:", error);
+            alert("An error occurred while fetching user data.");
+          });
+      }
+
+      // **Save the fetched user data to localStorage for future use**
+      function saveUserDataToLocalStorage(data) {
+        // Store the user data as a stringified JSON object in localStorage
+        localStorage.setItem("user_data", JSON.stringify(data));
+      }
+
+      // **Update the profile section on the page with user data**
+      function updateProfileSection(data) {
+        // Update various elements on the page with the user's details (name, profile image, etc.)
+        document.getElementById("user-name").textContent = data.full_name;
+        document.getElementById("profile-icon").src =
+          data.profile_image || "https://picsum.photos/id/1/200/300";
+        document.getElementById("user-name-dropdown").textContent =
+          data.full_name;
+        document.getElementById("user-email-dropdown").textContent = data.email;
+        document.getElementById("user-phone-dropdown").textContent =
+          data.number;
+        document.getElementById("user-role-dropdown").textContent = data.role;
+      }
+
+      // **Toggle the visibility of the profile dropdown**
+      function toggleProfileDropdown() {
+        const profileCart = document.getElementById("profile-cart");
+        // Toggle the display property of the profile dropdown (show or hide)
+        profileCart.style.display =
+          profileCart.style.display === "block" ? "none" : "block";
+      }
+
+      // **Logout the user by clearing stored data and redirecting to login page**
+      function logout() {
+        // Remove user data and access token from localStorage
+        localStorage.removeItem("user_data");
+        localStorage.removeItem("access_token");
+        // Redirect the user to the login page
+        redirectToLoginPage();
+      }
+
+      // **Populate the sidebar and modals with user details**
+      function populateSidebarAndModals() {
+        // Retrieve the access token from localStorage to authenticate the request
+        const token = localStorage.getItem("access_token");
+
+        // Fetch user data to populate the sidebar and modals
+        fetch("/users/user/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the access token in the request headers
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json()) // Parse the response as JSON
+          .then((data) => {
+            if (data) {
+              // If data is fetched successfully, update the sidebar and modal UI elements
+              updateSidebar(data);
+              updateModal(data);
+              updateUpdateForm(data);
+            }
+          })
+          .catch((error) => console.error("Error:", error)); // Log errors if the fetch fails
+      }
+
+      // **Update sidebar with user data**
+      function updateSidebar(data) {
+        // Populate sidebar with user's full name, email, and role
+        document.getElementById("user-fullname").textContent = data.full_name;
+        document.getElementById("user-email").textContent = data.email;
+        document.getElementById("user-role").textContent = data.role;
+      }
+
+      // **Update modal with user data**
+      function updateModal(data) {
+        // Populate the modal with user's full name, email, role, and phone number
+        document.getElementById("modal-fullname").textContent = data.full_name;
+        document.getElementById("modal-email").textContent = data.email;
+        document.getElementById("modal-role").textContent = data.role;
+        document.getElementById("modal-number").textContent = data.number;
+      }
+
+      // **Populate the update form with the user's current data**
+      function updateUpdateForm(data) {
+        // Pre-fill the form fields with user's current email and phone number
+        document.getElementById("email").value = data.email;
+        document.getElementById("number").value = data.number || ""; // Default to an empty string if the phone number is null
+      }
+
+      // **Handle the user update form submission (for email and phone number updates)**
+      function handleUserUpdateForm() {
+        // Listen for the form submission
+        document
+          .getElementById("update-user-form")
+          .addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Get the user ID from localStorage to update the correct user data
+            const userId = JSON.parse(localStorage.getItem("user_data")).id;
+            const updateApiUrl = `/users/user/${userId}/update/`; // Dynamic API endpoint based on user ID
+
+            // Collect the form data (email and phone number)
+            const userData = {
+              email: document.getElementById("email").value,
+              number: document.getElementById("number").value,
+            };
+
+            // Send a PUT request to update the user's details on the server
+            updateUserDetails(updateApiUrl, userData);
+          });
+      }
+
+      // **Send the PUT request to update the user's details**
+      function updateUserDetails(updateApiUrl, userData) {
+        // Retrieve the access token from localStorage for authentication
+        const token = localStorage.getItem("access_token");
+
+        // Send the PUT request to the API to update the user's data
+        fetch(updateApiUrl, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData), // Send the updated user data in the request body
+        })
+          .then((response) => response.json()) // Parse the JSON response
+          .then(() => {
+            // Show an alert and reload the page after a successful update
+            alert("Details updated successfully!");
+            window.location.reload(); // Refresh the page to reflect changes
+          })
+          .catch((error) => {
+            console.error("Error:", error); // Log any errors
+            alert("An error occurred while updating the details."); // Show an error message
+          });
+      }
+
+      // **Handle password change form submission**
+      function handleChangePasswordForm() {
+        // Listen for the form submission
+        document
+          .getElementById("change-password-form")
+          .addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Collect the password change data (old password, new password, confirm new password)
+            const passwordData = {
+              old_password: document.getElementById("old-password").value,
+              new_password: document.getElementById("new-password").value,
+              confirm_password:
+                document.getElementById("confirm-password").value,
+            };
+
+            // Send the password change request if the data is valid
+            changePassword(passwordData);
+          });
+      }
+
+      // **Send the password change request to the server**
+      function changePassword(passwordData) {
+        const token = localStorage.getItem("access_token");
+        const apiUrl = "/users/change-password/";
+
+        // **Validate the password data**
+        function validatePasswordData(passwordData) {
+          const { old_password, new_password, confirm_password } = passwordData;
+
+          // Check if any of the fields are empty
+          if (!old_password || !new_password || !confirm_password) {
+            alert("All fields are required.");
+            return false;
+          }
+
+          // Check if the new password and confirm password match
+          if (new_password !== confirm_password) {
+            alert("New password and confirm password do not match.");
+            return false;
+          }
+
+          // Check the strength of the new password (example: at least 8 characters, one uppercase, one number)
+          const passwordStrengthRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+          if (!passwordStrengthRegex.test(new_password)) {
+            alert(
+              "New password must be at least 8 characters long, include one uppercase letter and one number."
+            );
+            return false;
+          }
+
+          // If all checks pass, return true
+          return true;
+        }
+
+        // Validate the password data before sending the request
+        if (validatePasswordData(passwordData)) {
+          fetch(apiUrl, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(passwordData), // Send the password data in the request body
+          })
+            .then((response) => {
+              // Check if the response is ok (status 200-299)
+              if (!response.ok) {
+                return response.json().then((data) => {
+                  throw new Error(data.detail || "Failed to change password.");
+                });
+              }
+              return response.json();
+            })
+            .then((data) => {
+              // Check if the response contains errors (validation errors from the server)
+              if (data.errors) {
+                let errorMessage = "";
+                // Loop through all errors and create a message string
+                for (const key in data.errors) {
+                  if (data.errors.hasOwnProperty(key)) {
+                    errorMessage += `${key}: ${data.errors[key].join(", ")}\n`;
+                  }
+                }
+                alert(errorMessage || "Password changed successfully!");
+              } else {
+                // If no validation errors, show a success message
+                alert(data.detail || "Password changed successfully!");
+              }
+
+              // Reset the form after success
+              document.getElementById("change-password-form").reset();
+            })
+            .catch((error) => {
+              // Display any unexpected errors in an alert
+              alert(error.message || "An unknown error occurred.");
+            });
+        }
+      }
+      // create article model
+      // create article model
+
+      let allArticles = [];
+      document.addEventListener("DOMContentLoaded", () => {
+        const metricCards = document.querySelectorAll(".metric-card");
+
+        metricCards.forEach((card) => {
+          card.addEventListener("click", () => {
+            // Remove active class from all cards
+            metricCards.forEach((c) => c.classList.remove("active"));
+            // Add active class to clicked card
+            card.classList.add("active");
+          });
+        });
+
+        document.addEventListener("click", (e) => {
+          if (e.target.tagName === "TD") {
+            const row = e.target.parentElement;
+            const isActive = row.classList.contains("active-row");
+            document
+              .querySelectorAll("tr")
+              .forEach((tr) => tr.classList.remove("active-row"));
+            if (!isActive) {
+              row.classList.add("active-row");
+            }
+          }
+        });
+      });
+      // Fetch all articles and update counts
+      const fetchArticles = async () => {
+        const accessToken = localStorage.getItem("access_token");
+        console.log(accessToken);
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:8000/articles/articles/all/",
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch articles");
+          }
+          allArticles = await response.json();
+
+          // Update counts dynamically
+          document.getElementById("published-articles").innerText =
+            allArticles.filter(
+              (article) => article.status === "published"
+            ).length;
+          document.getElementById("approved-articles").innerText =
+            allArticles.filter(
+              (article) => article.status === "approved"
+            ).length;
+          document.getElementById("submitted-articles").innerText =
+            allArticles.filter(
+              (article) => article.status === "pending"
+            ).length;
+          document.getElementById("rejected-articles").innerText =
+            allArticles.filter(
+              (article) => article.status === "rejected"
+            ).length;
+        } catch (error) {
+          console.error("Error fetching articles:", error);
+        }
+      };
+
+      // Display articles based on filter
+      const filterArticles = (status) => {
+        const filteredArticles = allArticles.filter(
+          (article) => article.status === status
+        );
+        const articlesTableBody = document.getElementById("articlesTableBody");
+        articlesTableBody.innerHTML = "";
+
+        filteredArticles.forEach((article) => {
+          const articleRow = document.createElement("tr");
+          articleRow.innerHTML = `
+      <td>${article.title}</td>
+      <td>${article.subtitle}</td>
+      <td>${article.publish_date || "N/A"}</td>
+      <td><img src="https://via.placeholder.com/50" alt="Image" /></td>
+      <td><span class="status-badge ${
+        article.status === "rejected"
+          ? "status-rejected"
+          : article.status === "pending"
+          ? "status-pending"
+          : article.status === "published"
+          ? "status-published"
+          : article.status === "approved"
+          ? "status-approved"
+          : ""
+      }">${article.status}</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteArticle(${
+        article.id
+      })">Delete</button></td>
+    `;
+          articlesTableBody.appendChild(articleRow);
+        });
+      };
+
+      // Delete Article
+      const deleteArticle = async (id) => {
+        const accessToken = localStorage.getItem("access_token");
+        const confirmDelete = confirm(
+          "Are you sure you want to delete this article?"
+        );
+
+        if (confirmDelete) {
+          try {
+            const response = await fetch(
+              `http://127.0.0.1:8000/articles/articles/${id}/`,
+              {
+                method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+
+            if (response.ok) {
+              alert("Article deleted successfully!");
+              fetchArticles(); // Refresh articles
+            } else {
+              throw new Error("Failed to delete article");
+            }
+          } catch (error) {
+            console.error("Error deleting article:", error);
+            alert("Failed to delete article");
+          }
+        }
+      };
+
+      // Fetch and initialize articles on page load
+      fetchArticles();
+
+      // Add hover and click active styles dynamically
+      const style = document.createElement("style");
+      style.innerHTML = `
+  tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+  tr.active-row {
+    background-color: #d3d3d3;
+  }
+`;
+      document.head.appendChild(style);
+
+      // Add click event listener for active row selection
+      document.addEventListener("click", (e) => {
+        if (e.target.tagName === "TD") {
+          const row = e.target.parentElement;
+          const isActive = row.classList.contains("active-row");
+          document
+            .querySelectorAll("tr")
+            .forEach((tr) => tr.classList.remove("active-row"));
+          if (!isActive) {
+            row.classList.add("active-row");
+          }
+        }
+      });
+
+      /**
+       * ============================================= side bar end ======================================
+       */
+      /**
+       * ================ user create model start ==============================
+       */
+      // Utility to handle fetch requests
+
+      async function apiRequest(url, method, body = null) {
+        const accessToken = localStorage.getItem("access_token");
+
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        };
+
+        const options = {
+          method: method,
+          headers: headers,
+        };
+
+        if (body) {
+          options.body = JSON.stringify(body);
+        }
+
+        try {
+          const response = await fetch(url, options);
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || "Something went wrong");
+          }
+
+          return await response.json();
+        } catch (error) {
+          throw new Error(error.message || "Network error occurred");
+        }
+      }
+
+      // Create User Form Submission
+      document
+        .getElementById("create-user-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Collect form data
+          const email = document.getElementById("create-email").value;
+          const fullName = document.getElementById("create-full-name").value;
+          const password = document.getElementById("create-password").value;
+          const confirmPassword = document.getElementById(
+            "create-confirm-password"
+          ).value;
+          const role = document.getElementById("create-role").value;
+          const number = document.getElementById("create-number").value;
+
+          // Reset any previous error message
+          const errorMessageElement =
+            document.getElementById("create-user-error");
+          if (errorMessageElement) {
+            errorMessageElement.innerHTML = "";
+          }
+
+          // Email validation
+          const emailValidationResult = regexMail(email);
+          if (!emailValidationResult.isValid) {
+            alert(emailValidationResult.messages.join("\n"));
+            return;
+          }
+          // Validate fields before submitting
+          if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+          }
+
+          const payload = {
+            email,
+            full_name: fullName,
+            password,
+            confirm_password: confirmPassword,
+            role,
+            number,
+          };
+
+          try {
+            // Disable submit button and show loading state
+            const submitButton = document.getElementById("create-user-submit");
+            submitButton.disabled = true;
+            submitButton.innerText = "Creating User...";
+
+            const data = await apiRequest(
+              "/users/admin/users/",
+              "POST",
+              payload
+            );
+
+            // Save the email in localStorage (or a global variable)
+            localStorage.setItem("createdUserEmail", email);
+
+            alert("User created successfully!");
+
+            // Reset the form
+            document.getElementById("create-user-form").reset();
+
+            // Show OTP verification modal
+            const verifyOtpModal = new bootstrap.Modal(
+              document.getElementById("verifyOtpModal")
+            );
+            verifyOtpModal.show();
+
+            // Re-enable submit button
+            submitButton.disabled = false;
+            submitButton.innerText = "Create User";
+          } catch (error) {
+            // Show error message
+            const errorMessageElement =
+              document.getElementById("create-user-error");
+            if (errorMessageElement) {
+              errorMessageElement.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            }
+
+            // Re-enable submit button
+            const submitButton = document.getElementById("create-user-submit");
+            submitButton.disabled = false;
+            submitButton.innerText = "Create User";
+          }
+        });
+
+      // OTP Verification Form Submission
+      // OTP Verification Form Submission
+      document
+        .getElementById("verify-otp-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Collect OTP data
+          const email = document.getElementById("otp-email").value;
+          const otp = document.getElementById("otp").value;
+
+          // Validate OTP field
+          if (!otp) {
+            alert("Please enter the OTP");
+            return;
+          }
+
+          const payload = { email, otp };
+
+          try {
+            // Disable submit button and show loading state
+            const submitButton = document.getElementById("verify-otp-submit");
+            submitButton.disabled = true;
+            submitButton.innerText = "Verifying OTP...";
+
+            const data = await apiRequest(
+              "/users/register-verify-otp/",
+              "POST",
+              payload
+            );
+
+            alert("OTP verified successfully!");
+
+            // Hide OTP verification modal
+            const verifyOtpModal = bootstrap.Modal.getInstance(
+              document.getElementById("verifyOtpModal")
+            );
+            verifyOtpModal.hide();
+
+            // Re-enable submit button
+            submitButton.disabled = false;
+            submitButton.innerText = "Verify OTP";
+          } catch (error) {
+            // Show error message
+            const errorMessageElement =
+              document.getElementById("verify-otp-error");
+            if (errorMessageElement) {
+              errorMessageElement.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            }
+
+            // Re-enable submit button
+            const submitButton = document.getElementById("verify-otp-submit");
+            submitButton.disabled = false;
+            submitButton.innerText = "Verify OTP";
+          }
+        });
+
+      // Pre-fill email field for OTP form
+      document.addEventListener("DOMContentLoaded", () => {
+        const createdUserEmail = localStorage.getItem("createdUserEmail");
+        if (createdUserEmail) {
+          document.getElementById("otp-email").value = createdUserEmail;
+        }
+      });
+
+      /**
+       * =====================  user create model end ==========================================================
+       */
+      let currentPage = 1;
+      let totalPages = 0;
+
+      const loadArticles = async (page = 1) => {
+        const accessToken = localStorage.getItem("access_token");
+        const url = `/articles/articles/admin/?page=${page}`;
+
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch articles");
+          }
+
+          const data = await response.json();
+          displayArticles(data.results);
+          totalPages = Math.ceil(data.count / 5); // Assuming 5 articles per page
+          updatePagination(page, totalPages);
+        } catch (error) {
+          console.error("Error fetching articles:", error);
+        }
+      };
+
+      const displayArticles = (articles) => {
+        const articlesTableBody = document.getElementById("articlesTableBody");
+        articlesTableBody.innerHTML = "";
+
+        articles.forEach((article) => {
+          const articleRow = document.createElement("tr");
+          articleRow.innerHTML = `
+            <td>${article.title}</td>
+            <td>${article.author_name}</td>
+            <td>${article.author_email || "N/A"}</td>
+            <td><img src="https://via.placeholder.com/50" alt="Image" /></td>
+            <td><span class="status-badge ${
+              article.status === "rejected"
+                ? "status-rejected"
+                : article.status === "pending"
+                ? "status-pending"
+                : "status-published"
+            }">${article.status}</span></td>
+            <td><button class="btn btn-danger btn-sm" onclick="deleteArticle(${
+              article.id
+            })">Delete</button></td>
+          `;
+          articlesTableBody.appendChild(articleRow);
+        });
+      };
+
+      const updatePagination = (currentPage, totalPages) => {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+
+        for (let page = 1; page <= totalPages; page++) {
+          pagination.innerHTML += `<li class="page-item ${
+            page === currentPage ? "active" : ""
+          }">
+            <a class="page-link" href="#" onclick="loadArticles(${page})">${page}</a>
+          </li>`;
+        }
+      };
+
+      loadArticles(currentPage);
+      /**
+       * =====================  articles data fatched end ==========================================================
+       */
+    </script>
+  </body>
+</html>

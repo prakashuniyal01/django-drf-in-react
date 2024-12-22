@@ -78,13 +78,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 number=validated_data['number'],
                 full_name=validated_data['full_name'],
                 role=validated_data['role'],
-                is_active=False,  # Inactive by default
+                is_active=True,  # Inactive by default
             )
             user.set_password(validated_data['password'])
             user.save()
 
             # Generate and store OTP
             otp_code = str(random.randint(100000, 999999))
+            print("opt for the mail verification", otp_code)
             OTP.objects.create(user=user, otp=otp_code)
 
             # Send OTP email
@@ -103,7 +104,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         message = f"Hello {user.full_name},\n\nYour OTP for account verification is: {otp_code}.\nIt is valid for 10 minutes."
         from_email = "maan03saab@gmail.com"  # Replace with your email
         recipient_list = [user.email]
-
+        print("opt for the mail verification", otp_code)
+        print("deepak")
         send_mail(subject, message, from_email, recipient_list)
         
     def send_account_creation_email(self, user):

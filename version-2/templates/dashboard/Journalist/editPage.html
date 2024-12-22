@@ -1,0 +1,260 @@
+<div
+  class="modal fade"
+  id="editArticleModal"
+  tabindex="-1"
+  aria-labelledby="editArticleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editArticleModalLabel">Edit Article</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editArticleForm">
+          <div class="mb-3">
+            <label for="newTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="newTitle" required />
+          </div>
+          <div class="mb-3">
+            <label for="newSubtitle" class="form-label">Subtitle</label>
+            <input type="text" class="form-control" id="newSubtitle" />
+          </div>
+          <div class="mb-3">
+            <label for="newContent" class="form-label">Content</label>
+            <textarea class="form-control" id="newContent" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="newTags" class="form-label"
+              >Tags (comma-separated)</label
+            >
+            <input type="text" class="form-control" id="newTags" />
+          </div>
+          <div class="mb-3">
+            <label for="newCategories" class="form-label"
+              >Categories (comma-separated)</label
+            >
+            <input type="text" class="form-control" id="newCategories" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" id="saveArticleBtn">
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.editContent = async function (articleId) {
+    const currentContent = document.getElementById(
+      `content-${articleId}`
+    ).textContent;
+
+    const newContent = prompt("Edit Content:", currentContent);
+    if (newContent && newContent !== currentContent) {
+      try {
+        const response = await fetch(`/articles/articles/${articleId}/`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: newContent }),
+        });
+
+        if (response.ok) {
+          alert("Content updated successfully.");
+          fetchArticles(); // Refresh the articles list
+        } else {
+          alert("Failed to update content.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while updating content.");
+      }
+    }
+  };
+
+  window.updateArticle = async function (articleId) {
+    // Fetch article details for pre-filling the form
+    const response = await fetch(`/article/${articleId}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const article = await response.json();
+
+      // Populate and show modal
+      const modalContent = `
+                    <div class="modal" tabindex="-1" id="update-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Update Article</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="update-form">
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="title" value="${article.title}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="subtitle" class="form-label">Subtitle</label>
+                                            <input type="text" class="form-control" id="subtitle" value="${article.subtitle}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="content" class="form-label">Content</label>
+                                            <textarea class="form-control" id="content">${article.content}</textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-success" onclick="saveUpdatedArticle(${articleId})">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+      document.body.insertAdjacentHTML("beforeend", modalContent);
+      const modal = new bootstrap.Modal(
+        document.getElementById("update-modal")
+      );
+      modal.show();
+    } else {
+      alert("Failed to fetch article details.");
+    }
+  };
+
+  window.saveUpdatedArticle = async function (articleId) {
+    const title = document.getElementById("title").value;
+    const subtitle = document.getElementById("subtitle").value;
+    const content = document.getElementById("content").value;
+
+    try {
+      const response = await fetch(`/articles/articles/${articleId}/`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, subtitle, content }),
+      });
+
+      if (response.ok) {
+        alert("Article updated successfully.");
+        document.getElementById("update-modal").remove();
+        fetchArticles(); // Refresh the articles list
+      } else {
+        alert("Failed to update article.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while updating the article.");
+    }
+  };
+
+  // Edit Article
+  async function editArticle(articleId) {
+    // Fetch the article details first
+    try {
+      const response = await fetch(`/articles/articles/${articleId}/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      if (response.ok) {
+        const article = await response.json();
+        // Pre-fill the modal with the current article data
+        document.getElementById("newTitle").value = article.title;
+        document.getElementById("newSubtitle").value = article.subtitle || "";
+        document.getElementById("newContent").value = article.content || "";
+        document
+          .getElementById("newTags")
+          .value.split(",")
+          .map((tag) => tag.trim());
+        document
+          .getElementById("newCategories")
+          .value.split(",")
+          .map((category) => category.trim());
+        // Show the modal
+        const editModal = new bootstrap.Modal(
+          document.getElementById("editArticleModal")
+        );
+        editModal.show();
+
+        // Add event listener for Save button
+        document.getElementById("saveArticleBtn").onclick = async function () {
+          const updatedTitle = document.getElementById("newTitle").value;
+          const updatedSubtitle = document.getElementById("newSubtitle").value;
+          const updatedContent = document.getElementById("newContent").value;
+          const updatedTags = document
+            .getElementById("newTags")
+            .value.split(",")
+            .map((tag) => tag.trim());
+          const updatedCategories = document
+            .getElementById("newCategories")
+            .value.split(",")
+            .map((category) => category.trim());
+
+          if (updatedTitle) {
+            try {
+              const updateResponse = await fetch(
+                `/articles/articles/${articleId}/`,
+                {
+                  method: "PATCH",
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem(
+                      "access_token"
+                    )}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    title: updatedTitle,
+                    subtitle: updatedSubtitle,
+                    content: updatedContent,
+                    tags: updatedTags,
+                    categories: updatedCategories,
+                  }),
+                }
+              );
+
+              if (updateResponse.ok) {
+                alert("Article updated successfully!");
+                location.reload(); // Reload articles to reflect changes
+              } else {
+                alert("Failed to update article.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("An unexpected error occurred while updating the article.");
+            }
+          } else {
+            alert("Title is required.");
+          }
+        };
+      } else {
+        alert("Failed to fetch article details.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while fetching the article.");
+    }
+  }
+</script>

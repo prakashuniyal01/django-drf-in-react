@@ -1,0 +1,125 @@
+<div
+  class="modal fade"
+  id="createArticleModal"
+  tabindex="-1"
+  aria-labelledby="createArticleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createArticleModalLabel">Create Article</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="createArticleForm">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" required />
+          </div>
+          <div class="mb-3">
+            <label for="subtitle" class="form-label">Subtitle</label>
+            <input type="text" class="form-control" id="subtitle" required />
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea
+              class="form-control"
+              id="content"
+              rows="5"
+              required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="categories" class="form-label">Categories</label>
+            <input
+              type="text"
+              class="form-control"
+              id="categories"
+              placeholder="Comma-separated (e.g., technology, cloud)"
+              required />
+          </div>
+          <div class="mb-3">
+            <label for="tags" class="form-label">Tags</label>
+            <input
+              type="text"
+              class="form-control"
+              id="tags"
+              placeholder="Comma-separated (e.g., cloud computing, IT)"
+              required />
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input type="file" class="form-control" id="image" />
+          </div>
+          <button type="submit" class="btn btn-primary">Create Article</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // create article model
+  document.addEventListener("DOMContentLoaded", () => {
+    const createArticleForm = document.getElementById("createArticleForm");
+
+    createArticleForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const subtitle = document.getElementById("subtitle").value;
+      const content = document.getElementById("content").value;
+      const categories = document
+        .getElementById("categories")
+        .value.split(",")
+        .map((item) => item.trim());
+      const tags = document
+        .getElementById("tags")
+        .value.split(",")
+        .map((item) => item.trim());
+      const imageFile = document.getElementById("image").files[0]; // Get image file
+
+      // Prepare FormData payload for image upload and other article details
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("subtitle", subtitle);
+      formData.append("content", content);
+      formData.append("categories", categories.join(",")); // Convert categories to comma-separated string
+      formData.append("tags", tags.join(",")); // Convert tags to comma-separated string
+
+      if (imageFile) {
+        formData.append("image", imageFile); // Append image if it's selected
+        console.log(imageFile); // Check if the image is being appended correctly
+      } else {
+        console.log("No image selected"); // If no image is selected
+      }
+
+      const accessToken = localStorage.getItem("access_token");
+
+      try {
+        const response = await fetch("/articles/articles/", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            // 'Content-Type' is not needed here because we are using FormData
+          },
+          body: formData, // Send formData, which automatically sets 'Content-Type' to 'multipart/form-data'
+        });
+
+        if (response.ok) {
+          alert("Article created successfully!");
+          window.location.href = `/users/dashboard/journalist/`;
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message || "Failed to create article."}`);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An unexpected error occurred.");
+      }
+    });
+  });
+</script>

@@ -1,0 +1,47 @@
+<div class="container mt-5">
+  <!-- Article content -->
+  <h1>{{ article.title }}</h1>
+  <h3>{{ article.subtitle }}</h3>
+
+  <!-- Handling images, providing a fallback if no image is present -->
+  <img
+    src="{{ article.image.url | default:'https://picsum.photos/id/1/200/300' }}"
+    alt="{{ article.title }}"
+    class="img-fluid mb-3" />
+
+  <p>{{ article.content }}</p>
+  <p><strong>Status:</strong> {{ article.status }}</p>
+  <p><strong>Author:</strong> {{ article.author.full_name }}</p>
+  <!-- Assuming you want the author's full name -->
+  <p><strong>Email:</strong> {{ article.author.email }}</p>
+
+  <!-- Tags Section -->
+  <p>
+    <strong>Tags:</strong>
+    {% for tag in article.tags.all %} {{ tag.name }}{% if not forloop.last %},
+    {% endif %} {% endfor %}
+  </p>
+
+  <!-- Categories Section -->
+  <p>
+    <strong>Categories:</strong>
+
+    {% for category in article.categories.all %} {{ category.name }}{% if not forloop.last %}, {% endif %} {% endfor %}
+  </p>
+
+  <!-- Optional Comment Section (If you want to display comments) -->
+  {% comment %}
+  <p><strong>Likes:</strong> {{ article.likes|default:0 }}</p>
+  <p><strong>Comments:</strong></p>
+  {% if article.comments.count %}
+  <ul>
+    {% for comment in article.comments.all %}
+    <li>{{ comment.content|default:"No comment text" }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No comments yet.</p>
+  {% endif %} {% endcomment %}
+</div>
+
+<!-- JavaScript to handle the article as JSON (if needed for a JS interaction) -->

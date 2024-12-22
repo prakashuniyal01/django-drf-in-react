@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>editor Dashboard</title>
+    <title>Articles by Status</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet" />
@@ -11,6 +11,54 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
       rel="stylesheet" />
     <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1,
+      h2 {
+        color: #333;
+        text-align: center;
+      }
+
+      .articles-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+      }
+
+      .articles-table th,
+      .articles-table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      .articles-table th {
+        background-color: #f2f2f2;
+        color: #333;
+      }
+
+      .articles-table td {
+        background-color: #fafafa;
+      }
+
+      .articles-table tr:nth-child(even) td {
+        background-color: #f9f9f9;
+      }
+
       .profile-cart {
         position: absolute;
         top: 50px;
@@ -38,9 +86,7 @@
       }
     </style>
   </head>
-
   <body>
-    <!-- Header -->
     <header>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -322,235 +368,39 @@
       </div>
     </div>
 
-    <!-- Dashboard Content -->
-    <main class="mt-4 container dashboard-container">
-      <div
-        class="banner text-center p-5"
-        style="
-          background: url('https://via.placeholder.com/1200x400') no-repeat
-            center/cover;
-          color: #fff;
-        ">
-        <h1>Welcome</h1>
-        <p class="lead">Discover, read, and manage articles seamlessly.</p>
-        <a href="#articles-container" class="btn btn-primary btn-lg"
-          >Explore Articles</a
-        >
-      </div>
-    </main>
-    <!-- articles  -->
-    <div class="container my-5">
-      <h1 class="text-center mb-4">Articles</h1>
-      <div id="articles-container" class="row g-4"></div>
+    <div class="container">
+      <h2>Published Articles</h2>
+      <table id="published-table" class="articles-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Subtitle</th>
+            <th>Author</th>
+            <th>Content</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="published-list"></tbody>
+      </table>
+
+      <h2>Pending Articles</h2>
+      <table id="pending-table" class="articles-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Subtitle</th>
+            <th>Author</th>
+            <th>Content</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="pending-list"></tbody>
+      </table>
     </div>
-    <!-- model -->
-    <div
-      class="modal fade"
-      id="articleModal"
-      tabindex="-1"
-      aria-labelledby="articleModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="articleModalLabel">Article Details</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <img
-              id="modalImage"
-              src=""
-              class="img-fluid mb-3"
-              alt="Article Image" />
-            <h5 id="modalTitle"></h5>
-            <h6 id="modalSubtitle" class="text-muted"></h6>
-            <p id="modalContent"></p>
-            <p>
-              <strong>Categories:</strong> <span id="modalCategories"></span>
-            </p>
-            <p><strong>Tags:</strong> <span id="modalTags"></span></p>
-            <p><strong>Author:</strong> <span id="modalAuthor"></span></p>
-            <p id="modalStatus"></p>
-            <p id="modalPublishDate"></p>
-            <hr />
-            <h5>Comments</h5>
-            <div id="modalComments"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- <button class="btn btn-secondary edit-content-btn mt-3" data-id="${article.id}">Edit Content</button> -->
-    <div
-      class="modal fade"
-      id="editContentModal"
-      tabindex="-1"
-      aria-labelledby="editContentLabel"
-      aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editContentLabel">Edit Content</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="editContentForm">
-              <div class="mb-3">
-                <label for="editContentTextarea" class="form-label"
-                  >Content</label
-                >
-                <textarea
-                  class="form-control"
-                  id="editContentTextarea"
-                  rows="5"
-                  required></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                Save Changes
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======================================== footer ====================================== -->
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-      <div class="container">
-        <div class="row">
-          <!-- About Section -->
-          <div class="col-md-4">
-            <h5 class="text-uppercase">About Us</h5>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              convallis felis orci, nec sollicitudin urna pellentesque at.
-              Integer euismod pharetra metus, at efficitur nunc facilisis id.
-            </p>
-          </div>
-
-          <!-- Contact Section -->
-          <div class="col-md-4">
-            <h5 class="text-uppercase">Contact Us</h5>
-            <ul class="list-unstyled">
-              <li>
-                <i class="bi bi-house-door"></i> Address: 1234 Main Street,
-                City, Country
-              </li>
-              <li><i class="bi bi-phone"></i> Phone: +123 456 7890</li>
-              <li><i class="bi bi-envelope"></i> Email: contact@example.com</li>
-            </ul>
-          </div>
-
-          <!-- Social Media Links -->
-          <div class="col-md-4">
-            <h5 class="text-uppercase">Follow Us</h5>
-            <div class="d-flex">
-              <a href="#" class="btn btn-outline-light me-2"
-                ><i class="bi bi-facebook"></i> Facebook</a
-              >
-              <a href="#" class="btn btn-outline-light me-2"
-                ><i class="bi bi-twitter"></i> Twitter</a
-              >
-              <a href="#" class="btn btn-outline-light me-2"
-                ><i class="bi bi-linkedin"></i> LinkedIn</a
-              >
-              <a href="#" class="btn btn-outline-light"
-                ><i class="bi bi-instagram"></i> Instagram</a
-              >
-            </div>
-          </div>
-        </div>
-        <hr class="my-4 border-light" />
-        <div class="text-center">
-          <p>&copy; 2024 Your Website Name. All Rights Reserved.</p>
-        </div>
-      </div>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-      /**
-       * ========================= validation  ==========================
-       * email validation
-       * number number
-       * name
-       * password
-       */
-      function regexMail(email) {
-        const messages = [];
-
-        // 1. Check if input is empty
-        if (!email) {
-          messages.push("Email address cannot be empty.");
-          return { isValid: false, messages };
-        }
-
-        // 2. Format Check (basic regex)
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-          messages.push("Invalid email format. Please provide a valid email.");
-        }
-
-        // 3. Length Validation
-        if (email.length > 254) {
-          messages.push(
-            "Email address is too long. Maximum length is 254 characters."
-          );
-        }
-
-        // 4. Local part length check
-        const localPart = email.split("@")[0];
-        if (localPart.length > 64) {
-          messages.push(
-            "Local part of the email (before '@') is too long. Maximum is 64 characters."
-          );
-        }
-
-        // 5. Check for consecutive dots
-        if (email.includes("..")) {
-          messages.push(
-            "Email address cannot contain consecutive dots ('..')."
-          );
-        }
-
-        // 6. Top-Level Domain Check
-        const domain = email.split("@")[1];
-        if (domain && !domain.includes(".")) {
-          messages.push(
-            "Email domain must contain a '.' (e.g., 'example.com')."
-          );
-        }
-
-        // 7. Valid Characters
-        const invalidCharsRegex = /[^a-zA-Z0-9._%+-@]/;
-        if (invalidCharsRegex.test(email)) {
-          messages.push(
-            "Email contains invalid characters. Only letters, numbers, '.', '_', '%', '+', and '-' are allowed."
-          );
-        }
-
-        // 8. Optional: DNS Check (Mocked)
-        if (!domain || domain === "test.com") {
-          messages.push(
-            "Domain does not seem valid. (e.g., 'test.com' is not allowed)"
-          );
-        }
-
-        // Return results
-        const isValid = messages.length === 0;
-        if (isValid) {
-          messages.push("Email is valid!");
-        }
-        return { isValid, messages };
-      }
       /**
        * ============================================= side bar start ======================================
        */
@@ -587,7 +437,6 @@
         // Handle password change form submission
         handleChangePasswordForm();
       });
-
       // **Redirect the user to the login page**
       function redirectToLoginPage() {
         // Redirect to the login page if the user is not authenticated
@@ -858,233 +707,174 @@
       /**
        * ============================================= side bar end ======================================
        */
-      // Fetch the token
-      const accessToken = localStorage.getItem("access_token");
 
-      // Function to fetch data from the API
-      async function fetchArticles() {
-        try {
-          const response = await fetch("/articles/articles/", {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          const data = await response.json();
-          renderArticles(data);
-        } catch (error) {
-          console.error("Error fetching articles:", error);
-        }
-      }
+      document.addEventListener("DOMContentLoaded", function () {
+        // Replace with your API URL
+        const apiUrl = "http://127.0.0.1:8000/articles/articles/";
+        const accessToken = localStorage.getItem("access_token");
 
-      // Function to create a single card
-      function createCard(article) {
-        return `
-    <div class="col-md-6 col-lg-4">
-      <div class="card h-100">
-        <img src="${article.image}" class="card-img-top" alt="${article.title}">
-        <div class="card-body">
-          <h5 class="card-title">${article.title}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">${article.subtitle}</h6>
-          <p class="card-text" id="content-${
-            article.id
-          }">${article.content.slice(0, 100)}...</p>
-         <a
-  href="/users/Journalist/singleJournalistPage/${article.id}/"
-  class="btn btn-primary read-more-btn"
-  data-id="${article.id}"
->
-  Read More
-</a>
-          <div class="mt-3">
-            <label for="statusSelect-${
-              article.id
-            }" class="form-label">Update Status:</label>
-            <select class="form-select status-select" id="statusSelect-${
-              article.id
-            }" data-id="${article.id}">
-            <option value="draft" ${
-              article.status === "draft" ? "selected" : ""
-            }>draft</option>
-              <option value="approved" ${
-                article.status === "approved" ? "selected" : ""
-              }>Approved</option>
-              <option value="rejected" ${
-                article.status === "rejected" ? "selected" : ""
-              }>Rejected</option>
-              <option value="published" ${
-                article.status === "published" ? "selected" : ""
-              }>Published</option>
-            </select>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-  `;
-      }
-
-      // <button class="btn btn-secondary edit-content-btn mt-2" data-id="${article.id}">Edit Content</button>
-
-      // Function to render articles into the container]]
-      function setupReadMoreButtons(articles) {
-        const buttons = document.querySelectorAll(".read-more-btn");
-        buttons.forEach((button) => {
-          button.addEventListener("click", () => {
-            const articleId = button.getAttribute("data-id");
-            const article = articles.find((a) => a.id === parseInt(articleId));
-            showArticleModal(article);
-          });
-        });
-      }
-
-      function showArticleModal(article) {
-        // Populate modal with article details
-        document.getElementById("modalImage").src = article.image;
-        document.getElementById("modalTitle").textContent = article.title;
-        document.getElementById("modalSubtitle").textContent = article.subtitle;
-        document.getElementById("modalContent").textContent = article.content;
-        document.getElementById("modalCategories").textContent =
-          article.categories.map((c) => c.name).join(", ");
-        document.getElementById("modalTags").textContent = article.tags
-          .map((t) => t.name)
-          .join(", ");
-        document.getElementById("modalAuthor").textContent =
-          article.author_name;
-
-        // Format and display comments
-        const commentsSection = document.getElementById("modalComments");
-        if (article.comments.length > 0) {
-          commentsSection.innerHTML = article.comments
-            .map(
-              (comment) => `
-        <div class="mb-3">
-          <strong>${comment.author_name}</strong> (${new Date(
-                comment.date
-              ).toLocaleDateString()}):
-          <p>${comment.text}</p>
-        </div>
-      `
-            )
-            .join("");
-        } else {
-          commentsSection.innerHTML = `<p class="text-muted">No comments available.</p>`;
-        }
-
-        // Include additional details (like publish date, status)
-        document.getElementById(
-          "modalStatus"
-        ).textContent = `Status: ${article.status}`;
-        document.getElementById("modalPublishDate").textContent =
-          article.publish_date
-            ? `Publish Date: ${new Date(
-                article.publish_date
-              ).toLocaleDateString()}`
-            : "Not yet published";
-
-        // Show the modal
-        const modal = new bootstrap.Modal(
-          document.getElementById("articleModal")
-        );
-        modal.show();
-      }
-
-      function setupStatusUpdateListeners() {
-        const statusSelectors = document.querySelectorAll(".status-select");
-        statusSelectors.forEach((selector) => {
-          selector.addEventListener("change", async (e) => {
-            const articleId = e.target.getAttribute("data-id");
-            const newStatus = e.target.value;
-
-            try {
-              const response = await fetch(`/articles/articles/${articleId}/`, {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${accessToken}`,
-                },
-                body: JSON.stringify({ status: newStatus }),
-              });
-
-              if (response.ok) {
-                alert("Status updated successfully!");
-              } else {
-                alert("Failed to update status.");
-              }
-            } catch (error) {
-              console.error("Error updating status:", error);
+        // Function to fetch the articles data
+        fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            // 'Content-Type' is not needed here because we are using FormData
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
             }
-          });
-        });
-      }
-
-      function setupEditContentListeners(articles) {
-        const editButtons = document.querySelectorAll(".edit-content-btn");
-        editButtons.forEach((button) => {
-          button.addEventListener("click", (e) => {
-            const articleId = e.target.getAttribute("data-id");
-            const article = articles.find((a) => a.id === parseInt(articleId));
-
-            // Populate textarea with the existing content
-            document.getElementById("editContentTextarea").value =
-              article.content;
-
-            // Show the modal
-            const modal = new bootstrap.Modal(
-              document.getElementById("editContentModal")
+            return response.json();
+          })
+          .then((data) => {
+            // If the API call is successful, process and filter the articles
+            filterAndDisplayArticles(data);
+            // Set up the listeners after articles are displayed
+            setupStatusUpdateListeners();
+          })
+          .catch((error) => {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
             );
-            modal.show();
+          });
 
-            // Handle form submission
-            const form = document.getElementById("editContentForm");
-            form.onsubmit = async (event) => {
-              event.preventDefault();
-              const updatedContent = document.getElementById(
-                "editContentTextarea"
-              ).value;
+        // Function to filter articles based on status and display them in tables
+        function filterAndDisplayArticles(data) {
+          const publishedList = document.getElementById("published-list");
+          const pendingList = document.getElementById("pending-list");
+
+          // Separate articles based on their status
+          // Filter published or rejected articles
+          const publishedArticles = data.results.filter(
+            (article) =>
+              article.status === "rejected" || article.status === "published"
+          );
+
+          // Filter pending or approved articles
+          const pendingArticles = data.results.filter(
+            (article) =>
+              article.status === "pending" ||
+              article.status === "approved" ||
+              article.status === "draft"
+          );
+
+          // Display the published articles in the published table
+          if (publishedArticles.length > 0) {
+            publishedArticles.forEach((article) => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+            <td>${article.title}</td>
+            <td>${article.subtitle}</td>
+            <td>${article.author_name}</td>
+            <td>${article.content}</td>
+            <td>${article.status}</td>
+           
+             {% comment %} <td class="status-update">
+              <label for="statusSelect-${
+                article.id
+              }" class="form-label">Update Status:</label>
+              <select class="form-select status-select" id="statusSelect-${
+                article.id
+              }" data-id="${article.id}">
+                <option value="pending" ${
+                  article.status === "draft" ? "selected" : ""
+                }>Draft</option>
+                <option value="approved" ${
+                  article.status === "approved" ? "selected" : ""
+                }>Approved</option>
+                <option value="rejected" ${
+                  article.status === "rejected" ? "selected" : ""
+                }>Rejected</option>
+                <option value="published" ${
+                  article.status === "published" ? "selected" : ""
+                }>Published</option>
+              </select>
+            </td> {% endcomment %}
+        `;
+
+              publishedList.appendChild(row);
+            });
+          } else {
+            publishedList.innerHTML =
+              '<tr><td colspan="6">No published articles available.</td></tr>';
+          }
+
+          // Display the pending articles in the pending table
+          if (pendingArticles.length > 0) {
+            pendingArticles.forEach((article) => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+            <td>${article.title}</td>
+            <td>${article.subtitle}</td>
+            <td>${article.author_name}</td>
+            <td>${article.content}</td>
+            <td>${article.status}</td>
+            <td class="status-update">
+              <label for="statusSelect-${
+                article.id
+              }" class="form-label">Update Status:</label>
+              <select class="form-select status-select" id="statusSelect-${
+                article.id
+              }" data-id="${article.id}">
+               
+                <option value="approved" ${
+                  article.status === "approved" ? "selected" : ""
+                }>Approved</option>
+                <option value="rejected" ${
+                  article.status === "rejected" ? "selected" : ""
+                }>Rejected</option>
+                <option value="published" ${
+                  article.status === "published" ? "selected" : ""
+                }>Published</option>
+              </select>
+            </td>
+        `;
+
+              pendingList.appendChild(row);
+            });
+          } else {
+            pendingList.innerHTML =
+              '<tr><td colspan="5">No pending articles available.</td></tr>';
+          }
+        }
+
+        // Function to set up listeners for the status update
+        function setupStatusUpdateListeners() {
+          const statusSelectors = document.querySelectorAll(".status-select");
+          statusSelectors.forEach((selector) => {
+            selector.addEventListener("change", async (e) => {
+              const articleId = e.target.getAttribute("data-id");
+              const newStatus = e.target.value;
 
               try {
-                // Send only the content in the PATCH request
                 const response = await fetch(
-                  `/articles/articles/${article.id}/`,
+                  `/articles/articles/${articleId}/`,
                   {
                     method: "PATCH",
                     headers: {
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${accessToken}`,
                     },
-                    body: JSON.stringify({ content: updatedContent }), // only update content
+                    body: JSON.stringify({ status: newStatus }),
                   }
                 );
 
                 if (response.ok) {
-                  alert("Content updated successfully!");
-                  modal.hide();
-
-                  // Update the UI dynamically
-                  document.getElementById(`content-${article.id}`).textContent =
-                    updatedContent.slice(0, 100) + "...";
+                  window.location.reload();
+                  alert("Status updated successfully!");
                 } else {
-                  alert("Failed to update content.");
+                  alert("Failed to update status.");
                 }
               } catch (error) {
-                console.error("Error updating content:", error);
+                console.error("Error updating status:", error);
               }
-            };
+            });
           });
-        });
-      }
-
-      function renderArticles(articles) {
-        const container = document.getElementById("articles-container");
-        console.log({ articles });
-        container.innerHTML = articles.results.map(createCard).join("");
-
-        setupStatusUpdateListeners();
-        setupReadMoreButtons(articles);
-        setupEditContentListeners(articles);
-      }
-      // Initialize the app
-      fetchArticles();
+        }
+      });
     </script>
   </body>
 </html>
