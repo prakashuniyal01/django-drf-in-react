@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Article Title and Subtitle -->
+    <h1 class="text-center">{{ article.title }}</h1>
+    <h5 class="text-muted text-center">{{ article.subtitle }}</h5>
+    <p class="text-center">By {{ article.author_name }} | {{ article.city.name }}, {{ article.city.state }}</p>
+
+    <!-- Image Carousel -->
+    <div id="carouselDetail" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for image in article.images %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ image.image }}" class="d-block w-100" alt="Article Image">
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselDetail" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselDetail" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Article Content -->
+    <p>{{ article.content }}</p>
+
+    <!-- Location Map -->
+    <h4>Location</h4>
+    <div id="map" style="height: 400px;"></div>
+
+    <!-- Tags and Categories -->
+    <div class="mt-4">
+        <h5>Tags:</h5>
+        <ul class="list-inline">
+            {% for tag in article.tags %}
+            <li class="list-inline-item badge bg-primary">{{ tag.name }}</li>
+            {% endfor %}
+        </ul>
+        <h5>Category:</h5>
+        <span class="badge bg-secondary">{{ article.categories.0.name }}</span>
+    </div>
+</div>
+
+<!-- Leaflet Map Script -->
+<script>
+    const latitude = parseFloat("{{ article.latitude }}");
+    const longitude = parseFloat("{{ article.longitude }}");
+
+    const map = L.map('map').setView([latitude, longitude], 13);
+
+    // Load OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    // Add marker to the map
+    L.marker([latitude, longitude]).addTo(map)
+        .bindPopup("{{ article.city.name }}")
+        .openPopup();
+</script>
+
+<!-- Include Leaflet CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+{% endblock %}
