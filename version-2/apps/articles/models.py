@@ -97,12 +97,12 @@ class Article(models.Model):
     # Location Fields
     city = models.ForeignKey(City, null=True, blank=True, on_delete=models.SET_NULL)
     latitude = models.DecimalField(
-        max_digits=9, decimal_places=6,
+        max_digits=50, decimal_places=20,
         validators=[MinValueValidator(Decimal('-90.0')), MaxValueValidator(Decimal('90.0'))],
         null=True, blank=True
     )
     longitude = models.DecimalField(
-        max_digits=9, decimal_places=6,
+        max_digits=50, decimal_places=20,
         validators=[MinValueValidator(Decimal('-180.0')), MaxValueValidator(Decimal('180.0'))],
         null=True, blank=True
     )

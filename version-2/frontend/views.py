@@ -63,6 +63,9 @@ def journalist_article_detail(request, id):
 
     return render(request, 'journalist/article_detail.html', {'article': article})
 
+def journalist_article_create(request):
+    return render(request, "journalist/create_article.html")
+
 # ====================================== jounralist end ===========================================
 
 # Register page

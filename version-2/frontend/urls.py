@@ -12,5 +12,6 @@ urlpatterns = [
     path('journalist-dashboard/', views.journalist_dashboard, name='journalist-dashboard'),
     path('journalist_all-articles/', views.journalist_all_articles, name='journalist_all_articles'),  # URL for displaying all articles
     path('journalist_article/<int:id>/', views.journalist_article_detail, name='journalist_article_detail'),
+    path('journalist_article_create/', views.journalist_article_create, name='journalist_article_create')
     # ====================================== jounralist end ===========================================
 ]

@@ -18,7 +18,7 @@
                     <a class="nav-link" href="#">Pending Articles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Create Article</a>
+                    <a class="nav-link {% if request.path == '/journalist_article_create/' %}active{% endif %}" href="{% url 'journalist_article_create' %}">Create Article</a>
                 </li>
             </ul>
         </div>
