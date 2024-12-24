@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}Article Detail{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Sidebar -->
+    <div class="col-md-3" style="background-color: #5BCA7F; height: 100vh; color: white;">
+        <h3 class="text-center mt-4">Journalist Dashboard</h3>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#">All Articles</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Published Articles</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Pending Articles</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Create Article</a></li>
+        </ul>
+    </div>
+
+    <!-- Content Area -->
+    <div class="col-md-9">
+        <h4 id="article-title"></h4>
+        <h5 id="article-subtitle"></h5>
+        <p><strong>Author: </strong><span id="article-author"></span></p>
+        <p><strong>Publish Date: </strong><span id="article-date"></span></p>
+        <p><strong>Content: </strong></p>
+        <p id="article-content"></p>
+
+        <!-- Image Slideshow -->
+        <div id="article-images" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner" id="carousel-inner"></div>
+        </div>
+
+        <!-- OpenStreetMap -->
+        <div id="map" style="height: 400px;"></div>
+    </div>
+</div>
+
+<script>
+// Fetch access token from localStorage or session
+const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+
+// Check if access token is available and valid
+if (!accessToken) {
+    alert('You are not logged in. Redirecting to login page.');
+    window.location.href = '/login/';
+    return;
+}
+
+// Extract article ID from the current URL
+const pathname = window.location.pathname;
+const articleId = pathname.substring(pathname.lastIndexOf('/') + 1);
+
+console.log('Article ID:', articleId);  // Check if article ID is extracted properly
+
+// If articleId is empty or invalid, stop the fetch request
+if (!articleId || isNaN(articleId)) {
+    console.error('Article ID is missing or invalid');
+    return;
+}
+
+// Proceed with the fetch request if ID is valid
+fetch(`http://127.0.0.1:8000/articles/articles/${articleId}/`, {
+    method: 'GET',
+    headers: {
+        'Authorization': `Bearer ${accessToken}`,
+    }
+})
+.then(response => {
+    // If the response is not OK, show error
+    if (!response.ok) {
+        if (response.status === 401) {
+            alert('Unauthorized! Please login again.');
+            window.location.href = '/login/';
+        } else {
+            throw new Error('Article not found');
+        }
+    }
+    return response.json();
+})
+.then(data => {
+    // Display article content dynamically
+    document.querySelector('h4').innerText = data.title;
+    document.querySelector('h5').innerText = data.subtitle;
+    document.querySelector('p:nth-of-type(1)').innerHTML = `<strong>Author: </strong>${data.author_name}`;
+    document.querySelector('p:nth-of-type(2)').innerHTML = `<strong>Publish Date: </strong>${data.publish_date}`;
+    document.querySelector('p:nth-of-type(3)').innerHTML = `<strong>Content: </strong>${data.content}`;
+
+    // Populate images (if any)
+    const imageCarousel = document.getElementById('article-images');
+    let imageSlides = '';
+    data.images.forEach((image, index) => {
+        imageSlides += `
+            <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                <img src="${image.url}" class="d-block w-100" alt="Image">
+            </div>
+        `;
+    });
+    imageCarousel.querySelector('.carousel-inner').innerHTML = imageSlides;
+})
+.catch(error => {
+    console.error('Error fetching article:', error);
+});
+
+// Initialize the map
+const map = L.map('map').setView([51.505, -0.09], 13);  // Set initial map location
+
+// Add OpenStreetMap tile layer
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+// Add a marker (example)
+L.marker([51.5, -0.09]).addTo(map)
+    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+    .openPopup();
+
+
+</script>
+
+{% endblock %}

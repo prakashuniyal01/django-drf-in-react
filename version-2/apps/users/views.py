@@ -179,6 +179,9 @@ class LoginView(APIView):
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
 
+                # Store the access_token in the session
+                request.session['access_token'] = access_token  # Store token in session
+
                 # Prepare user data
                 user_data = {
                     'id': user.id,
@@ -201,6 +204,9 @@ class LoginView(APIView):
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
 
+                # Store the access_token in session
+                request.session['access_token'] = access_token  # Store token in session
+
                 # Prepare user data
                 user_data = {
                     'id': user.id,
@@ -216,7 +222,6 @@ class LoginView(APIView):
                     'access': access_token,
                 }, status=status.HTTP_200_OK)
 
-            # If the data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         except ValidationError as e:
@@ -224,6 +229,30 @@ class LoginView(APIView):
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class SessionCheckView(APIView):
+    """
+    Check if the user session is active and token is valid.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = request.user
+            if user.is_authenticated:
+                user_data = {
+                    'id': user.id,
+                    'email': user.email,
+                    'full_name': user.full_name,
+                    'role': user.role,
+                    'number': user.number,
+                }
+                return Response({"message": "Session is active.", "user": user_data}, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Session is not active."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 # user update and patch view
 class UserUpdateView(APIView):
     permission_classes = [IsAuthenticated]

@@ -1,6 +1,5 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import OTPVerificationView, UserRegisterView, LoginView, UserUpdateView, PasswordChangeView, SendOtpView, VerifyOtpView, ResendOTPView, UserDetailView, AdminUserView
+from .views import OTPVerificationView, UserRegisterView, LoginView, UserUpdateView, PasswordChangeView, SendOtpView, VerifyOtpView, ResendOTPView, UserDetailView, AdminUserView, SessionCheckView
 # from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -18,9 +17,7 @@ urlpatterns = [
 
     # Login and JWT authentication views
     path('login/', LoginView.as_view(), name='login'),  # Custom LoginView (if you have custom logic)
-    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # JWT login using TokenObtainPairView
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # JWT token refresh
-
+    path('api/session-check/', SessionCheckView.as_view(), name='session-check'),
     # Page rendering views
     # path('login-page/', TemplateView.as_view(template_name='login.html'), name='login'),
     # path('register-page/', TemplateView.as_view(template_name='register.html'), name='register'),

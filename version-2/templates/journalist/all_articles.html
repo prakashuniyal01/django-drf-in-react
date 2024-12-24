@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}All Articles{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Sidebar -->
+    <div class="col-md-3" style="background-color: #5BCA7F; height: 100vh; color: white;">
+        <h3 class="text-center mt-4">Journalist Dashboard</h3>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">All Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Published Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Pending Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Create Article</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content Area -->
+    <div class="col-md-9">
+        <h4>All Articles</h4>
+        <div id="articles-content" class="row">
+            <!-- Articles will be dynamically loaded here -->
+        </div>
+
+        <!-- Pagination buttons -->
+        <div id="pagination" class="d-flex justify-content-between">
+            <!-- Next and Previous buttons will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPage = 1;
+    let totalPages = 1;
+
+    function fetchArticles(page = 1) {
+        const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+
+        if (!accessToken) {
+            window.location.href = '/login/';
+        }
+
+        fetch(`http://127.0.0.1:8000/articles/articles/?page=${page}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const articlesContent = document.getElementById('articles-content');
+            const pagination = document.getElementById('pagination');
+
+            // Clear previous content
+            articlesContent.innerHTML = '';
+            pagination.innerHTML = '';
+
+            if (data.results && data.results.length > 0) {
+                console.log(data); // Log the response to see the structure
+                data.results.forEach(article => {
+                    console.log(article.id); // Check if the id exists for each article
+                    let articleCard = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card" style="width: 18rem;">
+                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Article image">
+                                <div class="card-body">
+                                    <h5 class="card-title">${article.title}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">${article.subtitle}</h6>
+                                    <p class="card-text">${article.content.substring(0, 100)}...</p>
+                                    <p class="text-muted"><small>Author: ${article.author_name}</small></p>
+                                    <a href="/journalist_article/${article.id}/" class="btn btn-primary">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    articlesContent.innerHTML += articleCard;
+
+                });
+
+
+                totalPages = Math.ceil(data.count / 10); // Assuming 10 items per page
+                if (page > 1) {
+                    pagination.innerHTML += `<button class="btn btn-secondary" onclick="fetchArticles(${page - 1})">Previous</button>`;
+                }
+                if (page < totalPages) {
+                    pagination.innerHTML += `<button class="btn btn-secondary" onclick="fetchArticles(${page + 1})">Next</button>`;
+                }
+            } else {
+                articlesContent.innerHTML = '<p>No articles found.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching articles:', error);
+            document.getElementById('articles-content').innerHTML = '<p>Error fetching articles.</p>';
+        });
+    }
+
+    // Initial fetch
+    fetchArticles(currentPage);
+</script>
+
+{% endblock %}
