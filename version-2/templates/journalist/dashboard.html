@@ -70,7 +70,7 @@
                         <a class="nav-link" href="{% url 'journalist_update_profile' %}">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
+                        <a class="nav-link" id='logout' href="#">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -111,7 +111,23 @@
             window.location.href = "/login/";
         }
     });
-    
+        // Logout functionality
+        document.querySelector('#logout').addEventListener('click', () => {
+            if (confirm("Are you sure you want to logout?")) {
+                // Clear tokens and session data
+                localStorage.removeItem('access_token');
+                sessionStorage.clear();
+        
+                // Reload the page
+                location.reload();
+        
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = "/login/";
+                }, 100); // 100ms delay
+            }
+        });
+        
 </script>
 
 </body>
