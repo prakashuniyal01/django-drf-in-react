@@ -49,61 +49,119 @@
         <!-- Tags -->
         <div class="mb-3">
             <label for="tags" class="form-label"><strong>Tags</strong></label>
-            <input type="text" class="form-control" id="tags" placeholder="Comma-separated tags">
+            <input type="text" class="form-control" id="tags" placeholder="Add tags" data-role="tagsinput">
         </div>
 
-        <!-- Location -->
+        <!-- Map for Location Selection -->
         <div class="mb-3">
-            <label for="location" class="form-label"><strong>Location</strong></label>
-            <input type="text" class="form-control" id="location" placeholder="City, State, Country">
+            <label for="article-map" class="form-label"><strong>Select Location</strong></label>
+            <div id="article-map" style="height: 400px;"></div>
         </div>
 
         <!-- Latitude -->
         <div class="mb-3">
             <label for="latitude" class="form-label"><strong>Latitude</strong></label>
-            <input type="number" step="any" class="form-control" id="latitude">
+            <input type="number" step="any" class="form-control" id="latitude" readonly>
         </div>
 
         <!-- Longitude -->
         <div class="mb-3">
             <label for="longitude" class="form-label"><strong>Longitude</strong></label>
-            <input type="number" step="any" class="form-control" id="longitude">
+            <input type="number" step="any" class="form-control" id="longitude" readonly>
         </div>
 
-        <!-- Author -->
-        <div class="mb-3">
-            <label for="author" class="form-label"><strong>Author</strong></label>
-            <input type="text" class="form-control" id="author" required>
-        </div>
-
-        <!-- Images -->
+        <!-- Images Gallery -->
         <div class="mb-3">
             <label for="images" class="form-label"><strong>Images</strong></label>
             <input type="file" class="form-control" id="images" multiple accept="image/*">
-            <div id="existing-images" class="mt-2">
-                <!-- Existing images will be displayed here -->
+            <div id="image-gallery" class="mt-2 row">
+                <!-- Existing images will be displayed here as thumbnails -->
             </div>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit and Cancel Buttons -->
         <button type="submit" class="btn btn-success">Update Article</button>
-        <button type="button" id="cancel-btn" class="btn btn-secondary" style="margin-left: 10px;">Cancel</button>
+        <button type="button" id="cancel-btn" class="btn btn-secondary ms-2">Cancel</button>
     </form>
 </div>
 
-<!-- Include Leaflet.js if needed for map -->
+<!-- Include Leaflet.js for Map -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<!-- Include Bootstrap JS for any components if needed -->
+<!-- Include Bootstrap JS for components -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Include Bootstrap Tags Input (Optional) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+<!-- Custom Styles for Tags Input -->
+<style>
+    .bootstrap-tagsinput {
+        width: 100%;
+        line-height: 2.2;
+    }
+    .tag {
+        margin-right: 2px;
+        color: white;
+        background-color: #0d6efd;
+        padding: 0.2em 0.4em;
+        border-radius: 0.2em;
+    }
+</style>
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        // Extract Article ID from URL
         const urlParts = window.location.pathname.split('/');
         const articleId = urlParts[urlParts.length - 2] || urlParts[urlParts.length - 1];
         console.log("Article ID for Update:", articleId);
 
+        // Initialize Map Variables
+        let map, marker;
+
+        // Initialize Tags Input (Using Bootstrap Tags Input or similar library)
+        $('#tags').tagsinput({
+            trimValue: true,
+            allowDuplicates: false
+        });
+
+        // Initialize Image Gallery with Existing Images
+        function initializeImageGallery(images) {
+            const imageGallery = document.getElementById("image-gallery");
+            imageGallery.innerHTML = ''; // Clear existing images
+
+            images.forEach((image, index) => {
+                const colDiv = document.createElement("div");
+                colDiv.classList.add("col-md-3", "mb-3");
+
+                const cardDiv = document.createElement("div");
+                cardDiv.classList.add("card");
+
+                const img = document.createElement("img");
+                img.src = image.image;
+                img.classList.add("card-img-top");
+                img.alt = `Image ${index + 1}`;
+
+                const cardBody = document.createElement("div");
+                cardBody.classList.add("card-body", "p-2");
+
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.classList.add("btn", "btn-danger", "btn-sm", "w-100");
+                removeBtn.textContent = "Remove";
+                removeBtn.setAttribute("data-image-id", image.id);
+
+                cardBody.appendChild(removeBtn);
+                cardDiv.appendChild(img);
+                cardDiv.appendChild(cardBody);
+                colDiv.appendChild(cardDiv);
+                imageGallery.appendChild(colDiv);
+            });
+        }
+
+        // Fetch Article Details from API
         async function fetchArticleDetail() {
             try {
                 const response = await fetch(`/articles/articles/admin/${articleId}/`, {
@@ -119,12 +177,15 @@
                     populateForm(data);
                 } else {
                     console.error("Failed to fetch article details for update");
+                    alert("Failed to fetch article details. Please try again.");
                 }
             } catch (error) {
                 console.error("Error fetching article details:", error);
+                alert("An error occurred while fetching article details.");
             }
         }
 
+        // Populate Form with Article Data
         function populateForm(article) {
             document.getElementById("title").value = article.title || '';
             document.getElementById("subtitle").value = article.subtitle || '';
@@ -135,46 +196,91 @@
                 document.getElementById("publish_date").value = publishDate.toISOString().slice(0,16);
             }
             document.getElementById("categories").value = article.categories.map(cat => cat.name).join(", ");
-            document.getElementById("tags").value = article.tags.map(tag => tag.name).join(", ");
-            document.getElementById("location").value = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
-            document.getElementById("latitude").value = article.latitude || '';
-            document.getElementById("longitude").value = article.longitude || '';
-            document.getElementById("author").value = article.author_name || '';
-
-            // Display existing images
-            const existingImagesContainer = document.getElementById("existing-images");
-            existingImagesContainer.innerHTML = '';
-            if (article.images && article.images.length > 0) {
-                article.images.forEach((image, index) => {
-                    const imgDiv = document.createElement("div");
-                    imgDiv.classList.add("mb-2");
-                    imgDiv.innerHTML = `
-                        <img src="${image.image}" alt="Image ${index + 1}" class="img-thumbnail" width="150">
-                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-image-btn" data-image-id="${image.id}">Remove</button>
-                    `;
-                    existingImagesContainer.appendChild(imgDiv);
+            // Initialize Tags Input
+            if (article.tags && article.tags.length > 0) {
+                article.tags.forEach(tag => {
+                    $('#tags').tagsinput('add', tag.name);
                 });
+            }
+
+            // Initialize Map with Article Location
+            if (article.latitude && article.longitude) {
+                initializeMap(article.latitude, article.longitude);
+            } else {
+                initializeMap(0, 0); // Default coordinates if not available
+            }
+
+            // Initialize Image Gallery
+            if (article.images && article.images.length > 0) {
+                initializeImageGallery(article.images);
             }
         }
 
+        // Initialize Leaflet Map
+        function initializeMap(lat, lng) {
+            map = L.map('article-map').setView([lat, lng], lat !== 0 && lng !== 0 ? 13 : 2);
+
+            // Add OpenStreetMap Tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add Marker if coordinates are provided
+            if (lat !== 0 && lng !== 0) {
+                marker = L.marker([lat, lng], { draggable: true }).addTo(map)
+                    .bindPopup("Article Location")
+                    .openPopup();
+
+                // Update latitude and longitude on marker drag
+                marker.on('dragend', function(e) {
+                    const position = marker.getLatLng();
+                    document.getElementById("latitude").value = position.lat.toFixed(6);
+                    document.getElementById("longitude").value = position.lng.toFixed(6);
+                });
+            }
+
+            // Handle Map Click to Add/Move Marker
+            map.on('click', function(e) {
+                const { lat, lng } = e.latlng;
+                if (marker) {
+                    marker.setLatLng(e.latlng);
+                } else {
+                    marker = L.marker(e.latlng, { draggable: true }).addTo(map)
+                        .bindPopup("Article Location")
+                        .openPopup();
+
+                    // Update latitude and longitude on marker drag
+                    marker.on('dragend', function(e) {
+                        const position = marker.getLatLng();
+                        document.getElementById("latitude").value = position.lat.toFixed(6);
+                        document.getElementById("longitude").value = position.lng.toFixed(6);
+                    });
+                }
+                document.getElementById("latitude").value = lat.toFixed(6);
+                document.getElementById("longitude").value = lng.toFixed(6);
+            });
+        }
+
+        // Handle Form Submission for Article Update
         async function updateArticle(event) {
             event.preventDefault();
 
-            const title = document.getElementById("title").value;
-            const subtitle = document.getElementById("subtitle").value;
-            const content = document.getElementById("content").value;
+            const title = document.getElementById("title").value.trim();
+            const subtitle = document.getElementById("subtitle").value.trim();
+            const content = document.getElementById("content").value.trim();
             const status = document.getElementById("status").value;
             const publish_date = document.getElementById("publish_date").value;
-            const categories = document.getElementById("categories").value.split(',').map(cat => cat.trim());
-            const tags = document.getElementById("tags").value.split(',').map(tag => tag.trim());
-            const location = document.getElementById("location").value;
+            const categories = document.getElementById("categories").value.split(',').map(cat => cat.trim()).filter(cat => cat !== '');
+            const tags = $('#tags').tagsinput('items').map(tag => tag.trim()).filter(tag => tag !== '');
             const latitude = parseFloat(document.getElementById("latitude").value);
             const longitude = parseFloat(document.getElementById("longitude").value);
-            const author = document.getElementById("author").value;
             const images = document.getElementById("images").files;
 
-            // Assuming location is in "City, State, Country" format
-            const [cityName, state, country] = location.split(',').map(part => part.trim());
+            // Validate Required Fields
+            if (!title || !content || !status) {
+                alert("Please fill in all required fields.");
+                return;
+            }
 
             // Create FormData for multipart/form-data
             const formData = new FormData();
@@ -185,12 +291,8 @@
             formData.append('publish_date', publish_date);
             formData.append('categories', JSON.stringify(categories));
             formData.append('tags', JSON.stringify(tags));
-            formData.append('city_name', cityName);
-            formData.append('state', state);
-            formData.append('country', country);
             formData.append('latitude', latitude);
             formData.append('longitude', longitude);
-            formData.append('author_name', author);
 
             // Append new images
             for (let i = 0; i < images.length; i++) {
@@ -199,21 +301,21 @@
 
             try {
                 const response = await fetch(`/articles/articles/admin/${articleId}/`, {
-                    method: 'PUT', // or 'PATCH' based on your API
+                    method: 'PUT', // Use 'PATCH' if partial update is preferred
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                        // 'Content-Type': 'multipart/form-data', // Do not set this header when using FormData
+                        // 'Content-Type': 'multipart/form-data', // Let the browser set this
                     },
                     body: formData
                 });
 
                 if (response.ok) {
                     alert("Article updated successfully!");
-                    window.location.href = `/admin_article_detail/${articleId}/`; // Adjust the URL as needed
+                    window.location.href = `/admin_article/${articleId}/`; // Adjust the URL as needed
                 } else {
                     const errorData = await response.json();
                     console.error("Failed to update article:", errorData);
-                    alert("Failed to update article. Check console for details.");
+                    alert("Failed to update article. Please check the console for details.");
                 }
             } catch (error) {
                 console.error("Error updating article:", error);
@@ -221,23 +323,20 @@
             }
         }
 
-        // Handle form submission
-        document.getElementById("update-article-form").addEventListener("submit", updateArticle);
-
-        // Handle cancel button
+        // Handle Cancel Button Click
         document.getElementById("cancel-btn").addEventListener("click", () => {
             window.location.href = `/admin_article/${articleId}/`; // Adjust the URL as needed
         });
 
-        // Handle removing existing images (optional)
-        document.getElementById("existing-images").addEventListener("click", async (event) => {
-            if (event.target.classList.contains("remove-image-btn")) {
+        // Handle Image Removal
+        document.getElementById("image-gallery").addEventListener("click", async (event) => {
+            if (event.target.classList.contains("btn-danger")) {
                 const imageId = event.target.getAttribute("data-image-id");
                 const confirmation = confirm("Are you sure you want to remove this image?");
                 if (!confirmation) return;
 
                 try {
-                    const response = await fetch(`/articles/images/${imageId}/`, { // Adjust the URL based on your API
+                    const response = await fetch(`/articles/images/${imageId}/`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -247,8 +346,8 @@
 
                     if (response.ok) {
                         alert("Image removed successfully!");
-                        // Remove the image element from the DOM
-                        event.target.parentElement.remove();
+                        // Remove the image card from the gallery
+                        event.target.closest('.col-md-3').remove();
                     } else {
                         console.error("Failed to remove image");
                         alert("Failed to remove image.");
@@ -260,6 +359,7 @@
             }
         });
 
+        // Initialize by fetching article details
         fetchArticleDetail();
     });
 </script>
