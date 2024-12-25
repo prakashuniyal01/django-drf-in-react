@@ -46,8 +46,8 @@ def admin_article_create(request):
 
 def admin_update_profile(request):
     return render(request, "admin/update_profile.html")
-def admin_update_article(request):
-    return render(request, "admin/article_update.html")
+def admin_update_article(request, id):
+    return render(request, "admin/article_update.html", {'article': id})
 def admin_users_list(request):
     return render(request, "admin/users.html")
 # =========================================== admin view end ===================================================

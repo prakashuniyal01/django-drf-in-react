@@ -13,7 +13,7 @@ urlpatterns = [
     path('admin_article_create/', views.admin_article_create, name='admin_article_create'),
     path('admin_update_profile/', views.admin_update_profile,name='admin_update_profile'),
     path('admin_users_list/', views.admin_users_list, name='admin_users_list'),  # URL for displaying all articles
-    path('admin_update_article/<int:article_id>/', views.admin_update_article, name='admin_update_article'),
+    path('admin_update_article/<int:id>/', views.admin_update_article, name='admin_update_article'),
     # path('admin_article_create/', views.admin_article_create, name='admin_article_create'),
     # path('admin_update_profile/', views.admin_update_profile,name='admin_update_profile'),
     # ========================================== admin start ====================================
