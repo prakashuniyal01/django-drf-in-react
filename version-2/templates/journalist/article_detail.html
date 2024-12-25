@@ -1,18 +1,31 @@
-
-{% extends 'journalist/dashboard.html' %}
+{% extends 'admin/dashboard.html' %}
 {% block title %}Article Detail{% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <div class="" id="article-images"></div>
+    <!-- Images Carousel -->
+    <div id="articleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
+        <div class="carousel-inner" id="article-images">
+            <!-- Images will be dynamically inserted here -->
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#articleCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#articleCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
     <h2 id="article-title"></h2>
     <h5 id="article-subtitle"></h5>
     <p id="article-content"></p>
-    
+
     <!-- Display the status of the article -->
     <div>
         <strong>Status:</strong> <span id="article-status"></span>
     </div>
-    
+
     <!-- Display the publish date -->
     <div>
         <strong>Publish Date:</strong> <span id="article-publish-date"></span>
@@ -30,47 +43,14 @@
     <div>
         <strong>Author:</strong> <span id="article-author"></span>
     </div>
-    
+
     <!-- Map Container -->
     <div id="article-map" style="height: 400px; margin-top: 20px;"></div>
 
-    <!-- Update button (Only visible if status is "pending") -->
-        <!-- Update and Delete buttons (Only visible if status is "pending") -->
-        <div id="article-actions" style="margin-top: 20px;">
-            <button id="update-btn" class="btn btn-primary" style="display: none;">Update Article</button>
-            <button id="delete-btn" class="btn btn-danger" style="display: none; margin-left: 10px;">Delete Article</button>
-        </div>
-</div>
-
-<!-- Modal for updating the article -->
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateModalLabel">Update Article</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="update-form">
-                    <div class="mb-3">
-                        <label for="update-title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="update-title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="update-subtitle" class="form-label">Subtitle</label>
-                        <input type="text" class="form-control" id="update-subtitle" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="update-content" class="form-label">Content</label>
-                        <textarea class="form-control" id="update-content" required></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="save-update-btn">Save Changes</button>
-            </div>
-        </div>
+    <!-- Update and Delete buttons -->
+    <div id="article-actions" style="margin-top: 20px;">
+        <button id="update-btn" class="btn btn-primary">Update Article</button>
+        <button id="delete-btn" class="btn btn-danger" style="margin-left: 10px;">Delete Article</button>
     </div>
 </div>
 
@@ -78,15 +58,14 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<!-- Include Bootstrap JS for Modal -->
+<!-- Include Bootstrap JS for Carousel -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
-        // Ensure article_id is passed correctly
         const articleId = {{ article|safe }};
         console.log("Article ID:", articleId);
-    
+
         async function fetchArticleDetail() {
             try {
                 const response = await fetch(`/articles/articles/${articleId}/`, {
@@ -96,7 +75,7 @@
                         'Content-Type': 'application/json',
                     }
                 });
-    
+
                 if (response.ok) {
                     const data = await response.json();
                     renderArticleDetail(data);
@@ -107,126 +86,64 @@
                 console.error("Error fetching article details:", error);
             }
         }
-    
+
         function renderArticleDetail(article) {
             console.log(article);
-    
+
+            // Carousel Inner Element
+            const carouselInner = document.getElementById("article-images");
+
+            // Render Images in Carousel
+            article.images.forEach((image, index) => {
+                const carouselItem = document.createElement("div");
+                carouselItem.classList.add("carousel-item");
+                if (index === 0) carouselItem.classList.add("active"); // First image is active
+
+                const img = document.createElement("img");
+                img.src = image.image;
+                img.alt = article.title;
+                img.classList.add("d-block", "w-100");
+
+                carouselItem.appendChild(img);
+                carouselInner.appendChild(carouselItem);
+            });
+
             // Set title, subtitle, and content
             document.getElementById("article-title").textContent = article.title;
             document.getElementById("article-subtitle").textContent = article.subtitle;
             document.getElementById("article-content").textContent = article.content;
-    
+
             // Render status
             document.getElementById("article-status").textContent = article.status || 'N/A';
-    
+
             // Format and render publish date
             const publishDate = new Date(article.publish_date);
-            const formattedPublishDate = publishDate.toLocaleString(); // Format the date
-            document.getElementById("article-publish-date").textContent = formattedPublishDate;
-    
+            document.getElementById("article-publish-date").textContent = publishDate.toLocaleString();
+
             // Categories and tags
-            const categories = article.categories.map(cat => cat.name).join(", ");
-            document.getElementById("article-categories").textContent = categories;
-    
-            const tags = article.tags.map(tag => tag.name).join(", ");
-            document.getElementById("article-tags").textContent = tags;
-    
-            // Location
-            const location = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
-            document.getElementById("article-location").textContent = location;
-    
-            // Author
+            document.getElementById("article-categories").textContent = article.categories.map(cat => cat.name).join(", ");
+            document.getElementById("article-tags").textContent = article.tags.map(tag => tag.name).join(", ");
+
+            // Location and Author
+            document.getElementById("article-location").textContent = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
             document.getElementById("article-author").textContent = article.author_name;
-    
-            // Images
-            const imagesContainer = document.getElementById("article-images");
-            article.images.forEach(image => {
-                const img = document.createElement("img");
-                img.src = image.image;
-                img.alt = article.title;
-                img.classList.add("img-fluid", "mb-3");
-                imagesContainer.appendChild(img);
-            });
-    
+
             // Render the map
             renderMap(article.latitude, article.longitude);
-    
-            // Show update and delete buttons if the article is pending
-            if (article.status === "pending") {
-                document.getElementById("update-btn").style.display = "inline-block";
-                document.getElementById("delete-btn").style.display = "inline-block";
-    
-                // Update button click handler
-                document.getElementById("update-btn").addEventListener("click", () => {
-                    openUpdateModal(article);
-                });
-    
-                // Delete button click handler
-                document.getElementById("delete-btn").addEventListener("click", () => {
-                    deleteArticle(article.id);
-                });
-            }
         }
-    
+
         function renderMap(latitude, longitude) {
             const map = L.map('article-map').setView([latitude, longitude], 13);
-    
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
-    
-            const marker = L.marker([latitude, longitude]).addTo(map);
-            marker.bindPopup("Article Location").openPopup();
+            L.marker([latitude, longitude]).addTo(map).bindPopup("Article Location").openPopup();
         }
-    
-        function openUpdateModal(article) {
-            // Populate the update form with the article data
-            document.getElementById("update-title").value = article.title;
-            document.getElementById("update-subtitle").value = article.subtitle;
-            document.getElementById("update-content").value = article.content;
-    
-            // Show the modal
-            const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
-            updateModal.show();
-    
-            // Handle saving the changes
-            document.getElementById("save-update-btn").addEventListener("click", () => {
-                updateArticle(article.id);
-            });
-        }
-    
-        async function updateArticle(articleId) {
-            const updatedArticle = {
-                title: document.getElementById("update-title").value,
-                subtitle: document.getElementById("update-subtitle").value,
-                content: document.getElementById("update-content").value,
-            };
-    
-            try {
-                const response = await fetch(`/articles/articles/${articleId}/`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(updatedArticle),
-                });
-    
-                if (response.ok) {
-                    alert("Article updated successfully!");
-                    location.reload(); // Reload the page to show updated details
-                } else {
-                    console.error("Failed to update article");
-                }
-            } catch (error) {
-                console.error("Error updating article:", error);
-            }
-        }
-    
+
         async function deleteArticle(articleId) {
             const confirmation = confirm("Are you sure you want to delete this article?");
             if (!confirmation) return;
-    
+
             try {
                 const response = await fetch(`/articles/articles/${articleId}/`, {
                     method: 'DELETE',
@@ -235,10 +152,10 @@
                         'Content-Type': 'application/json',
                     },
                 });
-    
+
                 if (response.ok) {
                     alert("Article deleted successfully!");
-                    window.location.href = '/journalist_all_articles/'; // Redirect to the articles list page
+                    window.location.href = '/admin_all_articles/';
                 } else {
                     console.error("Failed to delete article");
                 }
@@ -246,10 +163,13 @@
                 console.error("Error deleting article:", error);
             }
         }
-    
+
+        document.getElementById("delete-btn").addEventListener("click", () => {
+            deleteArticle(articleId);
+        });
+
         fetchArticleDetail();
     });
-    
 </script>
 
 {% endblock %}

@@ -1,0 +1,167 @@
+{% extends 'admin/dashboard.html' %}
+{% block title %}Create Article{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Create New Article</h2>
+    <form id="createArticleForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Step 1: Title, Subtitle, Content, Publish Date -->
+        <div id="step1">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            
+            <div class="form-group mt-3">
+                <label for="subtitle">Subtitle</label>
+                <input type="text" class="form-control" id="subtitle" name="subtitle" required>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="content">Content</label>
+                <textarea class="form-control" id="contentinput" name="content" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="publish_date">Publish Date</label>
+                <input type="datetime-local" class="form-control" id="publish_date" name="publish_date" required>
+            </div>
+
+            <button type="button" class="btn btn-primary mt-4" onclick="nextStep()">Next</button>
+        </div>
+
+        <!-- Step 2: Categories, Tags, Location, Images, Terms -->
+        <div id="step2" style="display: none;">
+            <div class="form-group mt-3">
+                <label for="categories_input">Categories</label>
+                <input type="text" class="form-control" id="categories_input" name="categories_input" required>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="tags_input">Tags</label>
+                <input type="text" class="form-control" id="tags_input" name="tags_input" required>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="images">Upload Images</label>
+                <input type="file" class="form-control" id="images" name="images" multiple required>
+            </div>
+
+            <div class="form-check mt-3">
+                <input type="checkbox" class="form-check-input" id="agreed_to_terms" name="agreed_to_terms" required>
+                <label class="form-check-label" for="agreed_to_terms">Agree to terms</label>
+            </div>
+
+            <!-- Location (OpenStreetMap) -->
+            <div class="form-group mt-3">
+                <label for="location">Location</label>
+                <div id="map" style="height: 400px;"></div>
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
+                <input type="text" class="form-control mt-2" id="city" name="city" readonly placeholder="City">
+                <input type="text" class="form-control mt-2" id="state" name="state" readonly placeholder="State">
+                <input type="text" class="form-control mt-2" id="country" name="country" readonly placeholder="Country">
+            </div>
+
+            <button type="button" class="btn btn-primary mt-4" onclick="submitForm()">Submit Article</button>
+        </div>
+    </form>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    // Initialize OpenStreetMap
+    var map = L.map('map').setView([28.6139, 77.2090], 13);  // Default location: New Delhi
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var marker;
+    map.on('click', function(e) {
+        // Set marker at clicked location
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+        document.getElementById('latitude').value = e.latlng.lat;
+        document.getElementById('longitude').value = e.latlng.lng;
+
+        // Reverse Geocoding to get city, state, country from latitude and longitude
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.address) {
+                    const city = data.address.city || data.address.town || data.address.village;
+                    const state = data.address.state;
+                    const country = data.address.country;
+
+                    document.getElementById('city').value = city || "";
+                    document.getElementById('state').value = state || "";
+                    document.getElementById('country').value = country || "";
+                }
+            })
+            .catch(error => console.error('Error fetching reverse geocoding data:', error));
+    });
+
+    function nextStep() {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+    }
+
+    function submitForm() {
+        var formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('subtitle', document.getElementById('subtitle').value);
+        formData.append('content', document.getElementById('contentinput').value);
+        formData.append('publish_date', document.getElementById('publish_date').value);
+        formData.append('categories_input', document.getElementById('categories_input').value);
+        formData.append('tags_input', document.getElementById('tags_input').value);
+        formData.append('latitude', document.getElementById('latitude').value);
+        formData.append('longitude', document.getElementById('longitude').value);
+    
+        // Prepare city, state, and country as a JSON object
+        var cityData = {
+            name: document.getElementById('city').value,
+            state: {
+                name: document.getElementById('state').value,
+                country: {
+                    name: document.getElementById('country').value,
+                },
+            },
+        };
+        formData.append('city', JSON.stringify(cityData));  // Send city as a JSON string
+    
+        formData.append('agreed_to_terms', document.getElementById('agreed_to_terms').checked);
+    
+        var images = document.getElementById('images').files;
+        for (var i = 0; i < images.length; i++) {
+            formData.append('images', images[i]);
+        }
+    
+        fetch('/articles/articles/admin/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                alert('Article created successfully!');
+                window.location.href = '/admin-dashboard';  // Redirect to dashboard
+            } else {
+                alert('Failed to create article. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+    
+</script>
+{% endblock %}

@@ -35,6 +35,21 @@ def admin_dashboard(request):
     # Only serve the dashboard page, JavaScript will handle the rest
     return render(request, 'admin/dashboard.html')
 
+def admin_all_articles(request):
+    return render(request, 'admin/all_articles.html')
+
+def admin_article_detail(request, id):
+    return render(request, 'admin/article_detail.html', {'article': id})
+
+def admin_article_create(request):
+    return render(request, "admin/create_article.html")
+
+def admin_update_profile(request):
+    return render(request, "admin/update_profile.html")
+def admin_update_article(request):
+    return render(request, "admin/article_update.html")
+def admin_users_list(request):
+    return render(request, "admin/users.html")
 # =========================================== admin view end ===================================================
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # =========================================== editor view start ===================================================

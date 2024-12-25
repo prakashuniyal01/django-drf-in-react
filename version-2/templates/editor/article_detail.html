@@ -2,7 +2,21 @@
 {% block title %}Article Detail{% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <div id="article-images"></div>
+    <!-- Images Carousel -->
+    <div id="articleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
+        <div class="carousel-inner" id="article-images">
+            <!-- Images will be dynamically inserted here -->
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#articleCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#articleCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
     <h2 id="article-title"></h2>
     <h5 id="article-subtitle"></h5>
     <p id="article-content"></p>
@@ -52,7 +66,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<!-- Include Bootstrap JS for Modal -->
+<!-- Include Bootstrap JS for Modal and Carousel -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -83,6 +97,24 @@
     
         function renderArticleDetail(article) {
             console.log(article);
+            // Carousel Inner Element
+            const carouselInner = document.getElementById("article-images");
+
+            // Render Images in Carousel
+            article.images.forEach((image, index) => {
+                const carouselItem = document.createElement("div");
+                carouselItem.classList.add("carousel-item");
+                if (index === 0) carouselItem.classList.add("active"); // First image is active
+
+                const img = document.createElement("img");
+                img.src = image.image;
+                img.alt = article.title;
+                img.classList.add("d-block", "w-100");
+
+                carouselItem.appendChild(img);
+                carouselInner.appendChild(carouselItem);
+            });
+
             document.getElementById("article-title").textContent = article.title;
             document.getElementById("article-subtitle").textContent = article.subtitle;
             document.getElementById("article-content").textContent = article.content;
@@ -93,14 +125,6 @@
             document.getElementById("article-tags").textContent = article.tags.map(tag => tag.name).join(", ");
             document.getElementById("article-location").textContent = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
             document.getElementById("article-author").textContent = article.author_name;
-            const imagesContainer = document.getElementById("article-images");
-            article.images.forEach(image => {
-                const img = document.createElement("img");
-                img.src = image.image;
-                img.alt = article.title;
-                img.classList.add("img-fluid", "mb-3");
-                imagesContainer.appendChild(img);
-            });
             renderMap(article.latitude, article.longitude);
         }
     

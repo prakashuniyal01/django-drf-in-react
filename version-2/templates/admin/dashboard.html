@@ -37,16 +37,16 @@
   <body>
     <!-- Sidebar -->
     <div id="sidebar" class="d-flex flex-column p-3">
-      <h5 class="text-center">Admin Dashboard</h5>
+      <a class="navbar-brand" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
       <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-          <a class="nav-link" href="#">All Users</a>
+          <a class="nav-link" href="{% url 'admin_users_list' %}">All Users</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Create User</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">All Articles</a>
+          <a class="nav-link" href="{% url 'admin_all_articles'%}">All Articles</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Published Articles</a>
@@ -58,7 +58,7 @@
           <a class="nav-link" href="#">Approved Articles</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Create Articles</a>
+          <a class="nav-link" href="{% url 'admin_article_create'%}">Create Articles</a>
         </li>
       </ul>
     </div>
@@ -67,7 +67,7 @@
     <div id="content">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Admin Dashboard</a>
+          <a class="navbar-brand" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -82,10 +82,10 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#">Profile</a>
+                <a class="nav-link" href="{% url 'admin_update_profile' %}">Profile</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" id='logout' href="#">Logout</a>
               </li>
             </ul>
           </div>
@@ -126,6 +126,23 @@
           window.location.href = "/login/";
         }
       });
+
+              // Logout functionality
+              document.querySelector('#logout').addEventListener('click', () => {
+                if (confirm("Are you sure you want to logout?")) {
+                    // Clear tokens and session data
+                    localStorage.removeItem('access_token');
+                    sessionStorage.clear();
+            
+                    // Reload the page
+                    location.reload();
+            
+                    // Redirect after a short delay
+                    setTimeout(() => {
+                        window.location.href = "/login/";
+                    }, 100); // 100ms delay
+                }
+            });
     </script>
   </body>
 </html>
