@@ -1,100 +1,118 @@
-{% extends 'base.html' %}
-{% block title %}Journalist Dashboard{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journalist Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #ddd;
+        }
+        #sidebar .nav-link {
+            color: #000;
+        }
+        #sidebar .nav-link:hover {
+            background-color: #e9ecef;
+            color: #000;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
 
-{% block content %}
-<div class="container-fluid">
-    <!-- Sidebar -->
-    <div class="row">
-        <div class="col-md-3" style="background-color: #5BCA7F; height: 100vh; color: white;">
-            <h3 class="text-center mt-4">Journalist Dashboard</h3>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/journalist_all-articles/' %}active{% endif %}" href="{% url 'journalist_all_articles' %}">All Articles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Published Articles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pending Articles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/journalist_article_create/' %}active{% endif %}" href="{% url 'journalist_article_create' %}">Create Article</a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Content Area -->
-        <div class="col-md-9">
-            <div id="articles-content">
-                <!-- Articles will be dynamically loaded here -->
-            </div>
-        </div>
-    </div>
+<!-- Sidebar -->
+<div id="sidebar" class="d-flex flex-column p-3">
+    <a class="nav-link" href="{% url 'journalist-dashboard' %}">Journalist Dashboard</a>
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'journalist_all_articles' %}">All Articles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Published Articles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Pending Articles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Approved Articles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'journalist_article_create' %}">Create Articles</a>
+        </li>
+    </ul>
 </div>
 
+<!-- Main Content -->
+<div id="content">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'journalist-dashboard' %}">Journalist Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'journalist_update_profile' %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% block content %}
+        <h1>Welcome to the Journalist Dashboard</h1>
+        {% endblock %}
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
 
-    if (!accessToken) {
-        window.location.href = '/login/';  // Redirect to login if no access token
-    }
-
-    // Function to fetch and display all articles
-    function fetchArticles(page = 1) {
-        fetch(`http://127.0.0.1:8000/articles/articles/?page=${page}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const articlesContent = document.getElementById('articles-content');
-            let content = '<h4>All Articles</h4><div class="row">';
-
-            if (data.results && data.results.length > 0) {
-                data.results.forEach(article => {
-                    content += `
-                        <div class="col-md-4 mb-4">
-                            <div class="card" style="width: 18rem;">
-                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Article image">
-                                <div class="card-body">
-                                    <h5 class="card-title">${article.title}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">${article.subtitle}</h6>
-                                    <p class="card-text">${article.content.substring(0, 100)}...</p>
-                                    <p class="text-muted"><small>Author: ${article.author_name}</small></p>
-                                    <a href="/articles/articles/${article.id}/" class="btn btn-primary">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                content += '</div>';
-
-                // Adding Pagination
-                let pagination = '<nav><ul class="pagination">';
-                for (let i = 1; i <= data.total_pages; i++) {
-                    pagination += `
-                        <li class="page-item ${i === data.page ? 'active' : ''}">
-                            <a class="page-link" href="javascript:void(0);" onclick="fetchArticles(${i})">${i}</a>
-                        </li>
-                    `;
+    document.addEventListener('DOMContentLoaded', async () => {
+        const accessToken = localStorage.getItem('access_token');
+    
+        if (!accessToken) {
+            window.location.href = "/login/";
+            return;
+        }
+    
+        try {
+            const response = await fetch('/users/api/session-check/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 }
-                pagination += '</ul></nav>';
-
-                articlesContent.innerHTML = content + pagination;
-            } else {
-                articlesContent.innerHTML = '<p>No articles found.</p>';
+            });
+    
+            if (!response.ok) {
+                console.log("Token validation failed. Redirecting to login...");
+                window.location.href = "/login/";
             }
-        })
-        .catch(error => {
-            console.error('Error fetching articles:', error);
-            document.getElementById('articles-content').innerHTML = '<p>Error fetching articles.</p>';
-        });
-    }
-
-    // Load the articles when the page is ready
-    fetchArticles();
+        } catch (error) {
+            console.error('Error validating session:', error);
+            window.location.href = "/login/";
+        }
+    });
+    
 </script>
 
-{% endblock %}
+</body>
+</html>

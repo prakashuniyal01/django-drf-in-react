@@ -1,48 +1,131 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Article Management</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                    <!-- Login and Register Links -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                </ul>
-                <nav>
-                    <ul class="pagination justify-content-center">
-                        {% if previous %}
-                        <li class="page-item"><a class="page-link" href="?page={{ previous|cut:'http://127.0.0.1:8000/articles/articles/published/?page=' }}">Previous</a></li>
-                        {% endif %}
-                        {% if next %}
-                        <li class="page-item"><a class="page-link" href="?page={{ next|cut:'http://127.0.0.1:8000/articles/articles/published/?page=' }}">Next</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </nav>
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      #sidebar {
+        min-width: 250px;
+        max-width: 250px;
+        background-color: #f8f9fa;
+        border-right: 1px solid #ddd;
+      }
+      #sidebar .nav-link {
+        color: #000;
+      }
+      #sidebar .nav-link:hover {
+        background-color: #e9ecef;
+        color: #000;
+      }
+      #content {
+        flex-grow: 1;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div id="sidebar" class="d-flex flex-column p-3">
+      <h5 class="text-center">Admin Dashboard</h5>
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="#">All Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Create User</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">All Articles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Published Articles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pending Articles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Approved Articles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Create Articles</a>
+        </li>
+      </ul>
     </div>
+
+    <!-- Main Content -->
+    <div id="content">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Admin Dashboard</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container mt-4">
+        {% block content %}
+        <h1>Welcome to the Admin Dashboard</h1>
+        {% endblock %}
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const accessToken = localStorage.getItem("access_token");
+
+        if (!accessToken) {
+          window.location.href = "/login/";
+          return;
+        }
+
+        try {
+          const response = await fetch("/users/api/session-check/", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            console.log("Token validation failed. Redirecting to login...");
+            window.location.href = "/login/";
+          }
+        } catch (error) {
+          console.error("Error validating session:", error);
+          window.location.href = "/login/";
+        }
+      });
+    </script>
+  </body>
 </html>

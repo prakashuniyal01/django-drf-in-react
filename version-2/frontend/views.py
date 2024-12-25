@@ -51,21 +51,14 @@ def journalist_all_articles(request):
 
 
 def journalist_article_detail(request, id):
-    # Construct the API URL dynamically
-    url = f'http://127.0.0.1:8000/articles/articles/{id}/'
 
-    # Fetch the article data from the API
-    response = requests.get(url)
-    if response.status_code == 200:
-        article = response.json()
-    else:
-        article = None  # Handle error case if article not found
-
-    return render(request, 'journalist/article_detail.html', {'article': article})
+    return render(request, 'journalist/article_detail.html', {'article': id})
 
 def journalist_article_create(request):
     return render(request, "journalist/create_article.html")
 
+def journalist_update_profile(request):
+    return render(request, "journalist/update_profile.html")
 # ====================================== jounralist end ===========================================
 
 # Register page

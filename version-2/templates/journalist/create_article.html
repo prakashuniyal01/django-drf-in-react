@@ -1,176 +1,129 @@
-{% extends 'base.html' %}
+{% extends 'journalist/dashboard.html' %}
 {% block title %}Create Article{% endblock %}
-
 {% block content %}
 <div class="container mt-5">
-    <h2>Create Article</h2>
-    
-    <!-- Step 1 -->
-    <div id="step1">
-        <h4>Step 1: Article Details</h4>
-        <form id="form-step1">
+    <h2>Create New Article</h2>
+    <form id="createArticleForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Step 1: Title, Subtitle, Content, Publish Date -->
+        <div id="step1">
             <div class="form-group">
-                <label for="title">Title:</label>
-                <input type="text" id="title" class="form-control" required>
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
             </div>
-            <div class="form-group">
-                <label for="subtitle">Subtitle:</label>
-                <input type="text" id="subtitle" class="form-control" required>
+            
+            <div class="form-group mt-3">
+                <label for="subtitle">Subtitle</label>
+                <input type="text" class="form-control" id="subtitle" name="subtitle" required>
             </div>
-            <div class="form-group">
-                <label for="content">Content:</label>
-                <textarea id="content" class="form-control" rows="5" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="publish_date">Publish Date:</label>
-                <input type="datetime-local" id="publish_date" class="form-control" required>
-            </div>
-            <button type="button" class="btn btn-primary" id="next-step1">Next</button>
-        </form>
-    </div>
 
-    <!-- Step 2 -->
-    <div id="step2" style="display: none;">
-        <h4>Step 2: Additional Details</h4>
-        <form id="form-step2" enctype="multipart/form-data">
-            <!-- Create New Category -->
-            <div class="form-group">
-                <label for="category">Category:</label>
-                <input type="text" id="category" class="form-control" placeholder="Enter category" required>
+            <div class="form-group mt-3">
+                <label for="content">Content</label>
+                <textarea class="form-control" id="contentinput" name="content" rows="4" required></textarea>
             </div>
-            
-            <!-- Create New Tags -->
-            <div class="form-group">
-                <label for="tags">Tags:</label>
-                <div>
-                    <input type="text" id="tag1" class="form-control" placeholder="Enter tag" />
-                    <input type="text" id="tag2" class="form-control" placeholder="Enter another tag" />
-                    <input type="text" id="tag3" class="form-control" placeholder="Enter another tag" />
-                    <!-- Add more input fields as needed -->
-                </div>
+
+            <div class="form-group mt-3">
+                <label for="publish_date">Publish Date</label>
+                <input type="datetime-local" class="form-control" id="publish_date" name="publish_date" required>
             </div>
-            
-            <div class="form-group">
-                <label for="images">Upload Images:</label>
-                <input type="file" id="images" class="form-control-file" multiple required>
+
+            <button type="button" class="btn btn-primary mt-4" onclick="nextStep()">Next</button>
+        </div>
+
+        <!-- Step 2: Categories, Tags, Location, Images, Terms -->
+        <div id="step2" style="display: none;">
+            <div class="form-group mt-3">
+                <label for="categories_input">Categories</label>
+                <input type="text" class="form-control" id="categories_input" name="categories_input" required>
             </div>
-            <div class="form-group">
-                <label for="city">City:</label>
-                <input type="text" id="city" class="form-control" readonly>
+
+            <div class="form-group mt-3">
+                <label for="tags_input">Tags</label>
+                <input type="text" class="form-control" id="tags_input" name="tags_input" required>
             </div>
-            <div class="form-group">
-                <label for="state">State:</label>
-                <input type="text" id="state" class="form-control" readonly>
+
+            <div class="form-group mt-3">
+                <label for="images">Upload Images</label>
+                <input type="file" class="form-control" id="images" name="images" multiple required>
             </div>
-            <div class="form-group">
-                <label for="country">Country:</label>
-                <input type="text" id="country" class="form-control" readonly>
+
+            <div class="form-check mt-3">
+                <input type="checkbox" class="form-check-input" id="agreed_to_terms" name="agreed_to_terms" required>
+                <label class="form-check-label" for="agreed_to_terms">Agree to terms</label>
             </div>
-            <div class="form-group">
-                <label for="agreed_to_terms">
-                    <input type="checkbox" id="agreed_to_terms" required>
-                    I agree to the terms and conditions.
-                </label>
+
+            <!-- Location (OpenStreetMap) -->
+            <div class="form-group mt-3">
+                <label for="location">Location</label>
+                <div id="map" style="height: 400px;"></div>
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
+                <input type="text" class="form-control mt-2" id="city" name="city" readonly placeholder="City">
+                <input type="text" class="form-control mt-2" id="state" name="state" readonly placeholder="State">
+                <input type="text" class="form-control mt-2" id="country" name="country" readonly placeholder="Country">
             </div>
-            <div id="map" style="height: 400px; margin-top: 20px;"></div>
-            <br>
-            <button type="button" class="btn btn-secondary" id="prev-step2">Back</button>
-            <button type="button" class="btn btn-success" id="submit-form">Submit</button>
-        </form>
-    </div>
+
+            <button type="button" class="btn btn-primary mt-4" onclick="submitForm()">Submit Article</button>
+        </div>
+    </form>
 </div>
-
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-    // Fetch access token from localStorage or session
-    const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-
-    // Check if access token is available and valid
-    if (!accessToken) {
-        alert('You are not logged in. Redirecting to login page.');
-        window.location.href = '/login/';
-    }
-    
-    // Step navigation
-    document.getElementById('next-step1').addEventListener('click', () => {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-    });
-
-    document.getElementById('prev-step2').addEventListener('click', () => {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step1').style.display = 'block';
-    });
-
-    // Map integration with OpenStreetMap and reverse geocoding
-    let latitude = 0;
-    let longitude = 0;
-    const map = L.map('map').setView([28.6139, 77.2090], 13);
-
+    // Initialize OpenStreetMap
+    var map = L.map('map').setView([28.6139, 77.2090], 13);  // Default location: New Delhi
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    const marker = L.marker([28.6139, 77.2090], { draggable: true }).addTo(map);
+    var marker;
+    map.on('click', function(e) {
+        // Set marker at clicked location
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+        document.getElementById('latitude').value = e.latlng.lat;
+        document.getElementById('longitude').value = e.latlng.lng;
 
-    marker.on('dragend', function (event) {
-        const position = marker.getLatLng();
-        latitude = position.lat;
-        longitude = position.lng;
-        console.log('Latitude:', latitude, 'Longitude:', longitude);
-
-        // Call reverse geocoding API
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch location data');
-                }
-                return response.json();
-            })
+        // Reverse Geocoding to get city, state, country from latitude and longitude
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+            .then(response => response.json())
             .then(data => {
-                const city = data.address.city || data.address.town || data.address.village || '';
-                const state = data.address.state || '';
-                const country = data.address.country || '';
+                if (data && data.address) {
+                    const city = data.address.city || data.address.town || data.address.village;
+                    const state = data.address.state;
+                    const country = data.address.country;
 
-                // Populate fields
-                document.getElementById('city').value = city;
-                document.getElementById('state').value = state;
-                document.getElementById('country').value = country;
-
-                console.log('City:', city, 'State:', state, 'Country:', country);
+                    document.getElementById('city').value = city || "";
+                    document.getElementById('state').value = state || "";
+                    document.getElementById('country').value = country || "";
+                }
             })
-            .catch(error => {
-                console.error('Error fetching location:', error);
-            });
+            .catch(error => console.error('Error fetching reverse geocoding data:', error));
     });
 
-    // Form submission
-    document.getElementById('submit-form').addEventListener('click', () => {
-        const formData = new FormData();
-    
+    function nextStep() {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+    }
+
+    function submitForm() {
+        var formData = new FormData();
         formData.append('title', document.getElementById('title').value);
         formData.append('subtitle', document.getElementById('subtitle').value);
-        formData.append('content', document.getElementById('content').value);
+        formData.append('content', document.getElementById('contentinput').value);
         formData.append('publish_date', document.getElementById('publish_date').value);
+        formData.append('categories_input', document.getElementById('categories_input').value);
+        formData.append('tags_input', document.getElementById('tags_input').value);
+        formData.append('latitude', document.getElementById('latitude').value);
+        formData.append('longitude', document.getElementById('longitude').value);
     
-        // Category (Text input)
-        const category = document.getElementById('category').value;
-        formData.append('category', category);
-    
-        // Tags (Text inputs)
-        const tags = [];
-        if (document.getElementById('tag1').value) tags.push(document.getElementById('tag1').value);
-        if (document.getElementById('tag2').value) tags.push(document.getElementById('tag2').value);
-        if (document.getElementById('tag3').value) tags.push(document.getElementById('tag3').value);
-        tags.forEach(tag => formData.append('tags', tag));
-    
-        // Other form fields (e.g., images, location, etc.)
-        const images = document.getElementById('images').files;
-        for (let i = 0; i < images.length; i++) {
-            formData.append('images', images[i]);
-        }
-    
-        const locationData = {
+        // Prepare city, state, and country as a JSON object
+        var cityData = {
             name: document.getElementById('city').value,
             state: {
                 name: document.getElementById('state').value,
@@ -179,43 +132,36 @@
                 },
             },
         };
+        formData.append('city', JSON.stringify(cityData));  // Send city as a JSON string
     
-        formData.append('location', JSON.stringify(locationData));
-        formData.append('latitude', latitude.toFixed(6));
-        formData.append('longitude', longitude.toFixed(6));
+        formData.append('agreed_to_terms', document.getElementById('agreed_to_terms').checked);
     
-        // Agreed to terms checkbox
-        const agreedToTerms = document.getElementById('agreed_to_terms').checked;
-        formData.append('agreed_to_terms', agreedToTerms);
-    
-        // Ensure agreement checkbox is checked
-        if (!agreedToTerms) {
-            alert('You must agree to the terms and conditions!');
-            return;
+        var images = document.getElementById('images').files;
+        for (var i = 0; i < images.length; i++) {
+            formData.append('images', images[i]);
         }
     
-        // Submit the form
-        fetch('http://localhost:8000/articles/articles/', {
+        fetch('/articles/articles/', {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${accessToken}`,
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
             },
-            body: formData,
+            body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to create article');
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                alert('Article created successfully!');
+                window.location.href = '/journalist-dashboard';  // Redirect to dashboard
+            } else {
+                alert('Failed to create article. Please try again.');
             }
-            return response.json();
-        })
-        .then(result => {
-            alert('Article created successfully');
-            console.log(result);
         })
         .catch(error => {
             console.error('Error:', error);
+            alert('An error occurred. Please try again.');
         });
-    });
+    }
+    
 </script>
-
 {% endblock %}

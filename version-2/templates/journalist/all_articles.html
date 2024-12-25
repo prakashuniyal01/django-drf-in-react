@@ -1,109 +1,98 @@
-{% extends 'base.html' %}
+{% extends 'journalist/dashboard.html' %}
 {% block title %}All Articles{% endblock %}
-
 {% block content %}
-<div class="container-fluid">
-    <!-- Sidebar -->
-    <div class="col-md-3" style="background-color: #5BCA7F; height: 100vh; color: white;">
-        <h3 class="text-center mt-4">Journalist Dashboard</h3>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">All Articles</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Published Articles</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pending Articles</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Create Article</a>
-            </li>
+<div class="container mt-5">
+    <h2>All Articles</h2>
+    <div id="articles-container" class="row gy-4">
+        <!-- Articles will be rendered here dynamically -->
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center" id="pagination">
+            <!-- Pagination buttons will be generated dynamically -->
         </ul>
-    </div>
-
-    <!-- Content Area -->
-    <div class="col-md-9">
-        <h4>All Articles</h4>
-        <div id="articles-content" class="row">
-            <!-- Articles will be dynamically loaded here -->
-        </div>
-
-        <!-- Pagination buttons -->
-        <div id="pagination" class="d-flex justify-content-between">
-            <!-- Next and Previous buttons will be dynamically inserted here -->
-        </div>
-    </div>
+    </nav>
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const articlesContainer = document.getElementById("articles-container");
+    const paginationContainer = document.getElementById("pagination");
     let currentPage = 1;
-    let totalPages = 1;
 
-    function fetchArticles(page = 1) {
-        const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-
-        if (!accessToken) {
-            window.location.href = '/login/';
-        }
-
-        fetch(`http://127.0.0.1:8000/articles/articles/?page=${page}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const articlesContent = document.getElementById('articles-content');
-            const pagination = document.getElementById('pagination');
-
-            // Clear previous content
-            articlesContent.innerHTML = '';
-            pagination.innerHTML = '';
-
-            if (data.results && data.results.length > 0) {
-                console.log(data); // Log the response to see the structure
-                data.results.forEach(article => {
-                    console.log(article.id); // Check if the id exists for each article
-                    let articleCard = `
-                        <div class="col-md-4 mb-4">
-                            <div class="card" style="width: 18rem;">
-                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Article image">
-                                <div class="card-body">
-                                    <h5 class="card-title">${article.title}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">${article.subtitle}</h6>
-                                    <p class="card-text">${article.content.substring(0, 100)}...</p>
-                                    <p class="text-muted"><small>Author: ${article.author_name}</small></p>
-                                    <a href="/journalist_article/${article.id}/" class="btn btn-primary">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    articlesContent.innerHTML += articleCard;
-
-                });
-
-
-                totalPages = Math.ceil(data.count / 10); // Assuming 10 items per page
-                if (page > 1) {
-                    pagination.innerHTML += `<button class="btn btn-secondary" onclick="fetchArticles(${page - 1})">Previous</button>`;
+    async function fetchArticles(page = 1) {
+        try {
+            const response = await fetch(`/articles/articles/?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                    'Content-Type': 'application/json'  // Optional, in case your API expects it
                 }
-                if (page < totalPages) {
-                    pagination.innerHTML += `<button class="btn btn-secondary" onclick="fetchArticles(${page + 1})">Next</button>`;
-                }
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                renderArticles(data.results);
+                renderPagination(data);
             } else {
-                articlesContent.innerHTML = '<p>No articles found.</p>';
+                console.error("Failed to fetch articles");
             }
-        })
-        .catch(error => {
-            console.error('Error fetching articles:', error);
-            document.getElementById('articles-content').innerHTML = '<p>Error fetching articles.</p>';
+        } catch (error) {
+            console.error("Error fetching articles:", error);
+        }
+    }
+    
+
+    function renderArticles(articles) {
+        articlesContainer.innerHTML = ""; // Clear previous articles
+        articles.forEach((article) => {
+            const articleCard = `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${article.title}</h5>
+                            <p class="card-text">${article.content.substring(0, 100)}...</p>
+                            <!-- Update the 'Read More' link with the correct URL -->
+                            <a href="/journalist_article/${article.id}/" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            articlesContainer.insertAdjacentHTML("beforeend", articleCard);
         });
     }
 
-    // Initial fetch
-    fetchArticles(currentPage);
-</script>
+    function renderPagination(data) {
+        paginationContainer.innerHTML = ""; // Clear previous pagination
+        if (data.previous) {
+            paginationContainer.innerHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                </li>
+            `;
+        }
+        if (data.next) {
+            paginationContainer.innerHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                </li>
+            `;
+        }
+    }
 
+    paginationContainer.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (e.target.tagName === "A") {
+            const page = e.target.dataset.page;
+            currentPage = parseInt(page);
+            fetchArticles(currentPage);
+        }
+    });
+
+    // Initial fetch
+    fetchArticles();
+});
+</script>
 {% endblock %}
