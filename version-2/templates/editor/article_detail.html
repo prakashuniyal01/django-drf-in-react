@@ -1,0 +1,158 @@
+{% extends 'editor/dashboard.html' %}
+{% block title %}Article Detail{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div id="article-images"></div>
+    <h2 id="article-title"></h2>
+    <h5 id="article-subtitle"></h5>
+    <p id="article-content"></p>
+    
+    <!-- Display the status of the article -->
+    <div>
+        <strong>Status:</strong> <span id="article-status"></span>
+    </div>
+    
+    <!-- Display the publish date -->
+    <div>
+        <strong>Publish Date:</strong> <span id="article-publish-date"></span>
+    </div>
+
+    <div>
+        <strong>Categories:</strong> <span id="article-categories"></span>
+    </div>
+    <div>
+        <strong>Tags:</strong> <span id="article-tags"></span>
+    </div>
+    <div>
+        <strong>Location:</strong> <span id="article-location"></span>
+    </div>
+    <div>
+        <strong>Author:</strong> <span id="article-author"></span>
+    </div>
+    
+    <!-- Map Container -->
+    <div id="article-map" style="height: 400px; margin-top: 20px;"></div>
+
+    <!-- Update and Change Status Actions -->
+    <div id="article-actions" style="margin-top: 20px;">
+        <div class="mb-3">
+            <label for="status-select" class="form-label"><strong>Change Status:</strong></label>
+            <select id="status-select" class="form-select">
+                <option value="">Select Status</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="published">Published</option>
+            </select>
+        </div>
+        <button id="update-status-btn" class="btn btn-success">Update Status</button>
+    </div>
+</div>
+
+<!-- Include Leaflet.js -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Include Bootstrap JS for Modal -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const articleId = {{ article|safe }};
+        console.log("Article ID:", articleId);
+    
+        async function fetchArticleDetail() {
+            try {
+                const response = await fetch(`/articles/articles/${articleId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    renderArticleDetail(data);
+                } else {
+                    console.error("Failed to fetch article details");
+                }
+            } catch (error) {
+                console.error("Error fetching article details:", error);
+            }
+        }
+    
+        function renderArticleDetail(article) {
+            console.log(article);
+            document.getElementById("article-title").textContent = article.title;
+            document.getElementById("article-subtitle").textContent = article.subtitle;
+            document.getElementById("article-content").textContent = article.content;
+            document.getElementById("article-status").textContent = article.status || 'N/A';
+            const publishDate = new Date(article.publish_date).toLocaleString();
+            document.getElementById("article-publish-date").textContent = publishDate;
+            document.getElementById("article-categories").textContent = article.categories.map(cat => cat.name).join(", ");
+            document.getElementById("article-tags").textContent = article.tags.map(tag => tag.name).join(", ");
+            document.getElementById("article-location").textContent = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
+            document.getElementById("article-author").textContent = article.author_name;
+            const imagesContainer = document.getElementById("article-images");
+            article.images.forEach(image => {
+                const img = document.createElement("img");
+                img.src = image.image;
+                img.alt = article.title;
+                img.classList.add("img-fluid", "mb-3");
+                imagesContainer.appendChild(img);
+            });
+            renderMap(article.latitude, article.longitude);
+        }
+    
+        function renderMap(latitude, longitude) {
+            const map = L.map('article-map').setView([latitude, longitude], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            const marker = L.marker([latitude, longitude]).addTo(map);
+            marker.bindPopup("Article Location").openPopup();
+        }
+
+        async function updateArticleStatus(articleId, newStatus) {
+            try {
+                const response = await fetch(`/articles/articles/${articleId}/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: newStatus }),
+                });
+
+                if (response.ok) {
+                    const updatedArticle = await response.json();
+                    alert(`Status updated to: ${updatedArticle.status}`);
+                    document.getElementById("article-status").textContent = updatedArticle.status;
+                    location.reload(); // Reload to reflect changes
+                } else {
+                    alert("Failed to update the status. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error updating status:", error);
+                alert("An error occurred while updating the status.");
+            }
+        }
+
+        document.getElementById("update-status-btn").addEventListener("click", () => {
+            const selectedStatus = document.getElementById("status-select").value;
+
+            if (!selectedStatus) {
+                alert("Please select a status to update.");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to change the status to '${selectedStatus}'?`)) {
+                updateArticleStatus(articleId, selectedStatus);
+            }
+        });
+
+        fetchArticleDetail();
+    });
+</script>
+
+{% endblock %}

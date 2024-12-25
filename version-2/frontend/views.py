@@ -29,16 +29,29 @@ def home(request):
 # Login page
 def login(request):
     return render(request, 'login.html')  # Frontend se login handle hoga
-
+# =========================================== admin view start ===================================================
 # Admin Dashboard view
 def admin_dashboard(request):
     # Only serve the dashboard page, JavaScript will handle the rest
     return render(request, 'admin/dashboard.html')
 
+# =========================================== admin view end ===================================================
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# =========================================== editor view start ===================================================
 # Editor Dashboard view
 def editor_dashboard(request):
     return render(request, 'editor/dashboard.html')
 
+def editor_all_articles(request):
+    return render(request, 'editor/all_articles.html')
+
+def editor_article_detail(request, id):
+    return render(request, 'editor/article_detail.html', {'article': id})
+
+def editor_update_profile(request):
+    return render(request, "editor/update_profile.html")
+# =========================================== editor view end ===================================================
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # ========================================== jounralist start =====================================================
 # Journalist Dashboard view
 def journalist_dashboard(request):
@@ -46,12 +59,10 @@ def journalist_dashboard(request):
 
 # View to display all articles (for 'all_articles.html')
 def journalist_all_articles(request):
-    # articles = Article.objects.all()  # Adjust this query based on your model or filtering criteria
     return render(request, 'journalist/all_articles.html')
 
 
 def journalist_article_detail(request, id):
-
     return render(request, 'journalist/article_detail.html', {'article': id})
 
 def journalist_article_create(request):
