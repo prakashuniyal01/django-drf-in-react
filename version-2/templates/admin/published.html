@@ -1,38 +1,21 @@
-{% extends 'base.html' %}
-{% block title %}Home{% endblock %}
-{% block nav %}
-<div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-        <!-- Login and Register Links -->
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Register</a>
-        </li>
-    </ul>
-
-</div>
-{% endblock %}
+{% extends 'admin/dashboard.html' %}
+{% block title %}All Published Articles{% endblock %}
 {% block content %}
-
-<h1 class="text-center mb-4">Latest Articles</h1>
-    <div class="container mt-5">
-        <h2>All Articles</h2>
-        <div id="articles-container" class="row gy-4">
-            <!-- Articles will be rendered here dynamically -->
-        </div>
-    
-        <!-- Pagination -->
-        <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-center" id="pagination">
-                <!-- Pagination buttons will be generated dynamically -->
-            </ul>
-        </nav>
+<div class="container mt-5">
+    <h2>All Published Articles</h2>
+    <div id="articles-container" class="row gy-4">
+        <!-- Articles will be rendered here dynamically -->
     </div>
-    
-    <script>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center" id="pagination">
+            <!-- Pagination buttons will be generated dynamically -->
+        </ul>
+    </nav>
+</div>
+
+<script>
     document.addEventListener("DOMContentLoaded", async () => {
         const articlesContainer = document.getElementById("articles-container");
         const paginationContainer = document.getElementById("pagination");
@@ -40,38 +23,54 @@
     
         async function fetchArticles(page = 1) {
             try {
-                const response = await fetch(`/articles/articles/published/?page=${page}`, {
+                const accessToken = localStorage.getItem('access_token');
+                if (!accessToken) {
+                    alert("Access token not found. Please log in.");
+                    return;
+                }
+    
+                const response = await fetch(`/articles/articles/admin/?page=${page}`, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json' // Optional, in case your API expects it
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
                     }
                 });
-        
+    
                 if (response.ok) {
                     const data = await response.json();
-                    renderArticles(data.results);
+                    const publishedArticles = data.results.filter(article => article.status === "published");  // Filter published articles
+                    renderArticles(publishedArticles);
                     renderPagination(data);
+                } else if (response.status === 401) {
+                    alert("Unauthorized! Please log in again.");
+                    window.location.href = '/login/'; // Redirect to login
                 } else {
-                    console.error("Failed to fetch articles");
+                    alert("Failed to fetch articles. Please try again later.");
+                    console.error("Error:", response.status, response.statusText);
                 }
             } catch (error) {
                 console.error("Error fetching articles:", error);
             }
         }
-        
     
         function renderArticles(articles) {
             articlesContainer.innerHTML = ""; // Clear previous articles
+            if (articles.length === 0) {
+                articlesContainer.innerHTML = `<p>No published articles found.</p>`;
+                return;
+            }
+    
             articles.forEach((article) => {
                 const articleCard = `
                     <div class="col-md-6 col-lg-4">
                         <div class="card">
-                            <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
+                            <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" 
+                                class="card-img-top" alt="${article.title}">
                             <div class="card-body">
                                 <h5 class="card-title">${article.title}</h5>
                                 <p class="card-text">${article.content.substring(0, 100)}...</p>
-                                <!-- Update the 'Read More' link with the correct URL -->
-                                <a href="/article/${article.id}/" class="btn btn-primary">Read More</a>
+                                <a href="/admin_article/${article.id}/" class="btn btn-primary">Read More</a>
                             </div>
                         </div>
                     </div>
@@ -110,5 +109,6 @@
         // Initial fetch
         fetchArticles();
     });
-    </script>
+    
+</script>
 {% endblock %}

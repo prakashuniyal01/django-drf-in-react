@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Create New Article</h2>
-    <form id="createArticleForm" enctype="multipart/form-data">
+    <form id="createArticleForm" enctype="multipart/form-data" onsubmit="return validateForm()">
         {% csrf_token %}
         
         <!-- Step 1: Title, Subtitle, Content, Publish Date -->
@@ -11,16 +11,19 @@
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" id="title" name="title" required>
+                <small id="titleError" class="form-text text-danger" style="display:none;">Title must be at least 3 words.</small>
             </div>
             
             <div class="form-group mt-3">
                 <label for="subtitle">Subtitle</label>
                 <input type="text" class="form-control" id="subtitle" name="subtitle" required>
+                <small id="subtitleError" class="form-text text-danger" style="display:none;">Subtitle must be at least 3 words.</small>
             </div>
 
             <div class="form-group mt-3">
                 <label for="content">Content</label>
                 <textarea class="form-control" id="contentinput" name="content" rows="4" required></textarea>
+                <small id="contentError" class="form-text text-danger" style="display:none;">Content must be at least 10 words.</small>
             </div>
 
             <div class="form-group mt-3">
@@ -33,19 +36,22 @@
 
         <!-- Step 2: Categories, Tags, Location, Images, Terms -->
         <div id="step2" style="display: none;">
+            <button type="button" class="btn btn-secondary mt-4" onclick="previousStep()">Back</button>
+
             <div class="form-group mt-3">
                 <label for="categories_input">Categories</label>
                 <input type="text" class="form-control" id="categories_input" name="categories_input" required>
             </div>
 
             <div class="form-group mt-3">
-                <label for="tags_input">Tags</label>
+                <label for="tags_input">Tags (comma separated)</label>
                 <input type="text" class="form-control" id="tags_input" name="tags_input" required>
             </div>
 
             <div class="form-group mt-3">
                 <label for="images">Upload Images</label>
                 <input type="file" class="form-control" id="images" name="images" multiple required>
+                <div id="imageGallery" class="mt-3"></div>
             </div>
 
             <div class="form-check mt-3">
@@ -68,10 +74,11 @@
         </div>
     </form>
 </div>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-    // Initialize OpenStreetMap
+    // OpenStreetMap and marker setup
     var map = L.map('map').setView([28.6139, 77.2090], 13);  // Default location: New Delhi
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -79,7 +86,6 @@
 
     var marker;
     map.on('click', function(e) {
-        // Set marker at clicked location
         if (marker) {
             map.removeLayer(marker);
         }
@@ -87,60 +93,110 @@
         document.getElementById('latitude').value = e.latlng.lat;
         document.getElementById('longitude').value = e.latlng.lng;
 
-        // Reverse Geocoding to get city, state, country from latitude and longitude
         var lat = e.latlng.lat;
         var lng = e.latlng.lng;
         fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
             .then(response => response.json())
             .then(data => {
                 if (data && data.address) {
-                    const city = data.address.city || data.address.town || data.address.village;
-                    const state = data.address.state;
-                    const country = data.address.country;
-
-                    document.getElementById('city').value = city || "";
-                    document.getElementById('state').value = state || "";
-                    document.getElementById('country').value = country || "";
+                    document.getElementById('city').value = data.address.city || "";
+                    document.getElementById('state').value = data.address.state || "";
+                    document.getElementById('country').value = data.address.country || "";
                 }
-            })
-            .catch(error => console.error('Error fetching reverse geocoding data:', error));
+            });
     });
 
-    function nextStep() {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
+    // Validate Form before submission
+    function validateForm() {
+        const title = document.getElementById('title').value.trim();
+        const subtitle = document.getElementById('subtitle').value.trim();
+        const content = document.getElementById('contentinput').value.trim();
+
+        const titleWords = title.split(/\s+/).length;
+        const subtitleWords = subtitle.split(/\s+/).length;
+        const contentWords = content.split(/\s+/).length;
+
+        let isValid = true;
+
+        if (titleWords < 3) {
+            document.getElementById('titleError').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('titleError').style.display = 'none';
+        }
+
+        if (subtitleWords < 3) {
+            document.getElementById('subtitleError').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('subtitleError').style.display = 'none';
+        }
+
+        if (contentWords < 10) {
+            document.getElementById('contentError').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('contentError').style.display = 'none';
+        }
+
+        return isValid;
     }
 
+    function nextStep() {
+        if (validateForm()) {
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+        }
+    }
+
+    function previousStep() {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step1').style.display = 'block';
+    }
+
+    // Handle image uploads
+    document.getElementById('images').addEventListener('change', function() {
+        const gallery = document.getElementById('imageGallery');
+        gallery.innerHTML = '';  // Clear existing images
+        const files = this.files;
+
+        for (let i = 0; i < files.length; i++) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(files[i]);
+            img.style.width = '100px';
+            img.style.marginRight = '10px';
+            gallery.appendChild(img);
+        }
+    });
+
+    // Handle tags as an array
+    function getTags() {
+        const tagsInput = document.getElementById('tags_input').value.trim();
+        return tagsInput.split(',').map(tag => tag.trim());
+    }
+
+    // Submit the form
     function submitForm() {
-        var formData = new FormData();
+        const formData = new FormData();
         formData.append('title', document.getElementById('title').value);
         formData.append('subtitle', document.getElementById('subtitle').value);
         formData.append('content', document.getElementById('contentinput').value);
         formData.append('publish_date', document.getElementById('publish_date').value);
         formData.append('categories_input', document.getElementById('categories_input').value);
-        formData.append('tags_input', document.getElementById('tags_input').value);
+        formData.append('tags_input', JSON.stringify(getTags()));  // Send tags as an array
         formData.append('latitude', document.getElementById('latitude').value);
         formData.append('longitude', document.getElementById('longitude').value);
-    
-        // Prepare city, state, and country as a JSON object
-        var cityData = {
+        formData.append('city', JSON.stringify({
             name: document.getElementById('city').value,
-            state: {
-                name: document.getElementById('state').value,
-                country: {
-                    name: document.getElementById('country').value,
-                },
-            },
-        };
-        formData.append('city', JSON.stringify(cityData));  // Send city as a JSON string
-    
+            state: { name: document.getElementById('state').value, country: { name: document.getElementById('country').value } }
+        }));
         formData.append('agreed_to_terms', document.getElementById('agreed_to_terms').checked);
-    
-        var images = document.getElementById('images').files;
-        for (var i = 0; i < images.length; i++) {
+
+        const images = document.getElementById('images').files;
+        for (let i = 0; i < images.length; i++) {
             formData.append('images', images[i]);
         }
-    
+
         fetch('/articles/articles/admin/', {
             method: 'POST',
             headers: {
@@ -152,7 +208,7 @@
         .then(data => {
             if (data) {
                 alert('Article created successfully!');
-                window.location.href = '/admin-dashboard';  // Redirect to dashboard
+                window.location.href = '/admin-dashboard';
             } else {
                 alert('Failed to create article. Please try again.');
             }
@@ -162,6 +218,5 @@
             alert('An error occurred. Please try again.');
         });
     }
-    
 </script>
 {% endblock %}

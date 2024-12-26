@@ -5,30 +5,25 @@ from django.http import JsonResponse
 # home for public articles views 
 def index(request):
     # Fetch published articles from API
-    response = requests.get("http://127.0.0.1:8000/articles/articles/published/")
-    articles = response.json().get("results", [])
-    return render(request, "home.html", {"articles": articles})
+    # response = requests.get("http://127.0.0.1:8000/articles/articles/published/")
+    # articles = response.json().get("results", [])
+    return render(request, "home.html")
 
 
-def article_detail(request, article_id):
+def article_detail(request, id):
     # Article data fetch from API
-    response = requests.get(f"http://127.0.0.1:8000/articles/articles/published/{article_id}/")
-    if response.status_code == 200:
-        article = response.json()
-    else:
-        article = None
-    return render(request, "article_detail.html", {"article": article})
+    return render(request, "article_detail.html", {"article": id})
 
 
 def home(request):
-    page = request.GET.get("page", 1)
-    response = requests.get(f"http://127.0.0.1:8000/articles/articles/published/?page={page}")
-    data = response.json()
-    return render(request, "home.html", {"articles": data.get("results", []), "next": data.get("next"), "previous": data.get("previous")})
+    return render(request, "home.html")
 
 # Login page
 def login(request):
     return render(request, 'login.html')  # Frontend se login handle hoga
+
+def forgat_password(request):
+    return render(request, 'forget_password.html')
 # =========================================== admin view start ===================================================
 # Admin Dashboard view
 def admin_dashboard(request):
@@ -53,6 +48,14 @@ def admin_users_list(request):
 
 def admin_users_create(request):
     return render(request, "admin/user_create.html")
+
+def admin_users_pubilished(request):
+    return render(request, "admin/published.html")
+
+def admin_users_panding(request):
+    return render(request, "admin/panding.html")
+def admin_users_approved(request):
+    return render(request, "admin/approved.html")
 # =========================================== admin view end ===================================================
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # =========================================== editor view start ===================================================
@@ -68,6 +71,13 @@ def editor_article_detail(request, id):
 
 def editor_update_profile(request):
     return render(request, "editor/update_profile.html")
+def editor_users_pubilished(request):
+    return render(request, "editor/published.html")
+
+def editor_users_panding(request):
+    return render(request, "editor/panding.html")
+def editor_users_approved(request):
+    return render(request, "editor/approved.html")
 # =========================================== editor view end ===================================================
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # ========================================== jounralist start =====================================================
@@ -82,12 +92,21 @@ def journalist_all_articles(request):
 
 def journalist_article_detail(request, id):
     return render(request, 'journalist/article_detail.html', {'article': id})
-
+def journalist_update_article(request, id):
+    return render(request, "journalist/article_update.html", {'article': id})
 def journalist_article_create(request):
     return render(request, "journalist/create_article.html")
 
 def journalist_update_profile(request):
     return render(request, "journalist/update_profile.html")
+
+def journalist_users_pubilished(request):
+    return render(request, "journalist/published.html")
+
+def journalist_users_panding(request):
+    return render(request, "journalist/panding.html")
+def journalist_users_approved(request):
+    return render(request, "journalist/approved.html")
 # ====================================== jounralist end ===========================================
 
 # Register page

@@ -12,7 +12,7 @@ article_detail = ArticleViewSetJournalist.as_view({
     'patch': 'partial_update',
     'delete': 'destroy'
 })
-
+app_name = 'apps.article'
 urlpatterns = [
     # published all articles 
     path('articles/published/', PublishedArticleListView.as_view(), name='published-articles'),

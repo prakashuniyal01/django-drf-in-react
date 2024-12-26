@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Article, Category, Tag, City, State, Country, ArticleImage
-import django_filters
+from datetime import timedelta
+from django.utils.timezone import now
+from django.db.models import Q
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -95,7 +97,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         read_only_fields = ['author']
 
     def create_or_get_city(self, city_data):
-        """Helper method to create or get city instance"""
+        """Helper method to create or get city instance."""
         if not city_data:
             return None
             
@@ -114,13 +116,42 @@ class ArticleSerializer(serializers.ModelSerializer):
         )
         return city
 
+    def handle_publish_date(self, instance, status):
+        """Update publish_date based on status and handle automatic status updates."""
+        current_time = now()
+
+        # Case 1: If the article is being approved
+        if status == 'approved':
+            if instance.publish_date is None:
+                # Set publish date to the current time (approval time)
+                instance.publish_date = current_time
+            elif instance.publish_date <= current_time:
+                # If publish_date has already passed, publish immediately
+                instance.publish_date = current_time
+
+        # Case 2: If the article is being published
+        elif status == 'published':
+            # Set publish_date to now immediately
+            instance.publish_date = current_time
+
+        # Case 3: If the article is pending and the publish date has passed, auto reject
+        if status == 'pending' and instance.publish_date and instance.publish_date <= current_time:
+            instance.status = 'rejected'
+            instance.save()
+            return  # Exit early as we do not need further processing
+
+        # Save the instance to reflect the updated publish date and status
+        instance.status = status
+        instance.save()
+        
     def create(self, validated_data):
         # Extract related data
         category_names = validated_data.pop('categories_input', [])
         tag_names = validated_data.pop('tags_input', [])
         city_data = validated_data.pop('city', None)
         images_data = validated_data.pop('images', [])
-        
+        status = validated_data.get('status')
+
         # Create or get city
         city = self.create_or_get_city(city_data)
 
@@ -129,6 +160,10 @@ class ArticleSerializer(serializers.ModelSerializer):
             city=city,
             **validated_data
         )
+
+        # Handle publish_date and status
+        self.handle_publish_date(article, status)
+        article.save()
 
         # Add categories
         for category_name in category_names:
@@ -192,11 +227,13 @@ class ArticleSerializer(serializers.ModelSerializer):
                     order=index
                 )
 
+        # Handle status and publish_date
+        status = validated_data.get('status', instance.status)
+        self.handle_publish_date(instance, status)
+
         # Update remaining fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
         instance.save()
         return instance
-    
-   

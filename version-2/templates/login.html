@@ -3,8 +3,7 @@
 {% block nav %}
 <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <!-- Login and Register Links -->
         <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}">Login</a>
@@ -13,44 +12,53 @@
             <a class="nav-link" href="{% url 'register' %}">Register</a>
         </li>
     </ul>
-    <nav>
-        <ul class="pagination justify-content-center">
-            {% if previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ previous|cut:'http://127.0.0.1:8000/articles/articles/published/?page=' }}">Previous</a></li>
-            {% endif %}
-            {% if next %}
-            <li class="page-item"><a class="page-link" href="?page={{ next|cut:'http://127.0.0.1:8000/articles/articles/published/?page=' }}">Next</a></li>
-            {% endif %}
-        </ul>
-    </nav>
 </div>
 {% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center">Login</h2>
-    <form id="loginForm">
-        {% csrf_token %}
-        
-        <!-- Email Field -->
-        <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center ">
+                    <h4>Login to Your Account</h4>
+                </div>
+                <div class="card-body">
+                    <form id="loginForm">
+                        {% csrf_token %}
+                        
+                        <!-- Email Field -->
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <!-- Password Field -->
+                        <div class="form-group mb-3 position-relative">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                                <button type="button" id="togglePassword" class="btn btn-outline-secondary">
+                                    <i id="passwordIcon" class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn  w-100">Login</button>
+                    </form>
+
+                    <!-- Error Message -->
+                    <div id="error-message" class="alert alert-danger mt-3" style="display:none;">
+                        Invalid credentials. Please try again.
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                    {% comment %} <p>forget password? <a href="{% url 'forgat_password' %}">forget password</a></p> {% endcomment %}
+                </div>
+            </div>
         </div>
-        
-        <!-- Password Field -->
-        <div class="form-group mt-3">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-        </div>
-        
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary mt-4">Login</button>
-        
-        <!-- Optional: Display a message if login fails -->
-        <div id="error-message" class="alert alert-danger mt-3" style="display:none;">
-            Invalid credentials. Please try again.
-        </div>
-    </form>
+    </div>
 </div>
 
 <script>
@@ -60,7 +68,7 @@
         var email = document.getElementById('email').value;
         var password = document.getElementById('password').value;
         
-        fetch('http://127.0.0.1:8000/users/login/', {
+        fetch('/users/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,6 +109,22 @@
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
         });
+    });
+
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        var passwordField = document.getElementById('password');
+        var passwordIcon = document.getElementById('passwordIcon');
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            passwordIcon.classList.remove('bi-eye');
+            passwordIcon.classList.add('bi-eye-slash');
+        } else {
+            passwordField.type = "password";
+            passwordIcon.classList.remove('bi-eye-slash');
+            passwordIcon.classList.add('bi-eye');
+        }
     });
 </script>
 {% endblock %}

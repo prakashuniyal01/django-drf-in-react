@@ -1,5 +1,5 @@
-<!-- admin/article_update.html -->
-{% extends 'admin/dashboard.html' %}
+<!-- article_update.html -->
+{% extends 'journalist/dashboard.html' %}
 {% block title %}Update Article{% endblock %}
 {% block content %}
 <div class="container mt-5">
@@ -23,16 +23,6 @@
             <textarea class="form-control" id="contents" rows="5" required></textarea>
         </div>
 
-        <!-- Status -->
-        <div class="mb-3">
-            <label for="status" class="form-label"><strong>Status</strong></label>
-            <select class="form-select" id="status" required>
-                <option value="">Select Status</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-                <option value="published">Published</option>
-            </select>
-        </div>
 
         <!-- Publish Date -->
         <div class="mb-3">
@@ -76,12 +66,6 @@
             <input type="number" step="any" class="form-control" id="longitude">
         </div>
 
-        <!-- Author -->
-        {% comment %} <div class="mb-3">
-            <label for="author" class="form-label"><strong>Author</strong></label>
-            <input type="text" class="form-control" id="author" required>
-        </div> {% endcomment %}
-
         <!-- Images -->
         <div class="mb-3">
             <label for="images" class="form-label"><strong>Images</strong></label>
@@ -114,7 +98,7 @@
 
         async function fetchArticleDetail() {
             try {
-                const response = await fetch(`/articles/articles/admin/${articleId}/`, {
+                const response = await fetch(`/articles/articles/${articleId}/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -138,11 +122,6 @@
             document.getElementById("title").value = article.title || '';
             document.getElementById("subtitle").value = article.subtitle || '';
             document.getElementById("contents").value = article.content || '';
-            document.getElementById("status").value = article.status || '';
-            if (article.publish_date) {
-                const publishDate = new Date(article.publish_date);
-                document.getElementById("publish_date").value = publishDate.toISOString().slice(0,16);
-            }
             document.getElementById("categories").value = article.categories.map(cat => cat.name).join(", ");
             document.getElementById("tags").value = article.tags.map(tag => tag.name).join(", ");
             document.getElementById("location").value = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
@@ -202,7 +181,6 @@
                 console.error("Error during reverse geocoding:", error);
             }
         });
-
         document.getElementById("update-article-form").addEventListener("submit", async (event) => {
             event.preventDefault(); // Prevent the default form submission behavior
         
@@ -213,7 +191,6 @@
                 title: document.getElementById("title").value,
                 subtitle: document.getElementById("subtitle").value,
                 content: document.getElementById("contents").value,
-                status: document.getElementById("status").value,
                 publish_date: document.getElementById("publish_date").value,
                 categories: document.getElementById("categories").value.split(',').map(cat => cat.trim()),
                 tags: document.getElementById("tags").value.split(',').map(tag => tag.trim()),
@@ -238,7 +215,7 @@
             }
         
             try {
-                const response = await fetch(`/articles/articles/admin/${articleId}/`, {
+                const response = await fetch(`/articles/articles/${articleId}/`, {
                     method: "PUT",
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -250,6 +227,7 @@
                 if (response.ok) {
                     const result = await response.json();
                     alert("Article updated successfully!");
+                    window.location.href = "/journalist_all_articles/";
                     console.log(result);
                 } else {
                     const errorData = await response.json();
@@ -262,7 +240,6 @@
             }
         });
         
-
         // Fetch and populate article details
         fetchArticleDetail();
     });

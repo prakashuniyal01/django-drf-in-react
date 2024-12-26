@@ -15,7 +15,7 @@ from .filter import ArticleFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 class ArticlePagination(PageNumberPagination):
-    page_size = 5  # Set the number of items per page
+    page_size = 6  # Set the number of items per page
     page_size_query_param = 'page_size'  # Allow clients to override the page size using a query parameter
     max_page_size = 100  # Maximum number of items per page
     

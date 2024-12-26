@@ -10,83 +10,143 @@
             <a class="nav-link" href="{% url 'register' %}">Register</a>
         </li>
     </ul>
-    <nav>
-        <ul class="pagination justify-content-center">
-            {% if previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ previous|cut:'http://127.0.0.1:8000/articles/articles/published/?page=' }}">Previous</a></li>
-            {% endif %}
-            {% if next %}
-            <li class="page-item"><a class="page-link" href="?page={{ next|cut:'http://127.0.0.1:8000/articles/articles/published/?page=' }}">Next</a></li>
-            {% endif %}
-        </ul>
-    </nav>
 </div>
 {% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <!-- Article Title and Subtitle -->
-    <h1 class="text-center">{{ article.title }}</h1>
-    <h5 class="text-muted text-center">{{ article.subtitle }}</h5>
-    <p class="text-center">By {{ article.author_name }} | {{ article.city.name }}, {{ article.city.state }}</p>
-
-    <!-- Image Carousel -->
-    <div id="carouselDetail" class="carousel slide mb-4" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            {% for image in article.images %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <img src="{{ image.image }}" class="d-block w-100" alt="Article Image">
-            </div>
-            {% endfor %}
+<div class="container mt-5">
+    <!-- Images Carousel -->
+    <div id="articleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
+        <div class="carousel-inner" id="article-images">
+            <!-- Images will be dynamically inserted here -->
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselDetail" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#articleCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselDetail" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#articleCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
     </div>
 
-    <!-- Article Content -->
-    <p>{{ article.content }}</p>
+    <h2 id="article-title"></h2>
+    <h5 id="article-subtitle"></h5>
+    <p id="article-content"></p>
 
-    <!-- Location Map -->
-    <h4>Location</h4>
-    <div id="map" style="height: 400px;"></div>
-
-    <!-- Tags and Categories -->
-    <div class="mt-4">
-        <h5>Tags:</h5>
-        <ul class="list-inline">
-            {% for tag in article.tags %}
-            <li class="list-inline-item badge bg-primary">{{ tag.name }}</li>
-            {% endfor %}
-        </ul>
-        <h5>Category:</h5>
-        <span class="badge bg-secondary">{{ article.categories.0.name }}</span>
+    <!-- Display the status of the article -->
+    <div>
+        <strong>Status:</strong> <span id="article-status"></span>
     </div>
+
+    <!-- Display the publish date -->
+    <div>
+        <strong>Publish Date:</strong> <span id="article-publish-date"></span>
+    </div>
+
+    <div>
+        <strong>Categories:</strong> <span id="article-categories"></span>
+    </div>
+    <div>
+        <strong>Tags:</strong> <span id="article-tags"></span>
+    </div>
+    <div>
+        <strong>Location:</strong> <span id="article-location"></span>
+    </div>
+    <div>
+        <strong>Author:</strong> <span id="article-author"></span>
+    </div>
+
+    <!-- Map Container -->
+    <div id="article-map" style="height: 400px; margin-top: 20px;"></div>
 </div>
 
-<!-- Leaflet Map Script -->
+<!-- Include Leaflet.js -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Include Bootstrap JS for Carousel -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    const latitude = parseFloat("{{ article.latitude }}");
-    const longitude = parseFloat("{{ article.longitude }}");
+    document.addEventListener("DOMContentLoaded", async () => {
+        const articleId = {{ article|safe }};
+        console.log("Article ID:", articleId);
 
-    const map = L.map('map').setView([latitude, longitude], 13);
+        async function fetchArticleDetail() {
+            try {
+                const response = await fetch(`/articles/articles/published/${articleId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
 
-    // Load OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
+                if (response.ok) {
+                    const data = await response.json();
+                    renderArticleDetail(data);
+                } else {
+                    console.error("Failed to fetch article details");
+                }
+            } catch (error) {
+                console.error("Error fetching article details:", error);
+            }
+        }
 
-    // Add marker to the map
-    L.marker([latitude, longitude]).addTo(map)
-        .bindPopup("{{ article.city.name }}")
-        .openPopup();
+        function renderArticleDetail(article) {
+            console.log(article);
+
+            // Carousel Inner Element
+            const carouselInner = document.getElementById("article-images");
+
+            // Render Images in Carousel
+            article.images.forEach((image, index) => {
+                const carouselItem = document.createElement("div");
+                carouselItem.classList.add("carousel-item");
+                if (index === 0) carouselItem.classList.add("active"); // First image is active
+
+                const img = document.createElement("img");
+                img.src = image.image;
+                img.alt = article.title;
+                img.classList.add("d-block", "w-100");
+
+                carouselItem.appendChild(img);
+                carouselInner.appendChild(carouselItem);
+            });
+
+            // Set title, subtitle, and content
+            document.getElementById("article-title").textContent = article.title;
+            document.getElementById("article-subtitle").textContent = article.subtitle;
+            document.getElementById("article-content").textContent = article.content;
+
+            // Render status
+            document.getElementById("article-status").textContent = article.status || 'N/A';
+
+            // Format and render publish date
+            const publishDate = new Date(article.publish_date);
+            document.getElementById("article-publish-date").textContent = publishDate.toLocaleString();
+
+            // Categories and tags
+            document.getElementById("article-categories").textContent = article.categories.map(cat => cat.name).join(", ");
+            document.getElementById("article-tags").textContent = article.tags.map(tag => tag.name).join(", ");
+
+            // Location and Author
+            document.getElementById("article-location").textContent = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
+            document.getElementById("article-author").textContent = article.author_name;
+
+            // Render the map
+            renderMap(article.latitude, article.longitude);
+        }
+
+        function renderMap(latitude, longitude) {
+            const map = L.map('article-map').setView([latitude, longitude], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            L.marker([latitude, longitude]).addTo(map).bindPopup("Article Location").openPopup();
+        }
+
+        fetchArticleDetail();
+    });
 </script>
 
-<!-- Include Leaflet CSS and JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 {% endblock %}
