@@ -50,6 +50,9 @@ def admin_update_article(request, id):
     return render(request, "admin/article_update.html", {'article': id})
 def admin_users_list(request):
     return render(request, "admin/users.html")
+
+def admin_users_create(request):
+    return render(request, "admin/user_create.html")
 # =========================================== admin view end ===================================================
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # =========================================== editor view start ===================================================

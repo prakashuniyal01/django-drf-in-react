@@ -52,6 +52,21 @@
         <button id="update-btn" class="btn btn-primary">Update Article</button>
         <button id="delete-btn" class="btn btn-danger" style="margin-left: 10px;">Delete Article</button>
     </div>
+
+        <!-- Update and Change Status Actions -->
+        <div id="article-actions" style="margin-top: 20px;">
+            <div class="mb-3">
+                <label for="status-select" class="form-label"><strong>Change Status:</strong></label>
+                <select id="status-select" class="form-select">
+                    <option value="">Select Status</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="published">Published</option>
+                </select>
+            </div>
+            <button id="update-status-btn" class="btn btn-success">Update Status</button>
+        </div>
+    </div>
 </div>
 
 <!-- Include Leaflet.js -->
@@ -173,6 +188,44 @@
                 console.error("Error deleting article:", error);
             }
         }
+
+        async function updateArticleStatus(articleId, newStatus) {
+            try {
+                const response = await fetch(`/articles/articles/admin/${articleId}/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: newStatus }),
+                });
+
+                if (response.ok) {
+                    const updatedArticle = await response.json();
+                    alert(`Status updated to: ${updatedArticle.status}`);
+                    document.getElementById("article-status").textContent = updatedArticle.status;
+                    location.reload(); // Reload to reflect changes
+                } else {
+                    alert("Failed to update the status. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error updating status:", error);
+                alert("An error occurred while updating the status.");
+            }
+        }
+
+        document.getElementById("update-status-btn").addEventListener("click", () => {
+            const selectedStatus = document.getElementById("status-select").value;
+
+            if (!selectedStatus) {
+                alert("Please select a status to update.");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to change the status to '${selectedStatus}'?`)) {
+                updateArticleStatus(articleId, selectedStatus);
+            }
+        });
 
         document.getElementById("delete-btn").addEventListener("click", () => {
             deleteArticle(articleId);
