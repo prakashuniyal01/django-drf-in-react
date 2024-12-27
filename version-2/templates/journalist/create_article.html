@@ -40,13 +40,82 @@
 
             <div class="form-group mt-3">
                 <label for="categories_input">Categories</label>
-                <input type="text" class="form-control" id="categories_input" name="categories_input" required>
+                <input type="text" class="form-control" id="categories_input" name="categories_input" readonly required>
+                <select class="form-control mt-2" id="categories_dropdown" onchange="updateCategoryInput()">
+                    <option value="">Select a Category</option>
+                    <option value="News">News</option>
+                    <option value="Opinion">Opinion</option>
+                    <option value="Feature">Feature</option>
+                </select>
             </div>
-
+            
             <div class="form-group mt-3">
-                <label for="tags_input">Tags (comma separated)</label>
-                <input type="text" class="form-control" id="tags_input" name="tags_input" required>
+                <label for="tags_input">Tags</label>
+                <input type="text" class="form-control" id="tags_input" name="tags_input" readonly required>
+                <div id="tags" class="mt-2 d-flex flex-wrap gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagPolitics" value="Politics" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagPolitics">Politics</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagSports" value="Sports" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagSports">Sports</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagTech" value="Tech" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagTech">Tech</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagHealth" value="Health" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagHealth">Health</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagEducation" value="Education" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagEducation">Education</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagEntertainment" value="Entertainment" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagEntertainment">Entertainment</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagScience" value="Science" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagScience">Science</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagBusiness" value="Business" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagBusiness">Business</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagLifestyle" value="Lifestyle" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagLifestyle">Lifestyle</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagTravel" value="Travel" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagTravel">Travel</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagEnvironment" value="Environment" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagEnvironment">Environment</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagFashion" value="Fashion" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagFashion">Fashion</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagFood" value="Food" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagFood">Food</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagFinance" value="Finance" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagFinance">Finance</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="tagWorld" value="World" onclick="updateTagsInput()">
+                        <label class="form-check-label" for="tagWorld">World</label>
+                    </div>
+                </div>
             </div>
+            
 
             <div class="form-group mt-3">
                 <label for="images">Upload Images</label>
@@ -141,7 +210,20 @@
 
         return isValid;
     }
+    // =======================  categories and tags 
+    function updateCategoryInput() {
+        const dropdown = document.getElementById('categories_dropdown');
+        const input = document.getElementById('categories_input');
+        input.value = dropdown.value; // Set the selected dropdown value to the input field
+    }
 
+    function updateTagsInput() {
+        const checkboxes = document.querySelectorAll('#tags input[type="checkbox"]:checked');
+        const tagsInput = document.getElementById('tags_input');
+        const selectedTags = Array.from(checkboxes).map(checkbox => checkbox.value);
+        tagsInput.value = selectedTags.join(', '); // Join selected tags with commas
+    }
+    
     function nextStep() {
         if (validateForm()) {
             document.getElementById('step1').style.display = 'none';

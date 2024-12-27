@@ -150,7 +150,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         tag_names = validated_data.pop('tags_input', [])
         city_data = validated_data.pop('city', None)
         images_data = validated_data.pop('images', [])
-        status = validated_data.get('status')
+        status = validated_data.get('status', 'pending')
 
         # Create or get city
         city = self.create_or_get_city(city_data)
@@ -158,7 +158,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         # Create article
         article = Article.objects.create(
             city=city,
-            **validated_data
+            **validated_data,
+            status=status
         )
 
         # Handle publish_date and status

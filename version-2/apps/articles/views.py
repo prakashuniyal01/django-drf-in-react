@@ -13,7 +13,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from .filter import ArticleFilter
 from django_filters.rest_framework import DjangoFilterBackend
-
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 class ArticlePagination(PageNumberPagination):
     page_size = 6  # Set the number of items per page
     page_size_query_param = 'page_size'  # Allow clients to override the page size using a query parameter
@@ -23,7 +24,7 @@ class ArticlePagination(PageNumberPagination):
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     permission_classes = [IsAuthenticated, IsAdminUser]
-    pagination_class = ArticlePagination  # Use the custom pagination
+    pagination_class = ArticlePagination
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -35,31 +36,45 @@ class ArticleViewSet(viewsets.ModelViewSet):
         context['request'] = self.request
         return context
 
+    @swagger_auto_schema(
+        operation_summary="Create a new article",
+        request_body=ArticleSerializer,
+        responses={201: ArticleSerializer},
+    )
+    def create(self, request, *args, **kwargs):
+        """
+        Custom implementation for creating an article.
+        """
+        return super().create(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="Update an article",
+        request_body=ArticleSerializer,
+        responses={200: ArticleSerializer},
+    )
+    def update(self, request, *args, **kwargs):
+        """
+        Custom implementation for updating an article.
+        """
+        return super().update(request, *args, **kwargs)
+
     def perform_create(self, serializer):
-        """
-        Set the author when creating an article.
-        """
         serializer.save(author=self.request.user)
 
     def perform_update(self, serializer):
-        """
-        Update the article and set updated_at timestamp.
-        """
         serializer.save(updated_at=timezone.now())
 
     def perform_destroy(self, instance):
-        """
-        Hard delete the article.
-        """
         instance.delete()
 
+    @swagger_auto_schema(
+        operation_summary="Delete an article",
+        responses={204: "No content"},
+    )
     def destroy(self, request, *args, **kwargs):
-        """
-        Override the default destroy method to hard delete the article.
-        """
-        instance = self.get_object()  # Get the instance to delete
-        self.perform_destroy(instance)  # Perform the actual deletion
-        return Response(status=status.HTTP_204_NO_CONTENT)  # Respond with success
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 # admin categories control
 class CategoryViewSet(viewsets.ViewSet):

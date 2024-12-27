@@ -3,6 +3,26 @@
 {% block content %}
 <div class="container mt-5">
     <h2>All Articles</h2>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> City </label>
+            <select id="city-filter" class="form-select">
+                <option value="">Filter by City</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Tag </label>
+            <select id="tag-filter" class="form-select">
+                <option value="">Filter by Tag</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Categories </label>
+            <select id="category-filter" class="form-select">
+                <option value="">Filter by Category</option>
+            </select>
+        </div>
+    </div>
     <div id="articles-container" class="row gy-4">
         <!-- Articles will be rendered here dynamically -->
     </div>
@@ -14,85 +34,181 @@
         </ul>
     </nav>
 </div>
-
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
-    const articlesContainer = document.getElementById("articles-container");
-    const paginationContainer = document.getElementById("pagination");
-    let currentPage = 1;
-
-    async function fetchArticles(page = 1) {
-        try {
-            const response = await fetch(`/articles/articles/admin/?page=${page}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                    'Content-Type': 'application/json'  // Optional, in case your API expects it
+    document.addEventListener("DOMContentLoaded", async () => {
+        const articlesContainer = document.getElementById("articles-container");
+        const paginationContainer = document.getElementById("pagination");
+        const cityFilter = document.getElementById("city-filter");
+        const tagFilter = document.getElementById("tag-filter");
+        const categoryFilter = document.getElementById("category-filter");
+    
+        let currentPage = 1;
+        let filters = { city: "", tag: "", category: "" };
+    
+        async function fetchArticles(page = 1) {
+            try {
+                const response = await fetch(`/articles/articles/admin/?page=${page}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    if (page === 1) {
+                        extractFilters(data.results);
+                    }
+                    renderArticles(data.results);
+                    renderPagination(data);
+                } else {
+                    console.error("Failed to fetch articles");
                 }
+            } catch (error) {
+                console.error("Error fetching articles:", error);
+            }
+        }
+    
+        function renderPagination(data) {
+            paginationContainer.innerHTML = ""; // Clear previous pagination
+    
+            const totalPages = Math.ceil(data.count / data.results.length);
+            const range = [...Array(totalPages).keys()].map(i => i + 1);
+    
+            if (data.previous) {
+                paginationContainer.innerHTML += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                    </li>
+                `;
+            }
+    
+            range.forEach((page) => {
+                paginationContainer.innerHTML += `
+                    <li class="page-item ${page === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${page}">${page}</a>
+                    </li>
+                `;
             });
     
-            if (response.ok) {
-                const data = await response.json();
-                renderArticles(data.results);
-                renderPagination(data);
-            } else {
-                console.error("Failed to fetch articles");
+            if (data.next) {
+                paginationContainer.innerHTML += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                    </li>
+                `;
             }
-        } catch (error) {
-            console.error("Error fetching articles:", error);
         }
-    }
     
-
-    function renderArticles(articles) {
-        articlesContainer.innerHTML = ""; // Clear previous articles
-        articles.forEach((article) => {
-            const articleCard = `
-                <div class="col-md-6 col-lg-4">
-                    <div class="card">
-                        <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
-                        <div class="card-body">
-                            <h5 class="card-title">${article.title}</h5>
-                            <p class="card-text">${article.content.substring(0, 100)}...</p>
-                            <!-- Update the 'Read More' link with the correct URL -->
-                            <a href="/admin_article/${article.id}/" class="btn btn-primary">Read More</a>
+        function extractFilters(articles) {
+            const cities = new Set();
+            const tags = new Set();
+            const categories = new Set();
+    
+            articles.forEach((article) => {
+                if (article.city && article.city.name) {
+                    cities.add(article.city.name);
+                }
+    
+                article.tags.forEach((tag) => {
+                    try {
+                        const parsedTags = JSON.parse(tag.name);
+                        parsedTags.forEach((t) => tags.add(t));
+                    } catch {
+                        tags.add(tag.name);
+                    }
+                });
+    
+                article.categories.forEach((category) => {
+                    categories.add(category.name);
+                });
+            });
+    
+            populateFilters([...cities], cityFilter);
+            populateFilters([...tags], tagFilter);
+            populateFilters([...categories], categoryFilter);
+        }
+    
+        function populateFilters(items, dropdown) {
+            dropdown.innerHTML = `<option value="">Select</option>`;
+            items.forEach((item) => {
+                dropdown.innerHTML += `<option value="${item}">${item}</option>`;
+            });
+        }
+    
+        function renderArticles(articles) {
+            articlesContainer.innerHTML = ""; // Clear previous articles
+            articles.forEach((article) => {
+                if (
+                    (filters.city && article.city.name !== filters.city) ||
+                    (filters.tag && !article.tags.some((tag) => tag.name.includes(filters.tag))) ||
+                    (filters.category && !article.categories.some((category) => category.name === filters.category))
+                ) {
+                    return;
+                }
+    
+                const articleCard = `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card">
+                            <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${article.title}</h5>
+                                <p class="card-text">${article.content.substring(0, 100)}...</p>
+                                <a href="/admin_article/${article.id}/" class="btn btn-primary">Read More</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-            articlesContainer.insertAdjacentHTML("beforeend", articleCard);
+                `;
+                articlesContainer.insertAdjacentHTML("beforeend", articleCard);
+            });
+        }
+    
+        function resetFilters(except) {
+            if (except !== "city") {
+                cityFilter.value = "";
+                filters.city = "";
+            }
+            if (except !== "tag") {
+                tagFilter.value = "";
+                filters.tag = "";
+            }
+            if (except !== "category") {
+                categoryFilter.value = "";
+                filters.category = "";
+            }
+        }
+    
+        cityFilter.addEventListener("change", (e) => {
+            filters.city = e.target.value;
+            resetFilters("city");
+            fetchArticles();
         });
-    }
-
-    function renderPagination(data) {
-        paginationContainer.innerHTML = ""; // Clear previous pagination
-        if (data.previous) {
-            paginationContainer.innerHTML += `
-                <li class="page-item">
-                    <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
-                </li>
-            `;
-        }
-        if (data.next) {
-            paginationContainer.innerHTML += `
-                <li class="page-item">
-                    <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
-                </li>
-            `;
-        }
-    }
-
-    paginationContainer.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (e.target.tagName === "A") {
-            const page = e.target.dataset.page;
-            currentPage = parseInt(page);
-            fetchArticles(currentPage);
-        }
+    
+        tagFilter.addEventListener("change", (e) => {
+            filters.tag = e.target.value;
+            resetFilters("tag");
+            fetchArticles();
+        });
+    
+        categoryFilter.addEventListener("change", (e) => {
+            filters.category = e.target.value;
+            resetFilters("category");
+            fetchArticles();
+        });
+    
+        paginationContainer.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (e.target.tagName === "A") {
+                const page = parseInt(e.target.dataset.page);
+                currentPage = page;
+                fetchArticles(currentPage);
+            }
+        });
+    
+        // Initial fetch
+        fetchArticles();
     });
-
-    // Initial fetch
-    fetchArticles();
-});
-</script>
+    </script>
+    
 {% endblock %}

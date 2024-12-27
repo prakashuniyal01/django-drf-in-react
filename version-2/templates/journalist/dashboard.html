@@ -79,6 +79,23 @@
     <div class="container mt-4">
         {% block content %}
         <h1>Welcome to the Journalist Dashboard</h1>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'journalist_all_articles' %}">All Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'journalist_users_pubilished' %}">Published Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'journalist_users_panding' %}">Pending Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'journalist_users_approved' %}">Approved Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'journalist_article_create' %}">Create Articles</a>
+            </li>
+        </ul>
         {% endblock %}
     </div>
 </div>
