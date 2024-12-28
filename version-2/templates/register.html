@@ -182,11 +182,11 @@ function validateEmail() {
     const errorField = document.getElementById("emailError");
     const emailInput = document.getElementById("email");
 
-    // Combined regex for email structure validation
-    const emailRegex =
-        /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    // Advanced regex for email structure validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const invalidPatterns = /[!#$%^&*(),?":{}|<>\\\/\s]|[@]{2,}|\.{2,}/;
 
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) || invalidPatterns.test(email)) {
         errorField.textContent = "Invalid email format.";
         errorField.classList.add("text-danger");
         errorField.classList.remove("text-success");
@@ -207,8 +207,8 @@ function validatePassword() {
     const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
     const numberRegex = /\d/;
 
-    if (!upperCaseRegex.test(password) || !specialCharRegex.test(password) || !numberRegex.test(password)) {
-        errorField.textContent = "Password must contain at least one uppercase letter, one special character, and one number.";
+    if (!upperCaseRegex.test(password) || !specialCharRegex.test(password) || !numberRegex.test(password) || password.length < 8) {
+        errorField.textContent = "Password must contain at least one uppercase letter, one special character, one number, and be at least 8 characters long.";
         errorField.classList.add("text-danger");
         errorField.classList.remove("text-success");
         passwordInput.classList.add("is-invalid");
@@ -352,12 +352,9 @@ function verifyOTP() {
             }
         })
         .catch((error) => {
-            // Hide loader
             hideLoader();
-            // Show network or unexpected errors
-            alert("Unexpected error occurred: " + error);
+            alert("Verification failed! Please try again.");
         });
 }
-
 </script>
 {% endblock %}
