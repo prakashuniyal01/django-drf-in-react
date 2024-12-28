@@ -69,6 +69,9 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
             'tags', 'city', 'images', 'agreed_to_terms'
         ]
 
+class ArticleSerializer_all(ArticleDetailSerializer):
+    class Meta(ArticleDetailSerializer.Meta):
+        fields = 'all'
 class ArticleSerializer(serializers.ModelSerializer):
     categories_input = serializers.ListField(
         child=serializers.CharField(max_length=50),

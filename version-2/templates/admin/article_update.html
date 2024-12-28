@@ -1,4 +1,3 @@
-<!-- admin/article_update.html -->
 {% extends 'admin/dashboard.html' %}
 {% block title %}Update Article{% endblock %}
 {% block content %}
@@ -13,7 +12,7 @@
 
         <!-- Subtitle -->
         <div class="mb-3">
-            <label for="subtitle" class="form-label"><strong>Subtitle</strosng></label>
+            <label for="subtitle" class="form-label"><strong>Subtitle</strong></label>
             <input type="text" class="form-control" id="subtitle">
         </div>
 
@@ -21,17 +20,6 @@
         <div class="mb-3">
             <label for="content" class="form-label"><strong>Content</strong></label>
             <textarea class="form-control" id="contents" rows="5" required></textarea>
-        </div>
-
-        <!-- Status -->
-        <div class="mb-3">
-            <label for="status" class="form-label"><strong>Status</strong></label>
-            <select class="form-select" id="status" required>
-                <option value="">Select Status</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-                <option value="published">Published</option>
-            </select>
         </div>
 
         <!-- Publish Date -->
@@ -58,37 +46,41 @@
             <div id="map" style="height: 300px;"></div>
         </div>
 
-        <!-- Location -->
+        <!-- City (Auto-populate State, Country, Latitude, Longitude) -->
         <div class="mb-3">
-            <label for="location" class="form-label"><strong>Location</strong></label>
-            <input type="text" class="form-control" id="location" placeholder="City, State, Country">
+            <label for="location" class="form-label"><strong>Location (City)</strong></label>
+            <input type="text" class="form-control" id="location" placeholder="Enter City Name" autocomplete="off">
+        </div>
+
+        <!-- State -->
+        <div class="mb-3">
+            <label for="state" class="form-label"><strong>State</strong></label>
+            <input type="text" class="form-control" id="state" placeholder="State" readonly>
+        </div>
+
+        <!-- Country -->
+        <div class="mb-3">
+            <label for="country" class="form-label"><strong>Country</strong></label>
+            <input type="text" class="form-control" id="country" placeholder="Country" readonly>
         </div>
 
         <!-- Latitude -->
         <div class="mb-3">
             <label for="latitude" class="form-label"><strong>Latitude</strong></label>
-            <input type="number" step="any" class="form-control" id="latitude">
+            <input type="number" step="any" class="form-control" id="latitude" readonly>
         </div>
 
         <!-- Longitude -->
         <div class="mb-3">
             <label for="longitude" class="form-label"><strong>Longitude</strong></label>
-            <input type="number" step="any" class="form-control" id="longitude">
+            <input type="number" step="any" class="form-control" id="longitude" readonly>
         </div>
-
-        <!-- Author -->
-        {% comment %} <div class="mb-3">
-            <label for="author" class="form-label"><strong>Author</strong></label>
-            <input type="text" class="form-control" id="author" required>
-        </div> {% endcomment %}
 
         <!-- Images -->
         <div class="mb-3">
             <label for="images" class="form-label"><strong>Images</strong></label>
             <input type="file" class="form-control" id="images" multiple accept="image/*">
-            <div id="existing-images" class="mt-2">
-                <!-- Existing images will be displayed here -->
-            </div>
+            <div id="existing-images" class="mt-2"></div>
         </div>
 
         <!-- Submit Button -->
@@ -101,17 +93,14 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<!-- Include Bootstrap JS for any components if needed -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         const urlParts = window.location.pathname.split('/');
         const articleId = urlParts[urlParts.length - 2] || urlParts[urlParts.length - 1];
-        console.log("Article ID for Update:", articleId);
-
+    
         let map, marker;
-
+    
+        // Fetch article details from the server
         async function fetchArticleDetail() {
             try {
                 const response = await fetch(`/articles/articles/admin/${articleId}/`, {
@@ -121,7 +110,7 @@
                         'Content-Type': 'application/json',
                     }
                 });
-
+    
                 if (response.ok) {
                     const data = await response.json();
                     populateForm(data);
@@ -132,29 +121,26 @@
                 console.error("Error fetching article details:", error);
             }
         }
-
+    
+        // Populate form with article data
         function populateForm(article) {
-            console.log(article)
             document.getElementById("title").value = article.title || '';
             document.getElementById("subtitle").value = article.subtitle || '';
             document.getElementById("contents").value = article.content || '';
-            document.getElementById("status").value = article.status || '';
-            if (article.publish_date) {
-                const publishDate = new Date(article.publish_date);
-                document.getElementById("publish_date").value = publishDate.toISOString().slice(0,16);
-            }
             document.getElementById("categories").value = article.categories.map(cat => cat.name).join(", ");
             document.getElementById("tags").value = article.tags.map(tag => tag.name).join(", ");
-            document.getElementById("location").value = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
+            document.getElementById("location").value = article.city_name || '';
+            document.getElementById("state").value = article.state_name || '';
+            document.getElementById("country").value = article.country_name || '';
             document.getElementById("latitude").value = article.latitude || '';
             document.getElementById("longitude").value = article.longitude || '';
-
+    
             // Set map and marker location
             const lat = article.latitude || 20.5937;
             const lng = article.longitude || 78.9629;
             map.setView([lat, lng], 10);
             marker.setLatLng([lat, lng]);
-
+    
             // Display existing images
             const existingImagesContainer = document.getElementById("existing-images");
             existingImagesContainer.innerHTML = '';
@@ -168,25 +154,37 @@
                     `;
                     existingImagesContainer.appendChild(imgDiv);
                 });
+    
+                // Handle image removal (client-side only)
+                const removeBtns = document.querySelectorAll('.remove-image-btn');
+                removeBtns.forEach(btn => {
+                    btn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        const imageId = event.target.getAttribute('data-image-id');
+                        const imageDiv = event.target.closest('div');
+                        imageDiv.remove(); // Remove the image from the DOM
+                        // Optionally send a request to delete it from the server (if required)
+                    });
+                });
             }
         }
-
+    
         // Initialize map
         map = L.map('map').setView([20.5937, 78.9629], 5);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
-
+    
         // Add a draggable marker
         marker = L.marker([20.5937, 78.9629], { draggable: true }).addTo(map);
-
+    
         // Update location fields when marker is moved
         marker.on('moveend', async (event) => {
             const position = event.target.getLatLng();
             document.getElementById("latitude").value = position.lat.toFixed(6);
             document.getElementById("longitude").value = position.lng.toFixed(6);
-
+    
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`);
                 if (response.ok) {
@@ -194,7 +192,9 @@
                     const city = data.address.city || data.address.town || data.address.village || '';
                     const state = data.address.state || '';
                     const country = data.address.country || '';
-                    document.getElementById("location").value = `${city}, ${state}, ${country}`;
+                    document.getElementById("location").value = city;
+                    document.getElementById("state").value = state;
+                    document.getElementById("country").value = country;
                 } else {
                     console.error("Failed to fetch location details");
                 }
@@ -202,58 +202,85 @@
                 console.error("Error during reverse geocoding:", error);
             }
         });
-
+    
+        // Handle city input for search functionality
+        document.getElementById("location").addEventListener("input", async function () {
+            const cityName = this.value;
+            if (cityName.length > 2) { // Trigger search after 2 characters
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${cityName}&format=json&addressdetails=1`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.length > 0) {
+                            const firstResult = data[0];
+                            document.getElementById("state").value = firstResult.address.state || '';
+                            document.getElementById("country").value = firstResult.address.country || '';
+                            document.getElementById("latitude").value = firstResult.lat;
+                            document.getElementById("longitude").value = firstResult.lon;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error during city search:", error);
+                }
+            }
+        });
+    
+        // Submit form and update article
         document.getElementById("update-article-form").addEventListener("submit", async (event) => {
-            event.preventDefault(); // Prevent the default form submission behavior
-        
-            const urlParts = window.location.pathname.split('/');
-            const articleId = urlParts[urlParts.length - 2] || urlParts[urlParts.length - 1];
-        
+            event.preventDefault();
+    
             const updatedData = {
                 title: document.getElementById("title").value,
                 subtitle: document.getElementById("subtitle").value,
                 content: document.getElementById("contents").value,
-                status: document.getElementById("status").value,
                 publish_date: document.getElementById("publish_date").value,
-                categories: document.getElementById("categories").value.split(',').map(cat => cat.trim()),
-                tags: document.getElementById("tags").value.split(',').map(tag => tag.trim()),
-                latitude: parseFloat(document.getElementById("latitude").value),
-                longitude: parseFloat(document.getElementById("longitude").value),
-                location: document.getElementById("location").value,
+                categories_input: document.getElementById("categories").value.split(',').map(cat => cat.trim()),
+                tags_input: document.getElementById("tags").value.split(',').map(tag => tag.trim()),
+                city: {
+                    name: document.getElementById("location").value,
+                    state: {
+                        name: document.getElementById("state").value,
+                        country: {
+                            name: document.getElementById("country").value
+                        }
+                    }
+                },
+                latitude: document.getElementById("latitude").value,
+                longitude: document.getElementById("longitude").value,
+                agreed_to_terms: true
             };
-        
-            // Prepare FormData if images need to be uploaded
+    
             const formData = new FormData();
             for (const [key, value] of Object.entries(updatedData)) {
-                if (key === "categories" || key === "tags") {
+                if (Array.isArray(value)) {
                     value.forEach(item => formData.append(key, item));
+                } else if (typeof value === 'object' && value !== null) {
+                    formData.append(key, JSON.stringify(value)); // Convert nested objects to JSON string
                 } else {
                     formData.append(key, value);
                 }
             }
-        
+    
+            // Handle image files
             const imagesInput = document.getElementById("images");
             for (const file of imagesInput.files) {
                 formData.append("images", file);
             }
-        
+    
             try {
                 const response = await fetch(`/articles/articles/admin/${articleId}/`, {
                     method: "PUT",
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                        // Omit 'Content-Type' because `fetch` automatically sets the correct headers for `FormData`
                     },
                     body: formData
                 });
-        
+    
                 if (response.ok) {
-                    const result = await response.json();
                     alert("Article updated successfully!");
-                    console.log(result);
+                    window.location.href = "/admin_all_articles/";
                 } else {
                     const errorData = await response.json();
-                    console.error("Failed to update article:", errorData);
                     alert("Failed to update article. Please check the input and try again.");
                 }
             } catch (error) {
@@ -261,10 +288,10 @@
                 alert("An unexpected error occurred. Please try again.");
             }
         });
-        
-
+    
         // Fetch and populate article details
         fetchArticleDetail();
     });
+    
 </script>
 {% endblock %}

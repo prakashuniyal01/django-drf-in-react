@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
 from .models import Article, Category, Tag
-from .serializers import ArticleSerializer, ArticleDetailSerializer,CategorySerializer, TagSerializer
+from .serializers import ArticleSerializer, ArticleDetailSerializer,CategorySerializer, TagSerializer, ArticleSerializer_all
 from .permissions import IsAdminUser, IsJournalistOrEditor
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import PermissionDenied
@@ -15,11 +15,18 @@ from .filter import ArticleFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.views import APIView
 class ArticlePagination(PageNumberPagination):
     page_size = 6  # Set the number of items per page
     page_size_query_param = 'page_size'  # Allow clients to override the page size using a query parameter
     max_page_size = 100  # Maximum number of items per page
-    
+
+# filter
+class AllArticlesView(APIView):
+    def get(self, request, *args, **kwargs):
+        articles = Article.objects.all()
+        serializer = ArticleSerializer_all(articles, many=True, context={'request': request})
+        return Response(serializer.data)
 # admin crud views 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()

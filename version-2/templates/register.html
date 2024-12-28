@@ -241,25 +241,118 @@ function validateFullName() {
 }
 
 function validateEmail() {
-    const email = document.getElementById("email").value;
-    const errorField = document.getElementById("emailError");
-    const emailInput = document.getElementById("email");
+  const email = document.getElementById("email").value;
+  const errorField = document.getElementById("emailError");
+  const emailInput = document.getElementById("email");
 
-    // Combined regex for email structure validation
-    const emailRegex =
-        /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+  // Basic Validation: Non-empty field
+  if (!email) {
+      errorField.textContent = "This field is required.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
 
-    if (!emailRegex.test(email)) {
-        errorField.textContent = "Invalid email format.";
-        errorField.classList.add("text-danger");
-        errorField.classList.remove("text-success");
-        emailInput.classList.add("is-invalid");
-    } else {
-        errorField.textContent = "";
-        errorField.classList.remove("text-danger");
-        errorField.classList.add("text-success");
-        emailInput.classList.remove("is-invalid");
-    }
+  // Basic Regex for valid email structure
+  const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(email)) {
+      errorField.textContent = "Invalid email format.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // Local Part Validations (length and valid characters)
+  const localPart = email.split('@')[0];
+  if (localPart.length > 64) {
+      errorField.textContent = "Local part cannot exceed 64 characters.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // Domain Part Validations
+  const domainPart = email.split('@')[1];
+  if (domainPart.includes("..")) {
+      errorField.textContent = "Domain part cannot have consecutive dots.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // Validate domain extension (handle multi-level TLDs like .co.uk, .gov.in)
+  const domainRegex = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+  const domainExtension = domainPart.split('.').pop();
+  
+  if (!domainRegex.test(domainPart)) {
+      errorField.textContent = "Invalid domain or extension.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // No Trailing Spaces
+  if (email.trim() !== email) {
+      errorField.textContent = "Email cannot have leading or trailing spaces.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // Single '@' Symbol Check
+  if ((email.match(/@/g) || []).length !== 1) {
+      errorField.textContent = "Email should contain only one '@' symbol.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // Length Constraints: Maximum 256 characters
+  if (email.length > 256) {
+      errorField.textContent = "Email cannot exceed 256 characters.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // Security Validation: Avoid Injection Attacks (basic example)
+  const invalidCharacters = ['<', '>', '"', "'", '\\'];
+  for (let char of invalidCharacters) {
+      if (email.includes(char)) {
+          errorField.textContent = "Email contains invalid characters.";
+          errorField.classList.add("text-danger");
+          errorField.classList.remove("text-success");
+          emailInput.classList.add("is-invalid");
+          return;
+      }
+  }
+
+  // Advanced DNS and Disposable Email Validation (e.g., using a third-party API or server-side check)
+  // For now, just checking for known disposable domains
+  const disposableDomains = ['mailinator.com', 'tempmail.com'];
+  const domain = email.split('@')[1];
+  if (disposableDomains.includes(domain)) {
+      errorField.textContent = "Disposable email addresses are not allowed.";
+      errorField.classList.add("text-danger");
+      errorField.classList.remove("text-success");
+      emailInput.classList.add("is-invalid");
+      return;
+  }
+
+  // If all checks pass
+  errorField.textContent = "Valid email!";
+  errorField.classList.remove("text-danger");
+  errorField.classList.add("text-success");
+  emailInput.classList.remove("is-invalid");
 }
 
 function validatePassword() {

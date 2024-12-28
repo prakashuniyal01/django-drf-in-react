@@ -1,6 +1,7 @@
 {% extends 'journalist/dashboard.html' %}
 {% block title %}Create Article{% endblock %}
 {% block content %}
+
 <div class="container mt-5">
     <h2>Create New Article</h2>
     <form id="createArticleForm" enctype="multipart/form-data" onsubmit="return validateForm()">
@@ -10,14 +11,14 @@
         <div id="step1">
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" name="title" required>
-                <small id="titleError" class="form-text text-danger" style="display:none;">Title must be at least 3 words.</small>
+                <input type="text" class="form-control" id="title" name="title"  required>
+                <small id="titleError" class="form-text text-danger" style="display:none;">Title must be at least 5 words.</small>
             </div>
             
             <div class="form-group mt-3">
                 <label for="subtitle">Subtitle</label>
                 <input type="text" class="form-control" id="subtitle" name="subtitle" required>
-                <small id="subtitleError" class="form-text text-danger" style="display:none;">Subtitle must be at least 3 words.</small>
+                <small id="subtitleError" class="form-text text-danger" style="display:none;">Subtitle must be at least 5 words.</small>
             </div>
 
             <div class="form-group mt-3">
@@ -28,7 +29,8 @@
 
             <div class="form-group mt-3">
                 <label for="publish_date">Publish Date</label>
-                <input type="datetime-local" class="form-control" id="publish_date" name="publish_date" required>
+                <input type="date" class="form-control" id="publish_date" name="publish_date" required>
+                <span id="publishDateError" style="color: red; display: none;">Publish date must be a future date.</span>
             </div>
 
             <button type="button" class="btn btn-primary mt-4" onclick="nextStep()">Next</button>
@@ -36,110 +38,79 @@
 
         <!-- Step 2: Categories, Tags, Location, Images, Terms -->
         <div id="step2" style="display: none;">
-            <button type="button" class="btn btn-secondary mt-4" onclick="previousStep()">Back</button>
-
-            <div class="form-group mt-3">
-                <label for="categories_input">Categories</label>
-                <input type="text" class="form-control" id="categories_input" name="categories_input" readonly required>
-                <select class="form-control mt-2" id="categories_dropdown" onchange="updateCategoryInput()">
-                    <option value="">Select a Category</option>
-                    <option value="News">News</option>
-                    <option value="Opinion">Opinion</option>
-                    <option value="Feature">Feature</option>
-                </select>
-            </div>
-            
-            <div class="form-group mt-3">
-                <label for="tags_input">Tags</label>
-                <input type="text" class="form-control" id="tags_input" name="tags_input" readonly required>
-                <div id="tags" class="mt-2 d-flex flex-wrap gap-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagPolitics" value="Politics" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagPolitics">Politics</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagSports" value="Sports" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagSports">Sports</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagTech" value="Tech" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagTech">Tech</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagHealth" value="Health" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagHealth">Health</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagEducation" value="Education" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagEducation">Education</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagEntertainment" value="Entertainment" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagEntertainment">Entertainment</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagScience" value="Science" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagScience">Science</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagBusiness" value="Business" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagBusiness">Business</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagLifestyle" value="Lifestyle" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagLifestyle">Lifestyle</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagTravel" value="Travel" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagTravel">Travel</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagEnvironment" value="Environment" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagEnvironment">Environment</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagFashion" value="Fashion" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagFashion">Fashion</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagFood" value="Food" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagFood">Food</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagFinance" value="Finance" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagFinance">Finance</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="tagWorld" value="World" onclick="updateTagsInput()">
-                        <label class="form-check-label" for="tagWorld">World</label>
-                    </div>
-                </div>
-            </div>
-            
-
             <div class="form-group mt-3">
                 <label for="images">Upload Images</label>
                 <input type="file" class="form-control" id="images" name="images" multiple required>
                 <div id="imageGallery" class="mt-3"></div>
             </div>
+            
+            <div class="form-group mt-3">
+                <label for="categories_input">Categories</label>
+                <select class="form-control" id="categories_input" name="categories_input" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="News">News</option>
+                    <option value="Opinion">Opinion</option>
+                    <option value="Feature">Feature</option>
+                    <option value="Feature">Technology</option>
 
+                </select>
+            </div>
+            
+            <div class="form-group mt-3">
+                <label for="tags_input">Tags</label>
+                <div id="tags_container" class="form-check">
+            </div>
+            
+            <!-- Location (OpenStreetMap) -->
+            <div class="form-group mt-3">
+                <!-- Text fields for city, state, country -->
+                <input 
+                type="text" 
+                class="form-control mt-2" 
+                id="city" 
+                name="city" 
+                placeholder="City" 
+                onblur="forwardGeocode()"
+                />
+                <input 
+                type="text" 
+                class="form-control mt-2" 
+                id="state" 
+                name="state" 
+                placeholder="State" 
+                onblur="forwardGeocode()"
+                />
+                <input 
+                type="text" 
+                class="form-control mt-2" 
+                id="country" 
+                name="country" 
+                placeholder="Country" 
+                onblur="forwardGeocode()"
+                />
+
+                <label for="location">Location</label>
+                <div id="map" style="height: 400px;"></div>
+                
+                <!-- Hidden fields for lat/lon -->
+                <input type="hidden" id="latitude" name="latitude" />
+                <input type="hidden" id="longitude" name="longitude" />
+                
+            </div>
             <div class="form-check mt-3">
                 <input type="checkbox" class="form-check-input" id="agreed_to_terms" name="agreed_to_terms" required>
                 <label class="form-check-label" for="agreed_to_terms">Agree to terms</label>
             </div>
+            <div style="display: flex;">
+                <div >
+                    <button type="button" class="btn btn-secondary mt-4" onclick="previousStep()">Back</button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary mt-4" onclick="submitForm()">Submit Article</button>
+                </div>
 
-            <!-- Location (OpenStreetMap) -->
-            <div class="form-group mt-3">
-                <label for="location">Location</label>
-                <div id="map" style="height: 400px;"></div>
-                <input type="hidden" id="latitude" name="latitude">
-                <input type="hidden" id="longitude" name="longitude">
-                <input type="text" class="form-control mt-2" id="city" name="city" readonly placeholder="City">
-                <input type="text" class="form-control mt-2" id="state" name="state" readonly placeholder="State">
-                <input type="text" class="form-control mt-2" id="country" name="country" readonly placeholder="Country">
             </div>
-
-            <button type="button" class="btn btn-primary mt-4" onclick="submitForm()">Submit Article</button>
+            
         </div>
     </form>
 </div>
@@ -148,92 +119,234 @@
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
     // OpenStreetMap and marker setup
-    var map = L.map('map').setView([28.6139, 77.2090], 13);  // Default location: New Delhi
+    var map = L.map('map').setView([28.6139, 77.2090], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    var marker;
+    var marker; // We'll store the current marker here.
+
+    // 2. Reverse Geocoding when user clicks on the map
     map.on('click', function(e) {
+        // Remove existing marker if any
         if (marker) {
             map.removeLayer(marker);
         }
+        // Place new marker
         marker = L.marker(e.latlng).addTo(map);
+
+        // Update lat/lon hidden fields
         document.getElementById('latitude').value = e.latlng.lat;
         document.getElementById('longitude').value = e.latlng.lng;
 
-        var lat = e.latlng.lat;
-        var lng = e.latlng.lng;
-        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+        // Reverse Geocode lat/lon to get city/state/country
+        reverseGeocode(e.latlng.lat, e.latlng.lng);
+    });
+
+
+    // 3. FORWARD Geocoding from user input (city, state, country)
+    //    Called when the user leaves (blur) one of the text fields.
+    function forwardGeocode() {
+        var city = document.getElementById('city').value.trim();
+        var state = document.getElementById('state').value.trim();
+        var country = document.getElementById('country').value.trim();
+
+        // If there's no input at all, do nothing
+        if (!city && !state && !country) {
+            return;
+        }
+
+        // Build a query string, e.g., "Mumbai, Maharashtra, India"
+        var query = [city, state, country].filter(Boolean).join(', ');
+
+        // Forward Geocode (search for the place)
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
+            .then(response => response.json())
+            .then(results => {
+                if (results && results.length > 0) {
+                    var loc = results[0];
+                    var lat = loc.lat;
+                    var lon = loc.lon;
+
+                    // Remove old marker if any
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+
+                    // Add new marker at the found lat/lon
+                    marker = L.marker([lat, lon]).addTo(map);
+                    map.setView([lat, lon], 13);
+
+                    // Update hidden fields
+                    document.getElementById('latitude').value = lat;
+                    document.getElementById('longitude').value = lon;
+
+                    // Then do a reverse geocode to fill state/country if user only typed city, etc.
+                    reverseGeocode(lat, lon);
+                }
+            })
+            .catch(error => {
+                console.error('Forward Geocoding error:', error);
+            });
+    }
+
+    // 4. Reverse Geocode utility: fill city/state/country from lat/lon
+    function reverseGeocode(lat, lon) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
             .then(response => response.json())
             .then(data => {
                 if (data && data.address) {
-                    document.getElementById('city').value = data.address.city || "";
-                    document.getElementById('state').value = data.address.state || "";
-                    document.getElementById('country').value = data.address.country || "";
+                    // Only update city if it's empty or we want to override
+                    if (!document.getElementById('city').value) {
+                        document.getElementById('city').value = data.address.city || data.address.town || data.address.village || "";
+                    }
+                    if (!document.getElementById('state').value) {
+                        document.getElementById('state').value = data.address.state || "";
+                    }
+                    if (!document.getElementById('country').value) {
+                        document.getElementById('country').value = data.address.country || "";
+                    }
                 }
+            })
+            .catch(error => {
+                console.error('Reverse Geocoding error:', error);
             });
+    }
+
+    
+ 
+    // Validate Title
+    document.getElementById('title').addEventListener('input', function () {
+        const title = this.value.trim();
+        const error = document.getElementById('titleError');
+        const wordCount = title.trim().split(/\s+/).length;
+        if (wordCount < 5) {
+            error.textContent = 'Title must have at least 5 words.';
+            error.style.display = 'block';
+        } else {
+            error.style.display = 'none';
+        }
     });
 
-    // Validate Form before submission
+    // Validate Subtitle
+    document.getElementById('subtitle').addEventListener('input', function () {
+        const subtitle = this.value.trim();
+        const error = document.getElementById('subtitleError');
+        const wordCount = subtitle.trim().split(/\s+/).length;
+        if (wordCount < 5) {
+            error.textContent = 'Subtitle must have at least 5 words.';
+            error.style.display = 'block';
+        } else {
+            error.style.display = 'none';
+        }
+    });
+
+    // Validate Content
+    document.getElementById('contentinput').addEventListener('input', function () {
+        const content = this.value.trim();
+        const words = content.split(/\s+/).filter(word => word).length;
+        const error = document.getElementById('contentError');
+        if (words < 10) {
+            error.textContent = 'Content must have at least 10 words.';
+            error.style.display = 'block';
+        } else {
+            error.style.display = 'none';
+        }
+    });
+
+    // Restrict Publish Date to Future Only
+    const publishDateInput = document.getElementById('publish_date');
+
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    publishDateInput.setAttribute('min', tomorrow.toISOString().split('T')[0]);
+
+    publishDateInput.addEventListener('input', function () {
+        const publishDate = new Date(this.value);
+        const currentDate = new Date();
+        if (publishDate <= currentDate) {
+            this.setCustomValidity('Publish date must be in the future.');
+            this.reportValidity();
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
+    // FUNCTION TO VALIDATE ALL FIELDS TOGETHER (FOR NEXT BUTTON)
     function validateForm() {
         const title = document.getElementById('title').value.trim();
         const subtitle = document.getElementById('subtitle').value.trim();
         const content = document.getElementById('contentinput').value.trim();
-
-        const titleWords = title.split(/\s+/).length;
-        const subtitleWords = subtitle.split(/\s+/).length;
-        const contentWords = content.split(/\s+/).length;
+        const publishDate = new Date(document.getElementById('publish_date').value);
+        const currentDate = new Date();
 
         let isValid = true;
 
-        if (titleWords < 3) {
+        // Title validation
+        const titleWords = title.trim().split(/\s+/).length; // Count words in title
+        if (titleWords < 5) {
             document.getElementById('titleError').style.display = 'block';
             isValid = false;
         } else {
             document.getElementById('titleError').style.display = 'none';
         }
 
-        if (subtitleWords < 3) {
-            document.getElementById('subtitleError').style.display = 'block';
-            isValid = false;
-        } else {
-            document.getElementById('subtitleError').style.display = 'none';
-        }
+        // Subtitle validation
+            const subtitleWords = subtitle.trim().split(/\s+/).length; // Count words in subtitle
+            if (subtitleWords < 5) {
+                document.getElementById('subtitleError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('subtitleError').style.display = 'none';
+            }
 
-        if (contentWords < 10) {
+        if (content.split(/\s+/).filter(word => word).length < 10) {
             document.getElementById('contentError').style.display = 'block';
             isValid = false;
         } else {
             document.getElementById('contentError').style.display = 'none';
         }
 
+        if (publishDate <= currentDate) {
+            alert('Publish date must be in the future.');
+            isValid = false;
+        }
+
         return isValid;
     }
-    // =======================  categories and tags 
-    function updateCategoryInput() {
-        const dropdown = document.getElementById('categories_dropdown');
-        const input = document.getElementById('categories_input');
-        input.value = dropdown.value; // Set the selected dropdown value to the input field
+
+    // NEXT AND BACK BUTTON FUNCTIONALITY
+    let formData = {};
+
+    function saveFormData() {
+        formData.title = document.getElementById('title').value;
+        formData.subtitle = document.getElementById('subtitle').value;
+        formData.content = document.getElementById('contentinput').value;
+        formData.publish_date = document.getElementById('publish_date').value;
     }
 
-    function updateTagsInput() {
-        const checkboxes = document.querySelectorAll('#tags input[type="checkbox"]:checked');
-        const tagsInput = document.getElementById('tags_input');
-        const selectedTags = Array.from(checkboxes).map(checkbox => checkbox.value);
-        tagsInput.value = selectedTags.join(', '); // Join selected tags with commas
+    function loadFormData() {
+        if (formData.title) document.getElementById('title').value = formData.title;
+        if (formData.subtitle) document.getElementById('subtitle').value = formData.subtitle;
+        if (formData.content) document.getElementById('contentinput').value = formData.content;
+        if (formData.publish_date) document.getElementById('publish_date').value = formData.publish_date;
     }
-    
+
     function nextStep() {
         if (validateForm()) {
+            saveFormData();
             document.getElementById('step1').style.display = 'none';
             document.getElementById('step2').style.display = 'block';
+            loadFormData();
         }
     }
 
     function previousStep() {
+        saveFormData();
         document.getElementById('step2').style.display = 'none';
         document.getElementById('step1').style.display = 'block';
+        loadFormData();
     }
 
     // Handle image uploads
@@ -251,11 +364,49 @@
         }
     });
 
-    // Handle tags as an array
-    function getTags() {
-        const tagsInput = document.getElementById('tags_input').value.trim();
-        return tagsInput.split(',').map(tag => tag.trim());
+    const predefinedTags = ['Politics', 'Sports', 'Tech', 'Lifestyle', 'Business'];
+
+    // Populate Tags as Checkboxes
+    function loadTags() {
+        const tagsContainer = document.getElementById('tags_container');
+        predefinedTags.forEach(tag => {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = tag;
+            checkbox.id = `tag_${tag}`;
+            checkbox.className = 'form-check-input';
+
+            const label = document.createElement('label');
+            label.htmlFor = `tag_${tag}`;
+            label.className = 'form-check-label';
+            label.textContent = tag;
+
+            const div = document.createElement('div');
+            div.className = 'form-check';
+
+            div.appendChild(checkbox);
+            div.appendChild(label);
+
+            tagsContainer.appendChild(div);
+        });
     }
+
+    // Get Selected Tags as an Array
+    function getSelectedTags() {
+        const selectedTags = [];
+        predefinedTags.forEach(tag => {
+            const checkbox = document.getElementById(`tag_${tag}`);
+            if (checkbox.checked) {
+                selectedTags.push(tag);
+            }
+        });
+        return selectedTags;
+    }
+    // Handle tags as an array
+    // function getTags() {
+    //     const tagsInput = document.getElementById('tags_input').value.trim();
+    //     return tagsInput.split(',').map(tag => tag.trim());
+    // }
 
     // Submit the form
     function submitForm() {
@@ -265,7 +416,7 @@
         formData.append('content', document.getElementById('contentinput').value);
         formData.append('publish_date', document.getElementById('publish_date').value);
         formData.append('categories_input', document.getElementById('categories_input').value);
-        formData.append('tags_input', JSON.stringify(getTags()));  // Send tags as an array
+        formData.append('tags_input', JSON.stringify(getSelectedTags()));  // Send tags as an array
         formData.append('latitude', document.getElementById('latitude').value);
         formData.append('longitude', document.getElementById('longitude').value);
         formData.append('city', JSON.stringify({
@@ -290,7 +441,7 @@
         .then(data => {
             if (data) {
                 alert('Article created successfully!');
-                window.location.href = '/journalist-dashboard';
+                window.location.href = '/journalist_all_articles';
             } else {
                 alert('Failed to create article. Please try again.');
             }
@@ -300,5 +451,6 @@
             alert('An error occurred. Please try again.');
         });
     }
+    document.addEventListener('DOMContentLoaded', loadTags);
 </script>
 {% endblock %}
