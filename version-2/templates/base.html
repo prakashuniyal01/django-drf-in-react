@@ -6,20 +6,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Home{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    {% block style %}{% endblock %}
-     <!-- Leaflet.js CSS -->
-     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    {% block style %}
+    <style>
+        body {
+            background-color: #091F36;
+            color: #BDBFC1;
+        }
 
+        .navbar {
+            background-color: #1F88E5;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #BDBFC1 !important;
+        }
+
+        .nav-link:hover {
+            color: #339EAF !important;
+        }
+
+        .card {
+            background-color: #021830;
+            border: none;
+            color: #BDBFC1;
+        }
+
+        .btn-primary {
+            background-color: #1B6DB6;
+            border-color: #1B6DB6;
+        }
+
+        .btn-primary:hover {
+            background-color: #339EAF;
+            border-color: #339EAF;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #339EAF;
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Article Management</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            {% block nav %}
-            {% endblock %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% block nav %}
+                <!-- Example Navigation Links -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/create-article">Create Article</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                </ul>
+                {% endblock %}
+            </div>
         </div>
     </nav>
     <div class="container mt-4">
