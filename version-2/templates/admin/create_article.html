@@ -3,12 +3,14 @@
 {% block content %}
 
 <div class="container mt-5">
+   
     <h2>Create New Article</h2>
     <form id="createArticleForm" enctype="multipart/form-data" onsubmit="return validateForm()">
         {% csrf_token %}
         
         <!-- Step 1: Title, Subtitle, Content, Publish Date -->
         <div id="step1">
+            <button id="back-button" class="btn btn-secondary mb-4">Back</button>
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" id="title" name="title"  required>
@@ -97,16 +99,16 @@
                 <input type="hidden" id="longitude" name="longitude" />
                 
             </div>
-            <div class="form-check mt-3">
-                <input type="checkbox" class="form-check-input" id="agreed_to_terms" name="agreed_to_terms" required>
+            <div class="form-check mb-5 mt-3">
+                <input type="checkbox" class="form-check-input mb-5 " id="agreed_to_terms" name="agreed_to_terms" required>
                 <label class="form-check-label" for="agreed_to_terms">Agree to terms</label>
             </div>
             <div style="display: flex;">
                 <div >
-                    <button type="button" class="btn btn-secondary mt-4" onclick="previousStep()">Back</button>
+                    <button type="button" class="btn mb-5 btn-secondary mt-4" onclick="previousStep()">Back</button>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary mt-4" onclick="submitForm()">Submit Article</button>
+                    <button type="button" class="btn mb-5 btn-primary mt-4" onclick="submitForm()">Submit Article</button>
                 </div>
 
             </div>
@@ -118,6 +120,22 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
+    const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
     // OpenStreetMap and marker setup
     var map = L.map('map').setView([28.6139, 77.2090], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -430,7 +448,7 @@
             formData.append('images', images[i]);
         }
 
-        fetch('/articles/articles/admin', {
+        fetch('/articles/articles/admin/', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -441,7 +459,7 @@
         .then(data => {
             if (data) {
                 alert('Article created successfully!');
-                window.location.href = '/admin_all_articles';
+                window.location.href = '/admin_all_articles/';
             } else {
                 alert('Failed to create article. Please try again.');
             }

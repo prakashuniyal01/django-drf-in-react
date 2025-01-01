@@ -2,6 +2,9 @@
 {% block title %}Article Detail{% endblock %}
 {% block content %}
 <div class="container mt-5">
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
+    <h2 class="text-center" id="article-title"></h2>
+    <h5 class="text-center" id="article-subtitle"></h5>
     <!-- Images Carousel -->
     <div id="articleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
         <div class="carousel-inner" id="article-images">
@@ -17,8 +20,7 @@
         </button>
     </div>
 
-    <h2 id="article-title"></h2>
-    <h5 id="article-subtitle"></h5>
+    
     <p id="article-content"></p>
     
     <!-- Display the status of the article -->
@@ -71,6 +73,23 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
+
         const articleId = {{ article|safe }};
         console.log("Article ID:", articleId);
     
@@ -109,7 +128,7 @@
                 const img = document.createElement("img");
                 img.src = image.image;
                 img.alt = article.title;
-                img.classList.add("d-block", "w-100");
+                img.classList.add("d-block", "w-50", 'm-auto');
 
                 carouselItem.appendChild(img);
                 carouselInner.appendChild(carouselItem);

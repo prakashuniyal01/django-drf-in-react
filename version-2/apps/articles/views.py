@@ -16,6 +16,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
+
 class ArticlePagination(PageNumberPagination):
     page_size = 6  # Set the number of items per page
     page_size_query_param = 'page_size'  # Allow clients to override the page size using a query parameter

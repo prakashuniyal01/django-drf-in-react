@@ -2,7 +2,23 @@
 {% block title %}All Articles{% endblock %}
 {% block content %}
 <div class="container mt-5">
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
     <h2>All Articles</h2>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label for="city-filter">City</label>
+            <select id="city-filter" class="form-select">
+                <option value="">Filter by City</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="category-filter">Category</label>
+            <select id="category-filter" class="form-select">
+                <option value="">Filter by Category</option>
+            </select>
+        </div>
+    </div>
     <div id="articles-container" class="row gy-4">
         <!-- Articles will be rendered here dynamically -->
     </div>
@@ -17,24 +33,53 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
+    const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
+
     const articlesContainer = document.getElementById("articles-container");
     const paginationContainer = document.getElementById("pagination");
-    let currentPage = 1;
+    const cityFilter = document.getElementById("city-filter");
+    const categoryFilter = document.getElementById("category-filter");
 
+    let currentPage = 1;
+    let allArticles = [];
+    let filters = { city: "", category: "" };
+
+    // Fetch articles and filters
     async function fetchArticles(page = 1) {
         try {
             const response = await fetch(`/articles/articles/?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                    'Content-Type': 'application/json'  // Optional, in case your API expects it
+                    'Content-Type': 'application/json'
                 }
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
-                renderArticles(data.results);
-                renderPagination(data);
+                allArticles = data.results;
+
+                if (page === 1) {
+                    extractFilters(allArticles); // Extract and populate filters
+                }
+
+                applyFilters(); // Apply current filters to render articles
+                renderPagination(data); // Render pagination
             } else {
                 console.error("Failed to fetch articles");
             }
@@ -42,19 +87,67 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error fetching articles:", error);
         }
     }
-    
 
+    // Extract unique filter options from articles
+    function extractFilters(articles) {
+        const cities = new Set();
+        const categories = new Set();
+
+        articles.forEach((article) => {
+            if (article.city?.name) cities.add(article.city.name);
+            article.categories.forEach(category => categories.add(category.name));
+        });
+
+        populateFilters([...cities], cityFilter);
+        populateFilters([...categories], categoryFilter);
+    }
+
+    // Populate filter dropdowns
+    function populateFilters(items, dropdown) {
+        dropdown.innerHTML = `<option value="">Select</option>`;
+        items.forEach(item => {
+            dropdown.innerHTML += `<option value="${item}">${item}</option>`;
+        });
+    }
+
+    // Apply selected filters to articles
+    function applyFilters() {
+        const filteredArticles = allArticles.filter(article => {
+            return (
+                (!filters.city || article.city?.name === filters.city) &&
+                (!filters.category || article.categories.some(category => category.name === filters.category))
+            );
+        });
+
+        updateDependentFilters(filteredArticles);
+        renderArticles(filteredArticles);
+    }
+
+    // Update dependent filters based on current selection
+    function updateDependentFilters(filteredArticles) {
+        const cities = new Set();
+        const categories = new Set();
+
+        filteredArticles.forEach((article) => {
+            if (article.city?.name) cities.add(article.city.name);
+            article.categories.forEach(category => categories.add(category.name));
+        });
+
+        if (!filters.city) populateFilters([...cities], cityFilter);
+        if (!filters.category) populateFilters([...categories], categoryFilter);
+    }
+
+    // Render articles
     function renderArticles(articles) {
         articlesContainer.innerHTML = ""; // Clear previous articles
-        articles.forEach((article) => {
+        articles.forEach(article => {
             const articleCard = `
                 <div class="col-md-6 col-lg-4">
                     <div class="card">
-                        <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
+                        <img src="${article.images?.[0]?.image || 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
                         <div class="card-body">
                             <h5 class="card-title">${article.title}</h5>
                             <p class="card-text">${article.content.substring(0, 100)}...</p>
-                            <!-- Update the 'Read More' link with the correct URL -->
                             <a href="/editor_article/${article.id}/" class="btn btn-primary">Read More</a>
                         </div>
                     </div>
@@ -64,6 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Render pagination
     function renderPagination(data) {
         paginationContainer.innerHTML = ""; // Clear previous pagination
         if (data.previous) {
@@ -82,11 +176,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Event listeners for filters
+    cityFilter.addEventListener("change", (e) => {
+        filters.city = e.target.value;
+        applyFilters();
+    });
+
+    categoryFilter.addEventListener("change", (e) => {
+        filters.category = e.target.value;
+        applyFilters();
+    });
+
     paginationContainer.addEventListener("click", (e) => {
         e.preventDefault();
         if (e.target.tagName === "A") {
-            const page = e.target.dataset.page;
-            currentPage = parseInt(page);
+            currentPage = parseInt(e.target.dataset.page);
             fetchArticles(currentPage);
         }
     });

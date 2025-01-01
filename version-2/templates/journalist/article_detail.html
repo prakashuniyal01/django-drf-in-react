@@ -1,8 +1,13 @@
 {% extends 'journalist/dashboard.html' %}
 {% block title %}Article Detail{% endblock %}
 {% block content %}
+<button id="back-button" class="btn btn-secondary mb-4">Back</button>
 <div class="container mt-5">
     <!-- Images Carousel -->
+
+    <h2 class="text-center" id="article-title"></h2>
+    <h5 class="text-center" id="article-subtitle"></h5>
+
     <div id="articleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
         <div class="carousel-inner" id="article-images">
             <!-- Images will be dynamically inserted here -->
@@ -17,8 +22,7 @@
         </button>
     </div>
 
-    <h2 id="article-title"></h2>
-    <h5 id="article-subtitle"></h5>
+
     <p id="article-content"></p>
 
     <!-- Display the status of the article -->
@@ -45,12 +49,12 @@
     </div>
 
     <!-- Map Container -->
-    <div id="article-map" style="height: 400px; margin-top: 20px;"></div>
+    <div id="article-map" class="mb-5" style="height: 400px; margin-top: 20px;"></div>
 
     <!-- Update and Delete buttons -->
-    <div id="article-actions" style="margin-top: 20px;">
-        <button id="update-btn" class="btn btn-primary">Update Article</button>
-        <button id="delete-btn" class="btn btn-danger" style="margin-left: 10px;">Delete Article</button>
+    <div id="article-actions"  class='mb-5' style="margin-top: 20px;">
+        <button id="update-btn" class=" mb-5 btn btn-primary">Update Article</button>
+        <button id="delete-btn" class=" mb-5 btn btn-danger" style="margin-left: 10px;">Delete Article</button>
     </div>
 
 
@@ -65,6 +69,23 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
+
         const articleId = {{ article|safe }};
         console.log("Article ID:", articleId);
 
@@ -91,48 +112,56 @@
 
         function renderArticleDetail(article) {
             console.log(article);
-
+        
             // Carousel Inner Element
             const carouselInner = document.getElementById("article-images");
-
+        
             // Render Images in Carousel
             article.images.forEach((image, index) => {
                 const carouselItem = document.createElement("div");
                 carouselItem.classList.add("carousel-item");
                 if (index === 0) carouselItem.classList.add("active"); // First image is active
-
+        
                 const img = document.createElement("img");
                 img.src = image.image;
                 img.alt = article.title;
-                img.classList.add("d-block", "w-100");
-
+                img.classList.add("d-block", "w-50", 'm-auto');
+        
                 carouselItem.appendChild(img);
                 carouselInner.appendChild(carouselItem);
             });
-
+        
             // Set title, subtitle, and content
             document.getElementById("article-title").textContent = article.title;
             document.getElementById("article-subtitle").textContent = article.subtitle;
             document.getElementById("article-content").textContent = article.content;
-
+        
             // Render status
             document.getElementById("article-status").textContent = article.status || 'N/A';
-
+        
             // Format and render publish date
-            const publishDate = new Date(article.publish_date);
-            document.getElementById("article-publish-date").textContent = publishDate.toLocaleString();
-
+            const publishDate = article.publish_date ? new Date(article.publish_date) : null;
+            document.getElementById("article-publish-date").textContent = publishDate ? publishDate.toLocaleString() : 'N/A';
+        
             // Categories and tags
             document.getElementById("article-categories").textContent = article.categories.map(cat => cat.name).join(", ");
             document.getElementById("article-tags").textContent = article.tags.map(tag => tag.name).join(", ");
-
+        
             // Location and Author
             document.getElementById("article-location").textContent = `${article.city.name}, ${article.city.state}, ${article.city.country}`;
             document.getElementById("article-author").textContent = article.author_name;
-
+        
+            // Show Update/Delete buttons only for pending status
+            if (article.status === 'pending') {
+                document.getElementById("article-actions").style.display = 'block';
+            } else {
+                document.getElementById("article-actions").style.display = 'none';
+            }
+        
             // Render the map
             renderMap(article.latitude, article.longitude);
         }
+        
 
         function renderMap(latitude, longitude) {
             const map = L.map('article-map').setView([latitude, longitude], 13);

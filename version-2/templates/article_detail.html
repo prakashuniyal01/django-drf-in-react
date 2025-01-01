@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}article details{% endblock %}
+{% block title %}Article Details{% endblock %}
 {% block nav %}
 <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ms-auto"
+    <ul class="navbar-nav ms-auto">
         <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}">Login</a>
         </li>
@@ -12,10 +12,15 @@
     </ul>
 </div>
 {% endblock %}
+
 {% block content %}
 <div class="container mt-5">
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
+    <h2 id="article-title" class="text-center mb-4" style="font-size: 2.5rem; font-weight: bold;"></h2>
+    <h5 id="article-subtitle" class="text-center mb-4" style="font-size: 1.5rem; color: #777;"></h5>
+
     <!-- Images Carousel -->
-    <div id="articleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
+    <div id="articleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000" data-bs-wrap="true">
         <div class="carousel-inner" id="article-images">
             <!-- Images will be dynamically inserted here -->
         </div>
@@ -29,35 +34,36 @@
         </button>
     </div>
 
-    <h2 id="article-title"></h2>
-    <h5 id="article-subtitle"></h5>
-    <p id="article-content"></p>
+    <div class="article-details mt-4">
+        <p id="article-content" class="text-center mb-4" style="font-size: 1.2rem;"></p>
 
-    <!-- Display the status of the article -->
-    <div>
-        <strong>Status:</strong> <span id="article-status"></span>
-    </div>
+        <!-- Article Status, Date, and Metadata -->
+        <div class="row">
 
-    <!-- Display the publish date -->
-    <div>
-        <strong>Publish Date:</strong> <span id="article-publish-date"></span>
-    </div>
-
-    <div>
-        <strong>Categories:</strong> <span id="article-categories"></span>
-    </div>
-    <div>
-        <strong>Tags:</strong> <span id="article-tags"></span>
-    </div>
-    <div>
-        <strong>Location:</strong> <span id="article-location"></span>
-    </div>
-    <div>
-        <strong>Author:</strong> <span id="article-author"></span>
+            <div class="col-md-6">
+                <strong>Publish Date:</strong> <span id="article-publish-date"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Categories:</strong> <span id="article-categories"></span>
+            </div>
+            <div class="col-md-6">
+                <strong>Tags:</strong> <span id="article-tags"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Location:</strong> <span id="article-location"></span>
+            </div>
+            <div class="col-md-6">
+                <strong>Author:</strong> <span id="article-author"></span>
+            </div>
+        </div>
     </div>
 
     <!-- Map Container -->
-    <div id="article-map" style="height: 400px; margin-top: 20px;"></div>
+    <div id="article-map" class="mb-4" style="height: 300px; margin-top: 20px;"></div>
 </div>
 
 <!-- Include Leaflet.js -->
@@ -69,6 +75,23 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
+
         const articleId = {{ article|safe }};
         console.log("Article ID:", articleId);
 
@@ -107,7 +130,7 @@
                 const img = document.createElement("img");
                 img.src = image.image;
                 img.alt = article.title;
-                img.classList.add("d-block", "w-100");
+                img.classList.add("d-block", "w-50", "carousel-image",'m-auto');
 
                 carouselItem.appendChild(img);
                 carouselInner.appendChild(carouselItem);
@@ -119,7 +142,7 @@
             document.getElementById("article-content").textContent = article.content;
 
             // Render status
-            document.getElementById("article-status").textContent = article.status || 'N/A';
+            // document.getElementById("article-status").textContent = article.status || 'N/A';
 
             // Format and render publish date
             const publishDate = new Date(article.publish_date);
@@ -142,7 +165,7 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
-            L.marker([latitude, longitude]).addTo(map).bindPopup("Article Location").openPopup();
+            L.marker([latitude, longitude]).addTo(map).bindPopup("Location").openPopup();
         }
 
         fetchArticleDetail();
@@ -150,3 +173,5 @@
 </script>
 
 {% endblock %}
+
+

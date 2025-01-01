@@ -218,25 +218,121 @@
           {% block content %}
           <h2 class="mb-4">Welcome to the Editor Dashboard</h2>
 
-          <!-- Quick Links or Cards -->
-          <ul class="nav nav-pills flex-column">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'editor_all_articles' %}">All Articles</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'editor_users_pubilished' %}">Published Articles</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'editor_users_panding' %}">Pending Articles</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'editor_users_approved' %}">Approved Articles</a>
-            </li>
-          </ul>
+          <div class="container mt-5">
+            <h2>All Pending Articles</h2>
+            <div id="articles-container" class="row gy-4">
+                <!-- Articles will be rendered here dynamically -->
+            </div>
+        
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Pagination buttons will be generated dynamically -->
+                </ul>
+            </nav>
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", async () => {
+                const articlesContainer = document.getElementById("articles-container");
+                const paginationContainer = document.getElementById("pagination");
+                let currentPage = 1;
+        
+                async function fetchArticles(page = 1) {
+                    try {
+                        const accessToken = localStorage.getItem('access_token');
+                        if (!accessToken) {
+                            alert("Access token not found. Please log in.");
+                            return;
+                        }
+        
+                        const response = await fetch(`/articles/articles/?page=${page}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+        
+                        if (response.ok) {
+                            const data = await response.json();
+                            // Filter the articles based on their status
+                            const pendingArticles = data.results.filter(article => article.status === 'pending');
+                            renderArticles(pendingArticles);
+                            renderPagination(data);
+                        } else if (response.status === 401) {
+                            alert("Unauthorized! Please log in again.");
+                            window.location.href = '/login/'; // Redirect to login
+                        } else {
+                            alert("Failed to fetch articles. Please try again later.");
+                            console.error("Error:", response.status, response.statusText);
+                        }
+                    } catch (error) {
+                        console.error("Error fetching articles:", error);
+                    }
+                }
+        
+                function renderArticles(articles) {
+                    articlesContainer.innerHTML = ""; // Clear previous articles
+                    if (articles.length === 0) {
+                        articlesContainer.innerHTML = `<p>No pending articles found.</p>`;
+                        return;
+                    }
+        
+                    articles.forEach((article) => {
+                        const articleCard = `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card">
+                                    <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" 
+                                        class="card-img-top" alt="${article.title}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${article.title}</h5>
+                                        <p class="card-text">${article.content.substring(0, 100)}...</p>
+                                        <a href="/editor_article/${article.id}/" class="btn btn-primary">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        articlesContainer.insertAdjacentHTML("beforeend", articleCard);
+                    });
+                }
+        
+                function renderPagination(data) {
+                    paginationContainer.innerHTML = ""; // Clear previous pagination
+                    if (data.previous) {
+                        paginationContainer.innerHTML += `
+                            <li class="page-item">
+                                <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                            </li>
+                        `;
+                    }
+                    if (data.next) {
+                        paginationContainer.innerHTML += `
+                            <li class="page-item">
+                                <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                            </li>
+                        `;
+                    }
+                }
+        
+                paginationContainer.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    if (e.target.tagName === "A") {
+                        const page = e.target.dataset.page;
+                        currentPage = parseInt(page);
+                        fetchArticles(currentPage);
+                    }
+                });
+        
+                // Initial fetch
+                fetchArticles();
+            });
+        </script>
           {% endblock %}
         </div>
       </div>
     </div>
+   
 
     <!-- Bootstrap JS (with Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

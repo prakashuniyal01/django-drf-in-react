@@ -2,6 +2,7 @@
 {% block title %}Users List{% endblock %}
 {% block content %}
 <div class="container mt-5">
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
     <h2>Users List</h2>
     <table class="table table-bordered">
         <thead>
@@ -80,7 +81,22 @@
   // Global variable for the API endpoint and token
 const apiEndpoint = "/users/admin/users/"; // API Endpoint
 const token = localStorage.getItem("access_token"); // Bearer Token
+const backButton = document.getElementById("back-button");
 
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
 // Function to fetch and render users list
 async function fetchUsers() {
     try {

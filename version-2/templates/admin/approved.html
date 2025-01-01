@@ -2,6 +2,7 @@
 {% block title %}All Approved Articles{% endblock %}
 {% block content %}
 <div class="container mt-5">
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
     <h2>All Approved Articles</h2>
     <div id="articles-container" class="row gy-4">
         <!-- Articles will be rendered here dynamically -->
@@ -17,6 +18,22 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
         const articlesContainer = document.getElementById("articles-container");
         const paginationContainer = document.getElementById("pagination");
         let currentPage = 1;

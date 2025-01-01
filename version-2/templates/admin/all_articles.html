@@ -2,21 +2,16 @@
 {% block title %}All Articles{% endblock %}
 {% block content %}
 <div class="container mt-5">
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
     <h2>All Articles</h2>
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <label> City </label>
             <select id="city-filter" class="form-select">
                 <option value="">Filter by City</option>
             </select>
         </div>
-        <div class="col-md-4">
-            <label> Tag </label>
-            <select id="tag-filter" class="form-select">
-                <option value="">Filter by Tag</option>
-            </select>
-        </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <label> Categories </label>
             <select id="category-filter" class="form-select">
                 <option value="">Filter by Category</option>
@@ -36,15 +31,32 @@
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
         const articlesContainer = document.getElementById("articles-container");
         const paginationContainer = document.getElementById("pagination");
         const cityFilter = document.getElementById("city-filter");
-        const tagFilter = document.getElementById("tag-filter");
         const categoryFilter = document.getElementById("category-filter");
-    
+
         let currentPage = 1;
-        let filters = { city: "", tag: "", category: "" };
-    
+        let allArticles = [];
+        let filters = { city: "", category: "" };
+
+        // Fetch all articles once
         async function fetchArticles(page = 1) {
             try {
                 const response = await fetch(`/articles/articles/admin/?page=${page}`, {
@@ -54,14 +66,13 @@
                         'Content-Type': 'application/json'
                     }
                 });
-    
+
                 if (response.ok) {
                     const data = await response.json();
-                    if (page === 1) {
-                        extractFilters(data.results);
-                    }
-                    renderArticles(data.results);
-                    renderPagination(data);
+                    allArticles = data.results;
+                    extractFilters(allArticles); // Extract filters for dropdowns
+                    applyFilters(); // Apply current filters to display articles
+                    renderPagination(data); // Render pagination
                 } else {
                     console.error("Failed to fetch articles");
                 }
@@ -69,89 +80,65 @@
                 console.error("Error fetching articles:", error);
             }
         }
-    
-        function renderPagination(data) {
-            paginationContainer.innerHTML = ""; // Clear previous pagination
-    
-            const totalPages = Math.ceil(data.count / data.results.length);
-            const range = [...Array(totalPages).keys()].map(i => i + 1);
-    
-            if (data.previous) {
-                paginationContainer.innerHTML += `
-                    <li class="page-item">
-                        <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
-                    </li>
-                `;
-            }
-    
-            range.forEach((page) => {
-                paginationContainer.innerHTML += `
-                    <li class="page-item ${page === currentPage ? 'active' : ''}">
-                        <a class="page-link" href="#" data-page="${page}">${page}</a>
-                    </li>
-                `;
-            });
-    
-            if (data.next) {
-                paginationContainer.innerHTML += `
-                    <li class="page-item">
-                        <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
-                    </li>
-                `;
-            }
-        }
-    
+
+        // Extract unique filter options based on articles
         function extractFilters(articles) {
             const cities = new Set();
-            const tags = new Set();
             const categories = new Set();
-    
+
             articles.forEach((article) => {
-                if (article.city && article.city.name) {
-                    cities.add(article.city.name);
-                }
-    
-                article.tags.forEach((tag) => {
-                    try {
-                        const parsedTags = JSON.parse(tag.name);
-                        parsedTags.forEach((t) => tags.add(t));
-                    } catch {
-                        tags.add(tag.name);
-                    }
-                });
-    
-                article.categories.forEach((category) => {
-                    categories.add(category.name);
-                });
+                if (article.city?.name) cities.add(article.city.name);
+                article.categories.forEach(category => categories.add(category.name));
             });
-    
+
             populateFilters([...cities], cityFilter);
-            populateFilters([...tags], tagFilter);
             populateFilters([...categories], categoryFilter);
         }
-    
+
+        // Populate dropdown options
         function populateFilters(items, dropdown) {
             dropdown.innerHTML = `<option value="">Select</option>`;
             items.forEach((item) => {
                 dropdown.innerHTML += `<option value="${item}">${item}</option>`;
             });
         }
-    
+
+        // Apply selected filters and update dropdowns
+        function applyFilters() {
+            const filteredArticles = allArticles.filter((article) => {
+                return (
+                    (!filters.city || article.city?.name === filters.city) &&
+                    (!filters.category || article.categories.some(category => category.name === filters.category))
+                );
+            });
+
+            updateDependentFilters(filteredArticles);
+            renderArticles(filteredArticles);
+        }
+
+        // Update dependent filters based on currently filtered articles
+        function updateDependentFilters(filteredArticles) {
+            const cities = new Set();
+            const categories = new Set();
+
+            filteredArticles.forEach((article) => {
+                if (article.city?.name) cities.add(article.city.name);
+                article.categories.forEach(category => categories.add(category.name));
+            });
+
+            // Update dropdowns
+            if (!filters.city) populateFilters([...cities], cityFilter);
+            if (!filters.category) populateFilters([...categories], categoryFilter);
+        }
+
+        // Render articles on the page
         function renderArticles(articles) {
             articlesContainer.innerHTML = ""; // Clear previous articles
             articles.forEach((article) => {
-                if (
-                    (filters.city && article.city.name !== filters.city) ||
-                    (filters.tag && !article.tags.some((tag) => tag.name.includes(filters.tag))) ||
-                    (filters.category && !article.categories.some((category) => category.name === filters.category))
-                ) {
-                    return;
-                }
-    
                 const articleCard = `
                     <div class="col-md-6 col-lg-4">
                         <div class="card">
-                            <img src="${article.images.length > 0 ? article.images[0].image : 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
+                            <img src="${article.images?.[0]?.image || 'https://via.placeholder.com/150'}" class="card-img-top" alt="${article.title}">
                             <div class="card-body">
                                 <h5 class="card-title">${article.title}</h5>
                                 <p class="card-text">${article.content.substring(0, 100)}...</p>
@@ -163,40 +150,49 @@
                 articlesContainer.insertAdjacentHTML("beforeend", articleCard);
             });
         }
-    
-        function resetFilters(except) {
-            if (except !== "city") {
-                cityFilter.value = "";
-                filters.city = "";
+
+        // Render pagination buttons
+        function renderPagination(data) {
+            paginationContainer.innerHTML = ""; // Clear previous pagination
+            const totalPages = Math.ceil(data.count / data.results.length);
+            const range = [...Array(totalPages).keys()].map(i => i + 1);
+
+            if (data.previous) {
+                paginationContainer.innerHTML += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                    </li>
+                `;
             }
-            if (except !== "tag") {
-                tagFilter.value = "";
-                filters.tag = "";
-            }
-            if (except !== "category") {
-                categoryFilter.value = "";
-                filters.category = "";
+
+            range.forEach((page) => {
+                paginationContainer.innerHTML += `
+                    <li class="page-item ${page === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${page}">${page}</a>
+                    </li>
+                `;
+            });
+
+            if (data.next) {
+                paginationContainer.innerHTML += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                    </li>
+                `;
             }
         }
-    
+
+        // Event listeners for filters
         cityFilter.addEventListener("change", (e) => {
             filters.city = e.target.value;
-            resetFilters("city");
-            fetchArticles();
+            applyFilters();
         });
-    
-        tagFilter.addEventListener("change", (e) => {
-            filters.tag = e.target.value;
-            resetFilters("tag");
-            fetchArticles();
-        });
-    
+
         categoryFilter.addEventListener("change", (e) => {
             filters.category = e.target.value;
-            resetFilters("category");
-            fetchArticles();
+            applyFilters();
         });
-    
+
         paginationContainer.addEventListener("click", (e) => {
             e.preventDefault();
             if (e.target.tagName === "A") {
@@ -205,10 +201,9 @@
                 fetchArticles(currentPage);
             }
         });
-    
+
         // Initial fetch
         fetchArticles();
     });
-    </script>
-    
+</script>
 {% endblock %}

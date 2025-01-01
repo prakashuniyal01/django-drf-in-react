@@ -3,6 +3,7 @@
 {% block content %}
 
 <div class="container mt-5">
+    <button id="back-button" class="btn btn-secondary mb-4">Back</button>
     <h2>Create New Article</h2>
     <form id="createArticleForm" enctype="multipart/form-data" onsubmit="return validateForm()">
         {% csrf_token %}
@@ -118,6 +119,23 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
+    const backButton = document.getElementById("back-button");
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            if (document.referrer) {
+                // Navigate to the previous page if referrer exists
+                window.location.href = document.referrer;
+            } else {
+                // If no referrer, use history back or redirect to a default page
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/admin/dashboard/'; // Default page
+                }
+            }
+        });
+
     // OpenStreetMap and marker setup
     var map = L.map('map').setView([28.6139, 77.2090], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
